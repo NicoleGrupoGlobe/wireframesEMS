@@ -1,0 +1,1192 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<title>EMS PASA — Wireframes low-fi por perfil</title>
+<style>
+*{box-sizing:border-box}html,body{width:100%;max-width:none}body{margin:0;font-family:'Segoe UI',Arial,sans-serif;color:#2b2f36;background:#eceef1}
+header.top{position:sticky;top:0;z-index:10;background:#2b2f36;color:#fff;padding:14px 24px}
+header.top h1{margin:0;font-size:17px} header.top p{margin:4px 0 10px;font-size:12px;color:#c3c8d0}
+nav.anchors{display:flex;flex-wrap:wrap;gap:6px}
+nav.anchors a{font-size:11.5px;color:#e7ecf1;background:#5b7089;padding:4px 10px;border-radius:12px;text-decoration:none}
+nav.anchors a:hover{background:#6d84a0}
+.group{padding:22px 24px}.group h2{font-size:15px;border-left:4px solid #5b7089;padding-left:10px;margin:18px 0 6px;scroll-margin-top:104px}
+.group .gmeta{font-size:12px;color:#6b7280;margin:0 0 14px 14px}
+.row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:auto auto;column-gap:18px;background:#fff;border:1px solid #c3c8d0;border-radius:10px;padding:16px;margin-bottom:20px;scroll-margin-top:104px}
+.rowtitle{grid-column:1 / -1;grid-row:1;margin:0 0 10px;font-size:14px;color:#2b2f36}
+.wf{grid-column:1;grid-row:2;aspect-ratio:1440 / 900;max-height:calc(100vh - 150px);width:100%;display:flex;align-items:center;justify-content:center;background:#fafbfc;border:1px solid #d9dce1;border-radius:6px;overflow:hidden}
+.wf.wf-mob{aspect-ratio:390 / 844}
+.wf img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.detail{grid-column:2;grid-row:2;align-self:start;font-size:12.5px;overflow-y:auto;overflow-x:hidden;min-height:0;max-height:calc(100vh - 150px);padding-right:8px}
+.detail h4{margin:2px 0 8px;font-size:13px;color:#5b7089;border-bottom:1px solid #e6e8ec;padding-bottom:4px}
+.detail .src{font-weight:normal;color:#9aa1ac;font-size:11px}
+.detail p.desc{margin:0 0 10px}.detail p.lbl{font-weight:700;margin:12px 0 4px;font-size:12px}
+.detail table{width:100%;border-collapse:collapse;margin-bottom:6px}
+.detail th{background:#e6e8ec;text-align:left;padding:5px 6px;font-size:11px}
+.detail td{border-bottom:1px solid #eceef1;padding:5px 6px;font-size:11.5px;vertical-align:top}
+.detail td.req,.detail .req{color:#5b7089;font-weight:600;white-space:nowrap}
+.detail .ux{margin:8px 0}.detail .uxc{font-weight:700;margin:0 0 2px;font-size:12px}
+.detail .ux p{margin:0 0 3px}.detail .prin{color:#5b7089;font-style:italic;font-size:11.5px}
+@media(max-width:860px){.row{grid-template-columns:1fr;grid-template-rows:auto auto auto}.rowtitle{grid-column:1}.wf{grid-column:1;grid-row:2;aspect-ratio:auto;max-height:56vh}.wf img{max-height:56vh}.detail{grid-column:1;grid-row:3;max-height:82vh}}
+</style></head><body>
+<header class="top"><h1>EMS PASA — Wireframes de baja fidelidad por perfil de usuario</h1>
+<p>Globe Power SpA · Fuente: Especificación de Pantallas v2.0 · Mapa gerencial reconciliado a 3 niveles (País → Centro comercial → Tienda/Local) según instrucción v2.1</p>
+<nav class="anchors">
+<a href="#gerencial">Gerencial (6)</a>
+<a href="#operacional">Operacional (6)</a>
+<a href="#tecnico">Técnico (7)</a>
+<a href="#auditor">Auditor (6)</a>
+<a href="#super-admin">Súper-admin (10)</a>
+</nav></header>
+<section class="group" id="gerencial"><h2>Perfil Gerencial</h2>
+<p class="gmeta">Solo lectura · sin MFA</p>
+<div class="row" id="3.1-panel-consolidado"><h3 class="rowtitle">3.1 · Panel consolidado</h3><div class="wf"><img src="01-gerencial/3.1-panel-consolidado.svg" alt="Wireframe 3.1"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de aterrizaje al iniciar sesión. Muestra el estado del portafolio completo en menos de 3 segundos (ARQ-07). La información se filtra progresivamente a través de 3 niveles geográficos interactivos accionados desde el mapa: País → Centro comercial → Tienda/Local. Cada clic refina el nivel de detalle y actualiza los KPIs del panel derecho sin saltar niveles.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Nivel 1 — País</b></td><td>Selector de país (Chile por defecto / Perú / Colombia) en tabs superiores; cambia todo el contexto del panel. Marcadores circulares por mall activo.</td><td class="req">ARQ-05, DAT-11, ARQ-07</td></tr>
+<tr><td><b>Nivel 2 — Centro comercial</b></td><td>Mapa con marcador por mall; color = estado (verde normal / amarillo alerta / rojo crítico / gris sin dato), tamaño proporcional al consumo relativo. Click actualiza KPIs.</td><td class="req">ARQ-05, DAT-11, DAT-03</td></tr>
+<tr><td><b>Nivel 3 — Tienda / Local / Isla</b></td><td>Al seleccionar un mall y piso se despliega el plano de planta vectorial provisto por PASA; cada tienda/local/isla es un bloque coloreado por estado; hover con nombre, consumo actual [kW] y última alarma.</td><td class="req">ARQ-05, DAT-03, DAT-11, ARQ-09</td></tr>
+<tr><td><b>Tarjeta Consumo [MWh]</b></td><td>Consumo total del período en el nivel seleccionado. Variación % vs. mismo período anterior. Mini sparkline de tendencia de las últimas 24 h.</td><td class="req">DAT-22, DAT-08, ARQ-07</td></tr>
+<tr><td><b>Tarjeta Costo [UF]</b></td><td>Costo acumulado del período. Variación % vs. período anterior. Moneda seleccionable (UF/CLP/USD/PEN/COP) según país del nivel activo.</td><td class="req">DAT-22, FIN-07</td></tr>
+<tr><td><b>Tarjeta Intensidad energética</b></td><td>Consumo / superficie arrendada [kWh/m²]. Variación % vs. período anterior. Aplica desde Nivel 2 (mall) en adelante.</td><td class="req">DAT-11, DAT-22</td></tr>
+<tr><td><b>Tarjeta Cobertura de medición</b></td><td>% de medidores activos / total esperado. Semáforo: verde ≥95%, amarillo 85–95%, rojo &lt;85%.</td><td class="req">DAT-17, DAT-06</td></tr>
+<tr><td><b>Feed de eventos críticos</b></td><td>Lista de los últimos 4–5 eventos del nivel activo: severidad (URGENT/WARNING/INFO), hora, descripción breve, zona afectada. Solo lectura en este perfil.</td><td class="req">DAT-03, DAT-27</td></tr>
+<tr><td><b>Semáforo calidad del dato</b></td><td>% lecturas reales / estimadas / CNR del período activo, en pills de color. Aplica desde Nivel 2.</td><td class="req">DAT-06, DAT-17</td></tr>
+<tr><td><b>Sistema de colores de estado</b></td><td>Consistente en todos los niveles y perfiles: verde = operación normal; amarillo = WARNING (sobreconsumo leve, calidad degradada, fase desbalanceada); rojo = alarma crítica (sobrecarga, medidor offline &gt;4 h); gris = sin dato.</td><td class="req">DAT-06, DAT-03, DAT-27</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País (selector de tab)</b></td><td>Chile / Perú / Colombia</td><td>Chile</td></tr>
+<tr><td><b>Colorear marcadores por</b></td><td>Estado de alarma / Consumo actual [kW] / Variación consumo % / Cobertura de medición %</td><td>Estado de alarma</td></tr>
+<tr><td><b>Mostrar solo malls con</b></td><td>Todos / Alarma crítica activa / Alerta warning activa / Sin datos</td><td>Todos</td></tr>
+<tr><td><b>Período de KPIs</b></td><td>Hoy / Mes actual / Trimestre / Últimos 12 meses / Rango personalizado</td><td>Mes actual</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Mapa como único punto de entrada (superior-izquierda)</p><p>El gerente abre esta pantalla para responder una sola pregunta: «¿dónde hay un problema en mi portafolio?». Por eso el mapa ocupa el cuadrante de mayor peso visual —arranque del recorrido de lectura en F— y no una columna lateral: la ubicación geográfica del riesgo es el primer dato que busca, y los marcadores de color le permiten localizar el mall crítico sin leer una sola cifra.</p>
+<p class="prin">Principio: Patrón de lectura en F y jerarquía visual: lo urgente ocupa el punto de entrada.</p>
+</div>
+<div class="ux"><p class="uxc">Retícula 2×2 de tarjetas KPI a la derecha</p><p>Consumo, costo, intensidad y cobertura se agrupan pegadas entre sí a la derecha del mapa porque el gerente las lee como un solo bloque de «salud del portafolio», no una por una. Alinearlas a la grilla permite comparar sus variaciones % con un barrido vertical del ojo; dispersarlas obligaría a rastrearlas y rompería la lectura en 3 segundos exigida por ARQ-07.</p>
+<p class="prin">Principio: Proximidad (Gestalt) y ley de proximidad para agrupar métricas afines.</p>
+</div>
+<div class="ux"><p class="uxc">Semáforo de color en lugar de texto de estado</p><p>El estado se codifica primero con color y forma y solo después con texto, porque este perfil escanea decenas de malls en segundos y el color se procesa de forma pre-atenta —más rápido que leer la palabra «crítico»—. Se añade letra y una leyenda fija para no depender únicamente del color y cumplir accesibilidad.</p>
+<p class="prin">Principio: Codificación pre-atenta del color; regla de no-solo-color (accesibilidad).</p>
+</div>
+<div class="ux"><p class="uxc">Feed de eventos sin botones de acción</p><p>El feed se ubica debajo de las tarjetas, como información de contexto de segundo nivel, y se muestra en solo lectura: el gerente no gestiona alarmas —eso pertenece al perfil Operacional—, así que se omiten los botones para no ofrecer una acción que el rol no posee y evitar errores de expectativa.</p>
+<p class="prin">Principio: Correspondencia entre rol y affordance; el diseño no promete lo que el permiso no permite.</p>
+</div>
+<div class="ux"><p class="uxc">Drill-down progresivo de 3 niveles</p><p>La navegación nunca salta niveles (País→Mall→Local): cada clic refina en el mismo lugar y conserva el panel de KPIs a la vista, de modo que el gerente no tiene que recordar dónde estaba. Reducir de 6 a 3 niveles acorta la ruta a la información que este perfil realmente consulta (portafolio y mall), sin obligarlo a atravesar región/ciudad/comuna.</p>
+<p class="prin">Principio: Reconocer antes que recordar; minimizar la carga en memoria de trabajo.</p>
+</div>
+<div class="ux"><p class="uxc">Barra de filtros única y persistente</p><p>Los cuatro filtros globales viven en una sola barra sobre el contenido, mostrando su valor por defecto entre paréntesis, para que el gerente sepa exactamente qué está viendo sin abrir menús y para que el patrón sea idéntico en todas las pantallas del perfil.</p>
+<p class="prin">Principio: Consistencia entre pantallas y visibilidad del estado del sistema.</p>
+</div>
+</div>
+</div>
+<div class="row" id="3.2-consumo-jerarquico"><h3 class="rowtitle">3.2 · Consumo jerárquico</h3><div class="wf"><img src="01-gerencial/3.2-consumo-jerarquico.svg" alt="Wireframe 3.2"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de análisis drill-down del consumo. Combina el mapa geográfico (panel izquierdo) con un árbol jerárquico expandible (columna central) y un panel de detalle con KPIs y gráficos (columna derecha). La interacción en cualquiera de los tres paneles sincroniza los otros dos. El árbol tiene 3 niveles: Total país → Mall → Piso/zona.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Nivel 0 — Total país</b></td><td>Fila raíz sin sangría. Muestra el total [MWh o métrica seleccionada] del país activo y variación % vs. período anterior.</td><td class="req">DAT-22, ARQ-05</td></tr>
+<tr><td><b>Nivel 1 — Mall (▸/▾)</b></td><td>Una fila por mall con punto de color de estado. Consumo [MWh], % del total, variación % (rojo si sube, verde si baja). Click expande y activa el detalle.</td><td class="req">DAT-11, DAT-22</td></tr>
+<tr><td><b>Nivel 2 — Piso / zona</b></td><td>Solo visible al expandir un mall (sangría doble). Nombre, consumo [MWh], variación %, punto de color según alarma. Click activa el plano de planta del piso.</td><td class="req">DAT-11, ARQ-05</td></tr>
+<tr><td><b>KPIs del mall (3 tarjetas)</b></td><td>Consumo del período [MWh], Intensidad [kWh/m²] y Costo estimado [UF], cada uno con su variación %.</td><td class="req">DAT-22, DAT-11, FIN-07</td></tr>
+<tr><td><b>Gráfico de tendencia mensual</b></td><td>Barras del mall vs. barras del promedio del portafolio, últimos 8–12 meses. Permite identificar anomalías estacionales.</td><td class="req">DAT-08, DAT-22</td></tr>
+<tr><td><b>Zonas del piso seleccionado</b></td><td>Tarjetas coloreadas por estado para cada tienda/zona del piso activo, con nombre y consumo [MWh]. Coherente con el Nivel 3 del Panel consolidado.</td><td class="req">DAT-11, DAT-03</td></tr>
+<tr><td><b>Tabla de remarcadores</b></td><td>Al seleccionar el mall (sin piso): ID medidor, zona, consumo [MWh], % del total, último valor, timestamp y estado (activo/offline/CNR/estimado).</td><td class="req">DAT-06, DAT-19, DAT-17</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos (multi-selección)</td><td>Chile</td></tr>
+<tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
+<tr><td><b>Métrica principal</b></td><td>Consumo [MWh] / Costo [UF o moneda] / Intensidad [kWh/m²] / Demanda máxima [kW]</td><td>Consumo [MWh]</td></tr>
+<tr><td><b>Granularidad temporal</b></td><td>Mensual / Semanal</td><td>Mensual</td></tr>
+<tr><td><b>Ordenar malls por</b></td><td>Mayor consumo / Mayor costo / Mayor variación % / Nombre A-Z</td><td>Mayor consumo</td></tr>
+<tr><td><b>Mostrar solo malls con</b></td><td>Todos / Alarma crítica / Variación &gt; X% / Sin datos completos</td><td>Todos</td></tr>
+<tr><td><b>Comparar con</b></td><td>Período anterior / Mismo período año anterior / Promedio del portafolio</td><td>Período anterior</td></tr>
+<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD / PEN / COP</td><td>UF</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tres paneles sincronizados en una vista</p><p>Mapa, árbol y detalle conviven sin pestañas ni modales porque el gerente compara «dónde» (mapa), «cuánto» (árbol) y «por qué» (detalle) en un mismo golpe de vista. Sincronizar los tres al hacer un solo clic elimina la coordinación manual y evita que pierda el hilo del análisis.</p>
+<p class="prin">Principio: Múltiples vistas coordinadas; reducir el costo de interacción.</p>
+</div>
+<div class="ux"><p class="uxc">Árbol expandible en vez de navegación página-a-página</p><p>El árbol se expande in situ (▸/▾) y solo el mall pulsado abre sus pisos; los demás no se mueven. Así el gerente mantiene visible el contexto del portafolio completo mientras profundiza, en lugar de abrir una pantalla nueva y perder la referencia de dónde estaba en la jerarquía.</p>
+<p class="prin">Principio: Preservar el contexto; revelación progresiva (progressive disclosure).</p>
+</div>
+<div class="ux"><p class="uxc">Resaltado en azul-acento de la fila activa</p><p>El único color saturado de la pantalla es el acento sobre la fila seleccionada, que ata visualmente el árbol con lo que muestran el mapa y el detalle. Al reservar el acento para «lo que estás mirando ahora», el resto queda en gris y la atención no se dispersa.</p>
+<p class="prin">Principio: Un único foco de atención; economía del color.</p>
+</div>
+<div class="ux"><p class="uxc">Barra de comparación como filtro, no como gráfico aparte</p><p>«Comparar con» (período anterior / año anterior / promedio del portafolio) es un filtro y no una vista separada porque el gerente casi siempre lee una cifra contra su referencia; incorporarlo al mismo panel evita duplicar pantallas y mantiene la variación % siempre en contexto.</p>
+<p class="prin">Principio: Comparación en contexto; consistencia con el resto del perfil.</p>
+</div>
+<div class="ux"><p class="uxc">Tabla de remarcadores al pie</p><p>El detalle a nivel medidor se coloca al final, en ancho completo y solo cuando se selecciona un mall sin piso: es el dato más granular y el menos frecuente para un gerente, así que ocupa la zona de menor prioridad de lectura pero queda disponible sin cambiar de pantalla.</p>
+<p class="prin">Principio: Jerarquía por frecuencia de consulta; lo granular al final del recorrido.</p>
+</div>
+</div>
+</div>
+<div class="row" id="3.3-costos-tendencias"><h3 class="rowtitle">3.3 · Costos y tendencias</h3><div class="wf"><img src="01-gerencial/3.3-costos-tendencias.svg" alt="Wireframe 3.3"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Vista financiera del consumo para control de gestión y proyecciones. Orientada a directivos y al área de finanzas. Combina la evolución mensual de costos, la descomposición de la variación y una tabla exportable con proyección de cierre.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Gráfico de barras apiladas mensual</b></td><td>Eje Y: costo [UF o moneda seleccionada]. Barras apiladas por país o mall (configurable). Línea superpuesta en eje Y secundario: precio medio de la energía [UF/MWh]. Hover con desglose del costo por componente.</td><td class="req">DAT-22, FIN-07</td></tr>
+<tr><td><b>Waterfall chart de variación</b></td><td>Descompone la variación de costo total entre el período anterior y el actual en: cambio en volumen, cambio en precio y cambio en mix de malls. Barras verdes para reducción, rojas para incremento.</td><td class="req">DAT-22, FIN-07</td></tr>
+<tr><td><b>Tabla de costos por mall</b></td><td>Columnas: mall, país, consumo [MWh], precio medio [UF/MWh], costo total, variación %, proyección cierre de mes y año. Ordenable por columna. Exportable a CSV/Excel.</td><td class="req">DAT-22, FIN-07, DAT-12</td></tr>
+<tr><td><b>Proyecciones</b></td><td>Últimos 2 meses con cifras proyectadas (barras con trama diferente), basadas en la tendencia de los últimos 3 meses.</td><td class="req">DAT-22, FIN-07</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
+<tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
+<tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado</td><td>Año en curso</td></tr>
+<tr><td><b>Moneda</b></td><td>UF / CLP / USD / PEN / COP (conversión al tipo de cambio del último día disponible)</td><td>UF</td></tr>
+<tr><td><b>Agrupación de gráficos</b></td><td>Por país / Por mall / Por tipología de mall</td><td>Por país</td></tr>
+<tr><td><b>Ordenar tabla por</b></td><td>Cualquier columna (asc/desc)</td><td>Costo total desc.</td></tr>
+<tr><td><b>Mostrar solo malls con variación</b></td><td>Todos / &gt;5% / &gt;10% / &gt;20% (campo numérico)</td><td>Todos</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Barras apiladas como pieza principal a la izquierda</p><p>La evolución mensual del costo es lo que el área de control de gestión revisa primero, así que ocupa el mayor bloque y el punto de entrada de lectura. Apilar por país/mall en una sola barra por mes permite ver a la vez el total y su composición sin cambiar de gráfico.</p>
+<p class="prin">Principio: Jerarquía visual por frecuencia de uso; densidad informativa controlada.</p>
+</div>
+<div class="ux"><p class="uxc">Waterfall junto a las barras, no en otra pestaña</p><p>El waterfall responde la pregunta que surge inmediatamente al ver subir el costo: «¿fue volumen, precio o mix?». Colocarlo al lado —no en otra pantalla— permite leer el «cuánto» y el «por qué» en el mismo movimiento ocular, respetando el sentido de lectura izquierda→derecha.</p>
+<p class="prin">Principio: Proximidad causa-efecto; patrón de lectura en Z.</p>
+</div>
+<div class="ux"><p class="uxc">Verde/rojo con dirección explícita en el waterfall</p><p>En finanzas el color por sí solo es ambiguo (¿rojo es malo o es gasto?), por eso cada barra lleva además el signo de la variación; el color acelera el escaneo pero el texto elimina la interpretación errónea de un ahorro como sobrecosto.</p>
+<p class="prin">Principio: Redundancia de codificación; prevención de error de interpretación.</p>
+</div>
+<div class="ux"><p class="uxc">Tabla exportable al pie, en ancho completo</p><p>La tabla es el artefacto que finanzas se lleva a su propio análisis, por eso está al final (cierre del recorrido), abarca todo el ancho para mostrar todas las columnas sin scroll horizontal, y expone el CSV/Excel donde se espera terminar la tarea.</p>
+<p class="prin">Principio: Coincidencia con el flujo de trabajo real del usuario; visibilidad de la acción de salida.</p>
+</div>
+<div class="ux"><p class="uxc">Proyección diferenciada por trama, no por color nuevo</p><p>Las columnas proyectadas usan una trama distinta en vez de un color adicional para no introducir una cuarta categoría cromática que compita con el semáforo; el gerente distingue «dato real» de «estimación» por textura, manteniendo la paleta sobria.</p>
+<p class="prin">Principio: Distinción por forma antes que por color; economía de la paleta.</p>
+</div>
+</div>
+</div>
+<div class="row" id="3.4-reportes-ejecutivos"><h3 class="rowtitle">3.4 · Reportes ejecutivos</h3><div class="wf"><img src="01-gerencial/3.4-reportes-ejecutivos.svg" alt="Wireframe 3.4"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Generación y descarga de reportes para comités y directorio. Permite configurar el contenido (alcance, período, comparación, secciones y formato) antes de generar, y conserva un historial descargable con retención mínima de 12 meses.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Configurador de reporte</b></td><td>Filtros que determinan el contenido: alcance geográfico, período, comparación, métrica principal, secciones a incluir y formato de salida (PDF con gráficos / PPT editable / Excel plano).</td><td class="req">FIN-07, DAT-28, DAT-08</td></tr>
+<tr><td><b>Secciones a incluir</b></td><td>Checkboxes individuales: KPIs ejecutivos, tendencia de consumo, ranking de malls, análisis de costos, calidad del dato, resumen de alarmas del período y mapa de cobertura. Todas activadas por defecto.</td><td class="req">FIN-07, DAT-28</td></tr>
+<tr><td><b>Tabla de historial</b></td><td>Fecha de generación, usuario, alcance, período cubierto, formato, estado (generando/listo/error) y link de descarga. Retención de archivos: 12 meses mínimo.</td><td class="req">DAT-12, DAT-08</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / País / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
+<tr><td><b>Período</b></td><td>Mes / Trimestre / Año / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
+<tr><td><b>Comparación</b></td><td>vs. período anterior / vs. mismo período año anterior / Sin comparación</td><td>vs. período anterior</td></tr>
+<tr><td><b>Secciones a incluir</b></td><td>KPIs / Tendencia / Ranking / Costos / Calidad / Alarmas / Mapa de cobertura</td><td>Todas activadas</td></tr>
+<tr><td><b>Métrica principal del reporte</b></td><td>Consumo / Costo / Intensidad</td><td>Consumo</td></tr>
+<tr><td><b>Formato de salida</b></td><td>PDF (con gráficos) / PPT (slides editables) / Excel (tablas planas)</td><td>PDF</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Configurador a la izquierda, resultado a la derecha</p><p>El flujo es «configuro → previsualizo → genero», por eso el formulario ocupa la columna izquierda (primer paso, sentido de lectura) y la vista previa más el historial la derecha (resultado). El gerente avanza de izquierda a derecha sin retroceder.</p>
+<p class="prin">Principio: Flujo secuencial alineado al recorrido de lectura; correspondencia con el modelo mental de la tarea.</p>
+</div>
+<div class="ux"><p class="uxc">Secciones como checkboxes con todo activado</p><p>Las secciones vienen todas marcadas porque el caso más común es el reporte completo; el gerente resta lo que no quiere en vez de construir desde cero. Es una configuración por defecto inteligente que minimiza clics para el 80% de los casos.</p>
+<p class="prin">Principio: Valores por defecto inteligentes; minimizar el esfuerzo del caso frecuente.</p>
+</div>
+<div class="ux"><p class="uxc">Vista previa antes del botón Generar</p><p>La miniatura e índice se muestran antes de generar para que el gerente confirme que el reporte es el correcto sin gastar el tiempo de render ni descargar un PDF equivocado; es feedback anticipado sobre una acción costosa.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema; prevención de errores antes de una acción cara.</p>
+</div>
+<div class="ux"><p class="uxc">Botón «Generar» con estilo de acento (CTA primaria)</p><p>«Generar reporte» es el único botón sólido en acento de la pantalla; «Programar envío» queda como acción secundaria en contorno. Diferenciar la acción principal por peso visual evita que el gerente dude cuál es el paso que cierra la tarea.</p>
+<p class="prin">Principio: Jerarquía de acciones (primaria vs. secundaria); ley de Fitts en el objetivo principal.</p>
+</div>
+<div class="ux"><p class="uxc">Historial con estado y link de descarga</p><p>El historial expone el estado (generando/listo/error) y el link en la misma fila para que el gerente sepa si un reporte ya está disponible sin reintentar; el estado visible reduce la incertidumbre en generaciones que tardan.</p>
+<p class="prin">Principio: Feedback de estado de procesos asíncronos.</p>
+</div>
+</div>
+</div>
+<div class="row" id="3.5-alarmas-agregadas"><h3 class="rowtitle">3.5 · Alarmas agregadas</h3><div class="wf"><img src="01-gerencial/3.5-alarmas-agregadas.svg" alt="Wireframe 3.5"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Resumen ejecutivo del estado de alertas del portafolio, sin detalle técnico de medidores individuales. Es una vista de gestión (no de operación): el gerente ve magnitud, tendencia y concentración de alarmas, pero no las gestiona.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Tarjetas de cabecera</b></td><td>Total alarmas activas / Críticas activas (badge rojo si &gt;0) / Resueltas en últimas 24 h / Tiempo medio de resolución del período [h] con indicador si supera el SLA.</td><td class="req">DAT-27, FIN-06</td></tr>
+<tr><td><b>Mapa geográfico de alarmas</b></td><td>Misma lógica del Panel consolidado, pero los marcadores se colorean siempre por estado de alarma (ignora la métrica de otras pantallas). Click: panel lateral con resumen del mall.</td><td class="req">DAT-03, DAT-27</td></tr>
+<tr><td><b>Gráfico de evolución — 30 días</b></td><td>Barras apiladas por día: abiertas (rojo) / escaladas (naranja) / resueltas (verde). Hover con conteo exacto por severidad.</td><td class="req">DAT-27, DAT-03</td></tr>
+<tr><td><b>Top 5 malls con más alarmas</b></td><td>Nombre, país, nº críticas, nº warnings y tendencia (↑/↓/→) vs. semana anterior.</td><td class="req">DAT-27, DAT-11</td></tr>
+<tr><td><b>Tabla de alarmas por mall</b></td><td>Mall, país, críticas activas, warnings activas, resueltas en período, tiempo medio de resolución [h], última alarma (hora y descripción breve). Sin datos de medidores individuales.</td><td class="req">DAT-03, DAT-11, FIN-06</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
+<tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
+<tr><td><b>Período de análisis</b></td><td>Hoy / Últimas 24h / Últimos 7 días / Últimos 30 días / Rango personalizado</td><td>Últimos 7 días</td></tr>
+<tr><td><b>Severidad</b></td><td>Todas / Solo críticas / Críticas y altas</td><td>Todas</td></tr>
+<tr><td><b>Estado de la alarma</b></td><td>Activas / Resueltas / Todas</td><td>Activas</td></tr>
+<tr><td><b>Gráfico — agrupar por</b></td><td>Día / Semana / Mall</td><td>Día</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Cuatro tarjetas-resumen en la cabecera</p><p>El gerente necesita una respuesta binaria al entrar: «¿está mi portafolio bajo control?». Las cuatro cifras clave —con la de críticas destacada por un badge— ocupan la primera línea de lectura para dar esa respuesta antes de que el ojo baje a los gráficos.</p>
+<p class="prin">Principio: Jerarquía visual en F; la conclusión antes que la evidencia.</p>
+</div>
+<div class="ux"><p class="uxc">Mapa siempre coloreado por estado de alarma</p><p>A diferencia de otras pantallas donde el color del marcador es configurable, aquí se fija en «estado de alarma» para eliminar ambigüedad: en la pantalla de alarmas, rojo siempre significa alarma. Quitar esa opción evita que el gerente malinterprete un mapa configurado para otra métrica.</p>
+<p class="prin">Principio: Consistencia de significado del color; prevención de error por configuración.</p>
+</div>
+<div class="ux"><p class="uxc">Evolución 30 días y Top 5 apilados a la derecha</p><p>Tendencia (¿mejora o empeora?) y concentración (¿qué malls?) responden preguntas de segundo nivel y se agrupan a la derecha, en bloque, para que el gerente pase de «cuántas» a «hacia dónde van» y «dónde se concentran» de arriba hacia abajo.</p>
+<p class="prin">Principio: Agrupación por afinidad funcional; secuencia de preguntas del usuario.</p>
+</div>
+<div class="ux"><p class="uxc">Tabla sin medidores individuales</p><p>La tabla se detiene deliberadamente a nivel mall: exponer medidores individuales sería ruido para un gerente y competencia del perfil Operacional. Limitar la granularidad protege el foco ejecutivo y respeta la separación de responsabilidades entre perfiles.</p>
+<p class="prin">Principio: Minimización de información según el rol; separación de responsabilidades.</p>
+</div>
+<div class="ux"><p class="uxc">Ausencia de botones de gestión de alarma</p><p>No hay «Asignar» ni «Cerrar»: esta vista informa, no opera. La ausencia de affordances de acción comunica al gerente que su rol aquí es de supervisión, evitando que intente gestionar algo que corresponde a otro perfil.</p>
+<p class="prin">Principio: Affordance acorde al permiso; claridad del rol.</p>
+</div>
+</div>
+</div>
+<div class="row" id="3.6-exportar-reportes"><h3 class="rowtitle">3.6 · Exportar reportes</h3><div class="wf"><img src="01-gerencial/3.6-exportar-reportes.svg" alt="Wireframe 3.6"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Descarga ad-hoc de datos agregados para análisis externo, presentaciones o respaldo. Permite elegir tipo de contenido, alcance, período, granularidad y formato. Los exports del perfil gerencial contienen únicamente datos agregados por mall y período.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Configurador del exportador</b></td><td>Tipo de contenido (consumos agregados / costos y facturación / calidad del dato / cobertura de medición / resumen de alarmas), alcance geográfico, período, granularidad temporal, formato de salida y moneda.</td><td class="req">DAT-07, DAT-12</td></tr>
+<tr><td><b>Historial de exportaciones</b></td><td>Registro de exportaciones realizadas con fecha, usuario, contenido, período, formato y link de descarga.</td><td class="req">DAT-12, DAT-08</td></tr>
+<tr><td><b>Limitación del perfil gerencial</b></td><td>Los exports incluyen solo datos agregados por mall y período; no incluyen datos crudos de medidores ni información identificable de locatarios. Para mayor granularidad, trazabilidad o evidencia firmada se requiere el perfil Auditor.</td><td class="req">DAT-07</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Tipo de contenido</b></td><td>Consumos agregados por mall / Costos y facturación / Calidad del dato / Cobertura de medición / Resumen de alarmas (multi-selección)</td><td>Consumos agregados</td></tr>
+<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / País / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
+<tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
+<tr><td><b>Granularidad temporal</b></td><td>Mensual / Semanal (datos diarios no disponibles en perfil gerencial)</td><td>Mensual</td></tr>
+<tr><td><b>Formato de salida</b></td><td>PDF ejecutivo / Excel / CSV</td><td>Excel</td></tr>
+<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD / PEN / COP</td><td>UF</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Formulario a la izquierda con resumen espejo a la derecha</p><p>Mientras el gerente arma la exportación en el formulario, el panel «Resumen» refleja en lenguaje natural lo que va a descargar. Ese eco reduce el error de exportar un alcance o período equivocado sin tener que releer cada control.</p>
+<p class="prin">Principio: Feedback inmediato del estado; reconocer antes que recordar.</p>
+</div>
+<div class="ux"><p class="uxc">Aviso de limitación siempre visible</p><p>La restricción de granularidad no se esconde en un tooltip: se muestra como bloque fijo para que el gerente entienda por qué no ve datos crudos y sepa que la ruta correcta es el perfil Auditor. Explicar el límite en el sitio evita frustración y tickets de soporte.</p>
+<p class="prin">Principio: Prevención de errores por expectativa; ayuda en contexto.</p>
+</div>
+<div class="ux"><p class="uxc">Excel como formato por defecto</p><p>El valor por defecto es Excel porque es el destino más frecuente de un gerente que arma presentaciones o análisis; ofrecer el formato esperado sin obligar a elegir acelera la tarea del caso común.</p>
+<p class="prin">Principio: Valor por defecto inteligente orientado al caso más frecuente.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de exportaciones al pie</p><p>El historial en ancho completo al final permite reutilizar o volver a descargar una extracción previa sin reconfigurarla; es memoria del sistema que ahorra repetir trabajo, ubicada al cierre del recorrido por ser de consulta ocasional.</p>
+<p class="prin">Principio: El sistema recuerda por el usuario; jerarquía por frecuencia.</p>
+</div>
+<div class="ux"><p class="uxc">Botón «Exportar» como CTA primaria</p><p>La acción de salida se distingue en acento sólido frente a «Programar», de contorno, para que el clic que completa la tarea sea el objetivo visual más grande y evidente de la columna derecha.</p>
+<p class="prin">Principio: Ley de Fitts; jerarquía primaria/secundaria de acciones.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="group" id="operacional"><h2>Perfil Operacional</h2>
+<p class="gmeta">MFA obligatorio · escritura alarmas/tickets</p>
+<div class="row" id="4.1-monitoreo-en-vivo"><h3 class="rowtitle">4.1 · Monitoreo en vivo</h3><div class="wf"><img src="02-operacional/4.1-monitoreo-en-vivo.svg" alt="Wireframe 4.1"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla principal del turno del perfil Operacional. Muestra el estado en tiempo real del parque completo de medidores, actualizado cada 15 minutos, con carga en menos de 3 segundos (ARQ-07). Combina indicadores de cabecera, un mapa/grilla de centros comerciales que abre la grilla de medidores al hacer click, un histograma de comportamiento del parque en las últimas 24 h y un feed cronológico de eventos recientes.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Indicadores de cabecera (refresco 15 min)</b></td><td>Total medidores / En línea [%] / Offline / Con dato estancado &gt; 4h (badge rojo, alerta automática DAT-24) / CNR pendientes.</td><td class="req">DAT-24, DAT-27, ARQ-08</td></tr>
+<tr><td><b>Mapa / grilla de centros comerciales</b></td><td>Tarjeta por mall: nombre, país, % medidores online, última lectura y semáforo general. Click en la tarjeta despliega la grilla de medidores del mall: serial, zona, estado, último valor, timestamp y variación vs. día anterior.</td><td class="req">ARQ-08, DAT-11, DAT-19</td></tr>
+<tr><td><b>Histograma de comportamiento del parque</b></td><td>% de medidores online por hora en las últimas 24 h. Permite detectar caídas masivas o parciales y correlacionarlas con eventos externos.</td><td class="req">DAT-27, DAT-24</td></tr>
+<tr><td><b>Feed de eventos recientes</b></td><td>Lista cronológica: medidor pasó a offline, alarma abierta, backfill completado, CNR ingresada. Con timestamp y mall.</td><td class="req">DAT-03, DAT-10, DAT-19</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
+<tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Todos</td></tr>
+<tr><td><b>Estado del medidor</b></td><td>Todos / Online / Offline / Dato estancado &gt; 4h / CNR pendiente</td><td>Todos</td></tr>
+<tr><td><b>Granularidad del histograma</b></td><td>Horaria / Por turno (8h)</td><td>Horaria</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Cinco indicadores de cabecera en una sola línea</p><p>Al recibir el turno, el operador escanea la primera línea para saber en segundos cuánto del parque está en riesgo: online, offline, estancado y CNR forman su check de entrada. Se codifica «dato estancado &gt; 4h» con un badge rojo porque es el disparador de la alerta DAT-24 y no debe perderse entre cifras neutras.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema; realce del dato accionable por color.</p>
+</div>
+<div class="ux"><p class="uxc">Mapa/grilla como bloque de mayor peso, arriba-izquierda</p><p>El mapa de malls ocupa el cuadrante de arranque de lectura porque la primera pregunta del turno es «¿qué mall está caído?». El click abre la grilla de medidores en el mismo lugar, sin cambiar de pantalla, para que el operador profundice al detalle sin perder la vista global del parque.</p>
+<p class="prin">Principio: Jerarquía visual y revelación progresiva; conservar el contexto del monitoreo.</p>
+</div>
+<div class="ux"><p class="uxc">Histograma 24h junto al mapa</p><p>Poner el histograma de % online por hora al lado del mapa permite distinguir de un vistazo una caída puntual de una masiva: si la curva se hunde a una hora concreta, el operador correlaciona con un evento externo en vez de abrir medidor por medidor.</p>
+<p class="prin">Principio: Reconocimiento de patrones sobre inspección manual; datos afines agrupados.</p>
+</div>
+<div class="ux"><p class="uxc">Feed cronológico en columna lateral</p><p>El feed corre en tiempo real a la derecha como bitácora viva del turno; cada línea lleva timestamp y mall para que el operador reconstruya la secuencia de fallas sin cruzar reportes. Los eventos críticos (offline, estancado) usan color rojo para saltar por delante de los informativos.</p>
+<p class="prin">Principio: Feedback continuo del sistema; escaneabilidad por severidad.</p>
+</div>
+<div class="ux"><p class="uxc">Filtros de estado en la barra superior</p><p>Filtrar por «Offline» o «Dato estancado &gt; 4h» desde la barra reduce el parque a solo lo que exige acción, evitando que el operador rastree manualmente entre 2.480 medidores. La granularidad horaria/turno del histograma vive en la misma barra para no fragmentar los controles.</p>
+<p class="prin">Principio: Reducción del espacio de búsqueda; consistencia de ubicación de controles.</p>
+</div>
+</div>
+</div>
+<div class="row" id="4.2-alarmas-eventos"><h3 class="rowtitle">4.2 · Alarmas y eventos</h3><div class="wf"><img src="02-operacional/4.2-alarmas-eventos.svg" alt="Wireframe 4.2"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión operativa de alarmas. Presenta una lista accionable ordenada por severidad y antigüedad, un panel de detalle con la serie temporal del medidor y sus acciones (asignar, escalar, cerrar, iniciar backfill), y un resumen del cumplimiento de SLA. Todo comentario queda en la pista de auditoría (DAT-14).</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Tabla de alarmas</b></td><td>Columnas: ID, severidad (badge), descripción, mall, zona/medidor, fecha de apertura, tiempo transcurrido, responsable asignado y estado. Ordenada por severidad + antigüedad por defecto. Fila expandible: valor que disparó la alarma, baseline esperado e historial de acciones.</td><td class="req">DAT-03, DAT-27, FIN-05</td></tr>
+<tr><td><b>Panel de detalle de alarma</b></td><td>Gráfico de serie temporal del medidor en las últimas 48 h con línea de threshold. Botones: Asignar / Escalar / Cerrar / Iniciar backfill automático. Campo de comentario que queda en la pista de auditoría.</td><td class="req">DAT-03, DAT-10, DAT-14, DAT-23</td></tr>
+<tr><td><b>Resumen de SLA de alarmas</b></td><td>% resueltas dentro del SLA / fuera del SLA, desglosado por severidad y período.</td><td class="req">FIN-06, FIN-05</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Severidad</b></td><td>Crítica / Alta / Media / Baja (multi-selección)</td><td>Todas</td></tr>
+<tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
+<tr><td><b>Estado</b></td><td>Abierta / Asignada / Escalada / Resuelta / Todas</td><td>Abierta</td></tr>
+<tr><td><b>Rango de fecha</b></td><td>Date picker inicio–fin</td><td>Hoy</td></tr>
+<tr><td><b>Responsable asignado</b></td><td>Mías / Todas / Por técnico (selector)</td><td>Todas</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tabla ordenada por severidad + antigüedad por defecto</p><p>La lista llega ya priorizada: crítico y más antiguo arriba, para que el operador ataque en el orden correcto sin ordenar manualmente cada vez que entra. El punto de estado en la primera columna transmite la severidad de forma pre-atenta antes de leer la descripción.</p>
+<p class="prin">Principio: Orden por prioridad como valor por defecto; codificación pre-atenta del riesgo.</p>
+</div>
+<div class="ux"><p class="uxc">Fila expandible en lugar de abrir otra pantalla</p><p>El valor que disparó la alarma, su baseline y el historial de acciones se despliegan dentro de la misma fila para que el operador confirme el diagnóstico sin abandonar la lista ni perder su posición entre decenas de alarmas del turno.</p>
+<p class="prin">Principio: Revelación progresiva; preservar el contexto de la lista de trabajo.</p>
+</div>
+<div class="ux"><p class="uxc">Panel de detalle con serie 48h y línea de threshold</p><p>La serie temporal muestra explícitamente la línea de umbral que gatilló la alarma, de modo que el operador vea de un golpe si fue un pico aislado o una tendencia sostenida antes de decidir escalar o cerrar. La evidencia gráfica precede a la acción.</p>
+<p class="prin">Principio: Evidencia visible antes de la decisión; correspondencia entre dato y acción.</p>
+</div>
+<div class="ux"><p class="uxc">Botonera de acción fija (Asignar / Escalar / Cerrar / Iniciar backfill)</p><p>Las cuatro acciones operativas viven juntas y siempre visibles bajo el gráfico, para que gestionar la alarma sea un solo movimiento sin buscar menús; agruparlas reduce el tiempo de respuesta en un turno de uso intensivo. «Iniciar backfill» queda en la misma fila porque suele seguir al cierre.</p>
+<p class="prin">Principio: Agrupación por afinidad de acción; economía de gestos (ley de Fitts).</p>
+</div>
+<div class="ux"><p class="uxc">Campo de comentario ligado a la pista de auditoría</p><p>El comentario se muestra pegado a las acciones y advierte que queda en la auditoría (DAT-14): así el operador sabe que lo que escribe es trazable e inmutable, lo que fomenta notas precisas y desalienta texto informal.</p>
+<p class="prin">Principio: Transparencia de las consecuencias; el diseño comunica la trazabilidad.</p>
+</div>
+<div class="ux"><p class="uxc">Resumen de SLA como cabecera del panel derecho</p><p>El bloque de % dentro/fuera de SLA por severidad se coloca arriba a la derecha como marco de contexto: recuerda al operador cuánto margen le queda antes de incumplir FIN-06 mientras trabaja cada alarma individual.</p>
+<p class="prin">Principio: Mantener la meta visible durante la tarea; contexto de rendimiento persistente.</p>
+</div>
+</div>
+</div>
+<div class="row" id="4.3-tickets-sla"><h3 class="rowtitle">4.3 · Tickets y SLA</h3><div class="wf"><img src="02-operacional/4.3-tickets-sla.svg" alt="Wireframe 4.3"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Seguimiento de tickets de soporte y cumplimiento de SLA para el perfil Operacional. Combina un semáforo permanente de SLA en la cabecera, un gráfico de evolución de uptime contra el umbral contratado del 99,5% y un tablero de tickets con estado y días restantes o vencidos. Cubre los niveles de soporte N1-N2-N3 (FIN-05).</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Semáforo de SLA (cabecera permanente)</b></td><td>Uptime del servicio (30 días) / Disponibilidad de datos [%] / Tiempo medio de resolución de alarmas críticas [h], cada uno con umbral de alerta visual.</td><td class="req">FIN-06, ARQ-08</td></tr>
+<tr><td><b>Tablero de tickets</b></td><td>ID, descripción, tipo (alarma / CNR / solicitud), prioridad, fecha de apertura, fecha de compromiso SLA, estado y días restantes o vencidos. Filtro rápido: mis tickets / todos / por vencer / vencidos.</td><td class="req">FIN-05, FIN-06</td></tr>
+<tr><td><b>Gráfico de evolución de SLA</b></td><td>Últimos 3 meses: línea de uptime real vs. umbral contratado (99,5%). Puntos de incidente marcados sobre la línea.</td><td class="req">FIN-06, FIN-07</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Semáforo de SLA como cabecera permanente</p><p>Las tres métricas de SLA encabezan la pantalla y no se ocultan al hacer scroll porque son el marcador contra el que se mide todo el turno: el operador debe saber en todo momento si el uptime sigue por encima del 99,5% comprometido antes de priorizar un ticket. El umbral se marca en el propio indicador para que la lectura sea de aprobado/reprobado, no un número aislado.</p>
+<p class="prin">Principio: Persistencia del indicador clave; comparación contra referencia en el propio dato.</p>
+</div>
+<div class="ux"><p class="uxc">Gráfico de evolución sobre la tabla</p><p>La línea de uptime vs. umbral se ubica entre el semáforo y el tablero para que el operador entienda la tendencia antes de bajar al detalle: los puntos de incidente marcados enlazan visualmente una caída del gráfico con los tickets que la explican debajo.</p>
+<p class="prin">Principio: De lo general a lo particular; relación causa-efecto en el recorrido de lectura.</p>
+</div>
+<div class="ux"><p class="uxc">Filtro rápido como pestañas, no como dropdown</p><p>«Mis tickets / Todos / Por vencer / Vencidos» se ofrece como pestañas siempre visibles porque son las vistas que el operador alterna decenas de veces por turno; un solo clic cambia el foco sin abrir un menú, y «Por vencer» queda a la vista como recordatorio de urgencia.</p>
+<p class="prin">Principio: Acceso de un clic a estados frecuentes; visibilidad de las opciones de filtrado.</p>
+</div>
+<div class="ux"><p class="uxc">Columna de días restantes/vencidos con color</p><p>La última columna traduce la fecha de compromiso a días restantes o vencidos y los pinta verde/rojo, evitando que el operador calcule mentalmente el margen de SLA fecha por fecha; el rojo empuja los vencidos al primer plano de atención.</p>
+<p class="prin">Principio: Reducir la carga cognitiva de cálculo; realce del incumplimiento.</p>
+</div>
+<div class="ux"><p class="uxc">Ausencia de barra de filtros global</p><p>Esta pantalla no lleva barra de filtros superior porque el filtrado relevante (por estado del ticket) ya vive en las pestañas y el alcance temporal está fijado por el SLA de 30/90 días; añadir filtros globales duplicaría controles y confundiría el modelo mental respecto a las otras pantallas del perfil.</p>
+<p class="prin">Principio: Evitar controles redundantes; simplicidad sobre completitud innecesaria.</p>
+</div>
+</div>
+</div>
+<div class="row" id="4.4-calidad-backfill"><h3 class="rowtitle">4.4 · Calidad y backfill</h3><div class="wf"><img src="02-operacional/4.4-calidad-backfill.svg" alt="Wireframe 4.4"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Control de calidad del dato por mall y gestión de backfill. Reúne un scorecard de calidad por mall con semáforo por fila, un histograma de composición de la calidad en 30 días, el panel de procesos de backfill en curso con opción de lanzarlos manualmente y las alertas de degradación de medidores que empeoraron en la última semana.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Scorecard de calidad por mall</b></td><td>Tabla: mall, % lecturas reales, % estimadas, % CNR, % backfill completado y tendencia (↑↓) vs. período anterior. Semáforo por fila.</td><td class="req">DAT-06, DAT-17</td></tr>
+<tr><td><b>Panel de backfill activo</b></td><td>Lista de procesos en curso: medidor, tipo de gap, período a reponer, % completado y ETA. Botón para lanzar backfill manual.</td><td class="req">DAT-10</td></tr>
+<tr><td><b>Histograma de calidad — 30 días</b></td><td>Área apilada por día: real / estimado / CNR / faltante. Los días problemáticos quedan visibles de un vistazo.</td><td class="req">DAT-06, DAT-17, DAT-27</td></tr>
+<tr><td><b>Alertas de degradación de calidad</b></td><td>Medidores que bajaron su % de lecturas reales en los últimos 7 días. Lista con delta y causa si está disponible.</td><td class="req">DAT-27, DAT-17</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Scorecard por mall como bloque principal a la izquierda</p><p>La tabla de calidad por mall ocupa el punto de entrada porque responde la pregunta de rutina del turno —«¿qué mall tiene peor calidad de dato hoy?»—. El semáforo por fila permite barrer verticalmente y detener el ojo solo en las filas ámbar/rojas, sin leer cada porcentaje.</p>
+<p class="prin">Principio: Escaneo vertical guiado por color; jerarquía por frecuencia de consulta.</p>
+</div>
+<div class="ux"><p class="uxc">Histograma de 30 días con composición apilada</p><p>Apilar real/estimado/CNR/faltante por día deja ver de inmediato los días problemáticos y si la degradación es puntual o sostenida; el operador distingue un incidente de un día contra un deterioro estructural sin abrir series individuales.</p>
+<p class="prin">Principio: Comparación de composición a lo largo del tiempo; densidad informativa legible.</p>
+</div>
+<div class="ux"><p class="uxc">Panel de backfill con acción de lanzamiento adjunta</p><p>Los procesos de backfill en curso muestran % completado y ETA en tabla, y el botón «Lanzar backfill manual» queda justo debajo para que el operador dispare la reposición del gap que acaba de identificar sin cambiar de módulo. Ver el ETA evita relanzar procesos ya en marcha.</p>
+<p class="prin">Principio: Proximidad entre información y acción; prevención de acciones duplicadas.</p>
+</div>
+<div class="ux"><p class="uxc">Alertas de degradación como lista con delta y causa</p><p>Los medidores que empeoraron en 7 días se listan con su caída porcentual y la causa cuando existe, ordenados por magnitud del deterioro; así el operador prioriza la intervención por impacto real y no por orden alfabético o de mall.</p>
+<p class="prin">Principio: Priorización por magnitud del cambio; información diagnóstica en contexto.</p>
+</div>
+<div class="ux"><p class="uxc">Coherencia de la codificación real/estimado/CNR</p><p>El mismo vocabulario de calidad (real / estimado / CNR / faltante) se usa en el scorecard, el histograma y las alertas, de modo que el operador no reinterpreta categorías al pasar de un bloque a otro dentro de la misma pantalla.</p>
+<p class="prin">Principio: Consistencia terminológica y de codificación entre componentes.</p>
+</div>
+</div>
+</div>
+<div class="row" id="4.5-cnr-pendientes"><h3 class="rowtitle">4.5 · CNR pendientes</h3><div class="wf"><img src="02-operacional/4.5-cnr-pendientes.svg" alt="Wireframe 4.5"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión de los Consumos No Registrados (CNR) pendientes. Muestra indicadores de cabecera sobre el volumen y antigüedad de las CNR abiertas, una tabla accionable con fila expandible por CNR y una barra de acciones para asignar, cambiar estado, comentar o exportar las CNR seleccionadas. Toda operación es trazable (DAT-19, DAT-14).</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Indicadores de cabecera</b></td><td>Total CNR abiertas / Con &gt; 7 días sin resolución / Ingresadas hoy.</td><td class="req">DAT-20</td></tr>
+<tr><td><b>Tabla de CNR</b></td><td>ID, medidor, mall, período afectado, tipo (manual / automático), responsable, fecha de ingreso, estado (pendiente / en revisión / aprobada / rechazada) y valor estimado [kWh]. Fila expandible con detalle, justificación e historial.</td><td class="req">DAT-20, DAT-19, DAT-14</td></tr>
+<tr><td><b>Acciones disponibles</b></td><td>Asignar responsable / Cambiar estado / Agregar comentario / Exportar CNR seleccionadas a CSV.</td><td class="req">DAT-20, DAT-12</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tres indicadores de cabecera centrados en la antigüedad</p><p>Las tarjetas priorizan el conteo de CNR con más de 7 días sin resolución porque la antigüedad es el criterio operativo de riesgo; destacarla junto al total y las del día le dice al operador de inmediato si el backlog está envejeciendo antes de entrar a la tabla.</p>
+<p class="prin">Principio: Visibilidad del indicador crítico; jerarquía por urgencia operativa.</p>
+</div>
+<div class="ux"><p class="uxc">Barra de acciones sobre la tabla, operando sobre la selección</p><p>Las cuatro acciones se colocan encima de la tabla para que el flujo natural sea seleccionar filas y actuar sobre ellas en lote; agrupar «Asignar / Cambiar estado / Comentar / Exportar» evita que el operador repita la misma operación CNR por CNR en un backlog grande.</p>
+<p class="prin">Principio: Acción por lotes sobre selección; economía de interacción.</p>
+</div>
+<div class="ux"><p class="uxc">Fila expandible con justificación e historial</p><p>El detalle, la justificación y el historial de cada CNR se abren dentro de la fila porque el operador necesita verificar la evidencia antes de aprobar o rechazar, sin perder de vista el resto del backlog ni abrir una ventana nueva por cada caso.</p>
+<p class="prin">Principio: Revelación progresiva; verificación en contexto antes de decidir.</p>
+</div>
+<div class="ux"><p class="uxc">Estado como columna con punto de color</p><p>El estado (pendiente / en revisión / aprobada / rechazada) se codifica con el punto de estado de la primera columna, permitiendo separar visualmente lo que espera acción de lo ya resuelto durante el barrido de la tabla.</p>
+<p class="prin">Principio: Codificación de estado pre-atenta; separar lo accionable de lo cerrado.</p>
+</div>
+<div class="ux"><p class="uxc">Exportación a CSV integrada en la misma barra</p><p>«Exportar CNR a CSV» convive con las acciones de gestión porque forma parte del mismo flujo (traspasar CNR a certificación o respaldo); tenerlo a mano evita que el operador salga a otra pantalla para documentar lo que acaba de revisar.</p>
+<p class="prin">Principio: Continuidad del flujo de trabajo; herramientas donde ocurre la tarea.</p>
+</div>
+</div>
+</div>
+<div class="row" id="4.6-mapa-cobertura"><h3 class="rowtitle">4.6 · Mapa de cobertura</h3><div class="wf"><img src="02-operacional/4.6-mapa-cobertura.svg" alt="Wireframe 4.6"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Vista de cobertura de medición del portafolio para el perfil Operacional. Un mapa interactivo colorea cada mall según su % de medidores online y, al hacer click, abre la grilla de medidores del mall; un panel lateral lista los malls ordenados de peor a mejor cobertura con buscador. El selector de métrica del marcador permite recolorear el mapa por alarmas, última lectura o calidad.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Mapa interactivo</b></td><td>Marcadores por mall coloreados según % de medidores online. Hover: popup con nombre, % online, alarmas activas y último dato. Click: grilla de medidores del mall.</td><td class="req">ARQ-08, DAT-17, DAT-11</td></tr>
+<tr><td><b>Panel lateral de lista</b></td><td>Malls ordenados por % online ascendente (los más problemáticos primero). Buscador por nombre.</td><td class="req">DAT-17, DAT-27</td></tr>
+<tr><td><b>Selector de métrica del marcador</b></td><td>Online % / Alarmas activas / Última lectura / Calidad del dato. Recolorea los marcadores del mapa según la métrica elegida.</td><td class="req">DAT-17, DAT-06</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Métrica del marcador</b></td><td>Online % / Alarmas activas / Última lectura / Calidad del dato</td><td>Online %</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Mapa como bloque dominante con lista pareada</p><p>El mapa ocupa dos tercios del ancho porque la cobertura es intrínsecamente geográfica: el operador localiza visualmente los focos rojos de un vistazo. La lista lateral acompaña como índice navegable para quienes prefieren buscar por nombre en vez de rastrear en el mapa.</p>
+<p class="prin">Principio: Vistas coordinadas mapa-lista; dos rutas al mismo dato.</p>
+</div>
+<div class="ux"><p class="uxc">Lista ordenada por % online ascendente</p><p>El panel lateral pone arriba los malls con peor cobertura porque son los que exigen acción; el operador lee de arriba hacia abajo su cola de trabajo sin ordenar la tabla, y el buscador le permite saltar a un mall concreto cuando llega un reporte específico.</p>
+<p class="prin">Principio: Los peores primero; el orden por defecto refleja la prioridad de acción.</p>
+</div>
+<div class="ux"><p class="uxc">Selector de métrica del marcador en la barra superior</p><p>Recolorear el mapa por online %, alarmas, última lectura o calidad desde un único selector permite responder distintas preguntas sobre el mismo mapa sin cambiar de pantalla; mantenerlo en la barra deja claro qué significa el color en cada momento.</p>
+<p class="prin">Principio: Reutilización de la misma vista con codificación conmutable; claridad del significado del color.</p>
+</div>
+<div class="ux"><p class="uxc">Hover con popup de resumen antes del click</p><p>El popup de hover (nombre, % online, alarmas, último dato) entrega el resumen del mall sin comprometer el click, de modo que el operador descarta o confirma un mall antes de abrir su grilla de medidores completa.</p>
+<p class="prin">Principio: Previsualización de bajo costo antes de la navegación; feedback anticipado.</p>
+</div>
+<div class="ux"><p class="uxc">Continuidad con la grilla de medidores de Monitoreo en vivo</p><p>El click en un marcador abre la misma grilla de medidores que en Monitoreo en vivo, reutilizando un patrón que el operador ya conoce; no aprende una interacción nueva para llegar al detalle desde el mapa de cobertura.</p>
+<p class="prin">Principio: Consistencia de interacción entre pantallas del perfil; transferencia de aprendizaje.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="group" id="tecnico"><h2>Perfil Técnico</h2>
+<p class="gmeta">MFA obligatorio · escritura terreno</p>
+<div class="row" id="5.1-mis-ordenes"><h3 class="rowtitle">5.1 · Mis órdenes</h3><div class="wf wf-mob"><img src="03-tecnico/5.1-mis-ordenes.svg" alt="Wireframe 5.1"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de aterrizaje del perfil Técnico en terreno (PWA móvil). Muestra las órdenes de trabajo asignadas con indicadores de cabecera, una lista priorizada por severidad y fecha de compromiso, y un panel de detalle con la ficha del medidor asociado y las acciones de gestión de la orden. Diseñada para uso con una mano y señal intermitente.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Indicadores de cabecera</b></td><td>Órdenes pendientes / En curso / Cerradas hoy / Vencidas (past SLA). La cifra de vencidas se destaca con badge para dirigir la atención.</td><td class="req">FIN-05, DAT-19</td></tr>
+<tr><td><b>Lista de órdenes</b></td><td>ID, descripción, tipo (mantención / instalación / diagnóstico / CNR), mall, prioridad, fecha de asignación, fecha de compromiso y estado. Ordenada por prioridad + fecha de compromiso por defecto.</td><td class="req">FIN-05, DAT-19</td></tr>
+<tr><td><b>Panel de detalle de orden</b></td><td>Descripción del problema, ficha del medidor asociado, historial de intervenciones previas (DAT-23) y botones: Iniciar / Pausar / Cerrar orden / Registrar intervención.</td><td class="req">DAT-19, DAT-23, INT-13</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Estado</b></td><td>Pendientes / En curso / Cerradas / Vencidas / Todas</td><td>Pendientes + En curso</td></tr>
+<tr><td><b>Prioridad</b></td><td>Crítica / Alta / Media / Baja / Todas</td><td>Todas</td></tr>
+<tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Todos</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tarjeta «Vencidas» aislada en la cabecera</p><p>El técnico abre la app para decidir qué atender primero, y el único número que altera su ruta del día es cuántas órdenes están vencidas; por eso ocupa la primera tarjeta con badge y no se diluye entre los demás contadores. La conclusión accionable va antes que el resumen.</p>
+<p class="prin">Principio: Jerarquía por consecuencia: lo que cambia la decisión se muestra primero.</p>
+</div>
+<div class="ux"><p class="uxc">Filas de la lista como objetivos táctiles grandes</p><p>Cada fila es un objetivo alto con el punto de estado a la izquierda porque la lista se toca de pie, con guantes o una sola mano; filas generosas y separadas reducen los toques errados frente al equipo.</p>
+<p class="prin">Principio: Ley de Fitts en móvil: objetivos táctiles amplios (≈44 px) y bien espaciados.</p>
+</div>
+<div class="ux"><p class="uxc">Barra de acciones fija al pie</p><p>Iniciar / Pausar / Cerrar / Registrar se colocan en la franja inferior, dentro del arco natural del pulgar, para que la acción que cambia el estado de la orden esté siempre al alcance sin reacomodar la mano.</p>
+<p class="prin">Principio: Zona del pulgar (thumb zone): las acciones frecuentes viven abajo en móvil.</p>
+</div>
+<div class="ux"><p class="uxc">Orden por prioridad + compromiso por defecto</p><p>El sistema ordena la lista para que el técnico no tenga que calcular cuál es más urgente bajo presión de tiempo; la secuencia correcta llega hecha, reduciendo la carga mental en terreno.</p>
+<p class="prin">Principio: Valores por defecto que ejecutan el trabajo por el usuario.</p>
+</div>
+<div class="ux"><p class="uxc">Apilado estricto en una columna</p><p>A diferencia del escritorio, aquí todo se apila en una sola columna para eliminar el scroll horizontal y la lectura en zigzag cuando la pantalla es pequeña y la conexión es intermitente.</p>
+<p class="prin">Principio: Diseño móvil primero: un único eje de lectura vertical.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.2-activos-medidores"><h3 class="rowtitle">5.2 · Activos (medidores)</h3><div class="wf wf-mob"><img src="03-tecnico/5.2-activos-medidores.svg" alt="Wireframe 5.2"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Inventario de medidores accesible desde terreno con búsqueda y filtros, y ficha técnica detallada del medidor seleccionado. La ficha reúne identificación, ubicación física, estado de comunicación con disponibilidad de 72 h, serie temporal de 48 h con gaps marcados por tipo de valor, e historial de fallas e intervenciones.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Búsqueda y filtros</b></td><td>Por serial, tag, mall, zona, gateway, protocolo y estado. Filtros: país / mall / estado de comunicación / tipo / con alarma activa.</td><td class="req">INT-14, ARQ-15</td></tr>
+<tr><td><b>Lista de medidores</b></td><td>Serial, nombre/tag, mall, zona, estado (online / offline / sin dato &gt; 4 h), protocolo (Modbus / DLMS / otro), último dato y timestamp.</td><td class="req">INT-14, DAT-06, DAT-24</td></tr>
+<tr><td><b>Ficha del medidor — Identificación</b></td><td>Serial, fabricante, modelo, firmware, protocolo, dirección Modbus/IP y gateway asignado.</td><td class="req">INT-14, DAT-23</td></tr>
+<tr><td><b>Ficha del medidor — Ubicación física</b></td><td>Tipo de sala (ref. Estándar Técnico Salas), rack / tablero / posición.</td><td class="req">INT-14, ARQ-15</td></tr>
+<tr><td><b>Ficha del medidor — Estado de comunicación</b></td><td>Timestamp, reintentos e historial de disponibilidad de 72 h en barras de 15 min.</td><td class="req">INT-13, INT-10</td></tr>
+<tr><td><b>Ficha del medidor — Serie temporal 48 h</b></td><td>Serie de las últimas 48 h con gaps marcados y tipo de valor (real / estimado / CNR).</td><td class="req">DAT-04, DAT-06, DAT-19</td></tr>
+<tr><td><b>Ficha del medidor — Historial de fallas</b></td><td>Fallas e intervenciones registradas sobre el medidor, en orden cronológico.</td><td class="req">DAT-23, DAT-19</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Costanera</td></tr>
+<tr><td><b>Estado de comunicación</b></td><td>Todos / Online / Offline / Sin dato &gt; 4 h</td><td>Todos</td></tr>
+<tr><td><b>Tipo</b></td><td>Todos / Remarcador / Sub-medidor</td><td>Todos</td></tr>
+<tr><td><b>Con alarma activa</b></td><td>Sí / No</td><td>No</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Lista compacta arriba, ficha desplegada debajo</p><p>El técnico primero localiza el medidor y luego lo inspecciona; el layout respeta esa secuencia buscar → seleccionar → inspeccionar en un solo scroll vertical, sin abrir pantallas nuevas que le hagan perder la referencia del equipo que tiene delante.</p>
+<p class="prin">Principio: Revelación progresiva: del listado al detalle sin cambiar de contexto.</p>
+</div>
+<div class="ux"><p class="uxc">Identificación como ficha campo-por-línea</p><p>Serial, protocolo y dirección Modbus se muestran uno por renglón etiquetado para poder cotejarlos contra el tablero físico sin ambigüedad; en terreno un dígito confundido es una intervención perdida.</p>
+<p class="prin">Principio: Reconocimiento sobre recuerdo y correspondencia con el objeto físico.</p>
+</div>
+<div class="ux"><p class="uxc">Histograma de disponibilidad de 72 h</p><p>Las barras de 15 min dejan ver de un vistazo si la caída es puntual o sostenida, lo que decide si el técnico revisa el enlace o el equipo; el patrón temporal se lee antes que cualquier cifra.</p>
+<p class="prin">Principio: Codificación visual pre-atenta de patrones temporales.</p>
+</div>
+<div class="ux"><p class="uxc">Serie de 48 h con gaps dibujados explícitamente</p><p>Los huecos se representan como vacíos, no como ceros, para que el técnico distinga «sin dato» de «consumo nulo» y no diagnostique una falla donde solo faltó la lectura.</p>
+<p class="prin">Principio: Hacer visible el estado ausente; prevención de error de interpretación.</p>
+</div>
+<div class="ux"><p class="uxc">Historial como línea de tiempo al final</p><p>La cronología de fallas cierra la ficha para que el técnico sepa qué se intentó antes y no repita una intervención ya realizada por otro turno.</p>
+<p class="prin">Principio: Continuidad y contexto: el sistema recuerda el historial por el usuario.</p>
+</div>
+<div class="ux"><p class="uxc">Densidad reducida frente al escritorio</p><p>La ficha muestra menos elementos por pantalla que su equivalente de estación fija, priorizando lo que se consulta junto al equipo con señal intermitente y evitando saturar una pantalla pequeña.</p>
+<p class="prin">Principio: Economía atencional adaptada al contexto móvil.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.3-diagnostico-comms"><h3 class="rowtitle">5.3 · Diagnóstico comms</h3><div class="wf"><img src="03-tecnico/5.3-diagnostico-comms.svg" alt="Wireframe 5.3"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Consola de diagnóstico de comunicaciones por medidor. Reúne el panel de estado del enlace (estado actual, último dato y tasa de éxito de 24 h), el histograma de disponibilidad de 72 h y las herramientas de diagnóstico activo, con acceso al log de comunicación crudo. Orientada a estación de escritorio por el detalle técnico que maneja.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Panel de diagnóstico</b></td><td>Estado actual (online / offline / intermitente). Último dato: valor, timestamp y tiempo transcurrido. Tasa de éxito de 24 h: % de intentos exitosos, reintentos y timeouts. Histograma de disponibilidad de 72 h.</td><td class="req">INT-13, INT-10, DAT-24</td></tr>
+<tr><td><b>Histograma de disponibilidad 72 h</b></td><td>Barras de 15 min; los huecos indican tramos sin lectura, revelando si la falla es puntual o sostenida.</td><td class="req">INT-13, INT-10, DAT-24</td></tr>
+<tr><td><b>Herramientas de diagnóstico</b></td><td>Test de conexión al gateway, forzar re-intento de lectura y ver el log de comunicación raw (últimas 100 líneas).</td><td class="req">INT-13, INT-10</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Medidor</b></td><td>Selector por serial / tag</td><td>SN-4471</td></tr>
+<tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Costanera</td></tr>
+<tr><td><b>Gateway</b></td><td>Selector de gateway del mall</td><td>GW-02</td></tr>
+<tr><td><b>Ventana</b></td><td>24 h / 48 h / 72 h</td><td>72 h</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tres KPIs de estado en la cabecera</p><p>Estado, tasa de éxito y último dato responden la primera pregunta del técnico —«¿está vivo el enlace?»— antes de que toque ninguna herramienta, de modo que el diagnóstico empieza con el estado visible y no con una acción a ciegas.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema.</p>
+</div>
+<div class="ux"><p class="uxc">Histograma de 72 h como pieza principal</p><p>El patrón de intermitencia ocupa el bloque de mayor peso porque es lo que dicta qué herramienta usar: una caída sostenida apunta al gateway, una intermitente a la señal. La evidencia manda sobre las acciones.</p>
+<p class="prin">Principio: Jerarquía por valor diagnóstico.</p>
+</div>
+<div class="ux"><p class="uxc">Herramientas separadas de las lecturas</p><p>Test, forzar y log se agrupan a la derecha, apartados de los indicadores, para que el técnico no confunda «ver el estado» con «actuar sobre el equipo»; leer y modificar viven en zonas distintas.</p>
+<p class="prin">Principio: Separación entre información y acción.</p>
+</div>
+<div class="ux"><p class="uxc">«Forzar re-lectura» ofrecida sin confirmación pesada</p><p>Reintentar una lectura es seguro y repetible (INT-10), así que se expone como acción directa; la fricción se reserva para lo que no tiene vuelta atrás, no para operaciones inocuas.</p>
+<p class="prin">Principio: Coste de interacción proporcional al riesgo de la acción.</p>
+</div>
+<div class="ux"><p class="uxc">Log crudo al pie, en ancho completo</p><p>Las 100 líneas de trama son el último recurso del diagnóstico, por eso cierran el recorrido y ocupan todo el ancho, permitiendo leer las tramas completas sin recorte cuando el técnico ya agotó la vista resumida.</p>
+<p class="prin">Principio: Jerarquía por frecuencia: el detalle crudo al final del flujo.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.4-registro-intervencion"><h3 class="rowtitle">5.4 · Registro de intervención</h3><div class="wf wf-mob"><img src="03-tecnico/5.4-registro-intervencion.svg" alt="Wireframe 5.4"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Formulario de bitácora de la intervención realizada en terreno, con adjuntos y firma digital del técnico. Al firmar y guardar, el registro se vuelve inmutable con timestamp del servidor, usuario y hash de integridad, y no puede editarse. Un checkbox permite encadenar el ingreso de CNR.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Formulario de bitácora</b></td><td>Tipo de intervención / Descripción (texto libre) / Resultado (solucionado / pendiente piezas / requiere escalación) / Adjuntos: fotos máx. 5 (JPG/PNG) + documentos (PDF) / Firma digital del técnico. El checkbox «requiere CNR» pre-llena el formulario de CNR.</td><td class="req">DAT-19, DAT-23</td></tr>
+<tr><td><b>Validaciones e inmutabilidad</b></td><td>Al guardar: registro inmutable con timestamp del servidor, usuario y hash de integridad. No se puede editar una vez firmado.</td><td class="req">DAT-19, CYB-10, DAT-14</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Formulario corto en una sola columna</p><p>Se muestran pocos campos apilados a la vez para poder completar la bitácora de pie y con una mano justo al terminar el trabajo, evitando formularios que exijan sentarse o dos manos.</p>
+<p class="prin">Principio: Minimizar campos por vista; baja carga de entrada en terreno.</p>
+</div>
+<div class="ux"><p class="uxc">Resultado como opción cerrada</p><p>Solucionado / pendiente piezas / escalación se elige de una lista en vez de escribirse, lo que acelera el registro con guantes y estandariza el dato para los tableros aguas abajo.</p>
+<p class="prin">Principio: Reconocer sobre escribir; entrada restringida y consistente.</p>
+</div>
+<div class="ux"><p class="uxc">Bloque de inmutabilidad visible antes de firmar</p><p>Se advierte explícitamente que el registro no será editable antes de mostrar el botón de firma, para que el técnico revise el contenido sabiendo que no habrá corrección posterior.</p>
+<p class="prin">Principio: Prevención de errores; visibilidad de consecuencias irreversibles.</p>
+</div>
+<div class="ux"><p class="uxc">«Firmar y guardar» como único CTA de acento</p><p>Un solo botón primario, claramente distinto de «Cancelar», evita firmar por accidente y deja inequívoca la acción que cierra la bitácora.</p>
+<p class="prin">Principio: Jerarquía de acciones; una salida primaria inconfundible.</p>
+</div>
+<div class="ux"><p class="uxc">Checkbox «requiere CNR» que pre-llena el CNR</p><p>Cuando la intervención implica un consumo no registrado, el checkbox arrastra los datos ya capturados al formulario de CNR sin re-teclearlos, siguiendo el flujo natural del terreno.</p>
+<p class="prin">Principio: Continuidad de tarea; evitar el reingreso de datos.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.5-ingreso-cnr-manual"><h3 class="rowtitle">5.5 · Ingreso CNR manual</h3><div class="wf wf-mob"><img src="03-tecnico/5.5-ingreso-cnr-manual.svg" alt="Wireframe 5.5"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Formulario de ingreso manual de Consumo No Registrado (CNR) siguiendo la norma correspondiente. Captura período afectado, valor real, motivo, justificación, evidencia y firma digital. El valor queda marcado como dato manual — CNR en todos los dashboards y, una vez firmado, no puede retroeditarse.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Formulario CNR</b></td><td>Período afectado (fecha/hora inicio – fin) / Valor real [kWh] / Motivo del CNR / Justificación (texto libre) / Adjunto de evidencia / Firma digital. El valor queda marcado como &#x27;dato manual — CNR&#x27; en todos los dashboards.</td><td class="req">DAT-20, DAT-14, DAT-19</td></tr>
+<tr><td><b>Restricciones post-firma</b></td><td>No se puede retroeditar. Solo puede marcarse como &#x27;en revisión&#x27; por el perfil operacional. Registra en pista de auditoría: usuario, timestamp y valor anterior si existía.</td><td class="req">DAT-20, DAT-14, CYB-10</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Formulario dividido en dos bloques (datos / justificación)</p><p>Separar los datos duros del CNR de la justificación y evidencia parte el formulario en unidades más cortas y agrupa campos afines, reduciendo la sensación de trámite largo en una pantalla pequeña.</p>
+<p class="prin">Principio: Chunking y agrupación por afinidad.</p>
+</div>
+<div class="ux"><p class="uxc">Restricciones post-firma explícitas antes del botón</p><p>El aviso de irreversibilidad se coloca justo antes de la firma para que el técnico entienda que no hay marcha atrás en el mismo momento en que decide confirmar.</p>
+<p class="prin">Principio: Prevención de errores en acciones irreversibles.</p>
+</div>
+<div class="ux"><p class="uxc">Marcado «dato manual — CNR» comunicado en pantalla</p><p>Se informa que el valor quedará etiquetado como manual en todos los dashboards, alineando la expectativa del técnico con el efecto real del ingreso y evitando que crea que introduce una lectura ordinaria.</p>
+<p class="prin">Principio: Visibilidad del efecto del sistema; honestidad sobre la naturaleza del dato.</p>
+</div>
+<div class="ux"><p class="uxc">Confirmación por firma digital, no un simple guardar</p><p>La firma eleva el ingreso a un compromiso trazable, proporcional a un dato que altera consumos certificados; guardar sin firma sería demasiado liviano para el peso del acto.</p>
+<p class="prin">Principio: Correspondencia entre gravedad del acto y fricción exigida.</p>
+</div>
+<div class="ux"><p class="uxc">Targets grandes y campo numérico para [kWh]</p><p>Campos amplios y el tipo de dato adecuado para el valor en kWh reducen los errores de tecleo en terreno, donde una cifra mal ingresada quedaría fijada de forma inmutable.</p>
+<p class="prin">Principio: Ley de Fitts; ajuste del control al tipo de dato.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.6-maestro-medidores"><h3 class="rowtitle">5.6 · Maestro de medidores</h3><div class="wf"><img src="03-tecnico/5.6-maestro-medidores.svg" alt="Wireframe 5.6"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión del maestro de medidores: tabla completa con búsqueda y filtros, formulario de alta / edición agrupado por secciones y pista de cambios inmutable. Permite incorporar nuevos puntos de medida sin consultoría específica (FIN-02 / FIN-03). Pensada para estación de escritorio por el volumen de campos y la precisión requerida.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Lista y búsqueda del maestro</b></td><td>Tabla completa: serial, tag, mall, zona, protocolo, gateway, estado comms, fecha de alta y estado del activo (activo / baja / en mantención). Búsqueda y filtros completos.</td><td class="req">INT-14, FIN-02, FIN-03</td></tr>
+<tr><td><b>Formulario de alta / edición</b></td><td>Identificación (serial, fabricante, modelo, firmware, protocolo). Configuración de comunicación (dirección Modbus/IP, gateway, tiempo de muestreo). Ubicación (mall, zona, tipo de sala, rack, tablero). Factor de multiplicación / constante de medición.</td><td class="req">INT-14, ARQ-15, FIN-03</td></tr>
+<tr><td><b>Pista de cambios del maestro</b></td><td>Toda modificación registra: campo cambiado, valor anterior, valor nuevo, usuario y timestamp. Inmutable.</td><td class="req">DAT-23, DAT-14, CYB-10</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
+<tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Todos</td></tr>
+<tr><td><b>Protocolo</b></td><td>Modbus / DLMS / BACnet / Otro / Todos</td><td>Todos</td></tr>
+<tr><td><b>Estado del activo</b></td><td>Activo / Baja / En mantención / Todos</td><td>Activo</td></tr>
+<tr><td><b>Estado de comunicación</b></td><td>Todos / Online / Offline / Sin dato &gt; 4 h</td><td>Todos</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tabla a la izquierda, formulario a la derecha</p><p>Es un patrón maestro-detalle: el técnico selecciona un medidor en la lista y lo edita en el panel contiguo sin cambiar de pantalla, manteniendo a la vista el resto del inventario mientras modifica un registro.</p>
+<p class="prin">Principio: Patrón maestro-detalle; contexto persistente durante la edición.</p>
+</div>
+<div class="ux"><p class="uxc">Formulario largo agrupado por secciones</p><p>Identificación, comunicación, ubicación y medición se ordenan en bloques lógicos que guían el alta paso a paso; agrupar decenas de campos por afinidad evita que un formulario extenso resulte abrumador.</p>
+<p class="prin">Principio: Agrupación por afinidad y progresión lógica del formulario.</p>
+</div>
+<div class="ux"><p class="uxc">«Dar de baja» separado de «Guardar cambios»</p><p>La acción que retira un activo se distingue visualmente del guardado ordinario para que el técnico no la accione por inercia al confirmar una edición rutinaria.</p>
+<p class="prin">Principio: Separación de acciones destructivas; prevención de error.</p>
+</div>
+<div class="ux"><p class="uxc">Pista de cambios inmutable al pie</p><p>Mostrar valor anterior → nuevo, usuario y timestamp en la misma pantalla cumple la trazabilidad (DAT-23) y disuade cambios sin registro, porque cada modificación queda expuesta y firmada.</p>
+<p class="prin">Principio: Transparencia; rendición de cuentas visible.</p>
+</div>
+<div class="ux"><p class="uxc">Diseño de escritorio, no de terreno</p><p>El alta y la edición del maestro son trabajo de precisión con muchos campos, propio de una estación fija; por eso esta pantalla se saca del layout móvil de una columna que sirve para consulta en terreno.</p>
+<p class="prin">Principio: Correspondencia dispositivo-tarea.</p>
+</div>
+</div>
+</div>
+<div class="row" id="5.7-reglas-transformacion"><h3 class="rowtitle">5.7 · Reglas de transformación</h3><div class="wf"><img src="03-tecnico/5.7-reglas-transformacion.svg" alt="Wireframe 5.7"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Módulo dentro del maestro de medidores para configurar las reglas de normalización de los datos de campo antes de exponerlos por la API y los dashboards (INT-05). Combina la lista de reglas activas, el formulario de alta / edición con simulador de valor de prueba, el indicador de impacto y el historial de cambios inmutable.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Lista de reglas activas por medidor</b></td><td>Tabla: medidor (serial/tag), tipo de regla (factor de escala / conversión de unidades / offset / fórmula personalizada), valor de entrada esperado, valor de salida resultante, estado (activa/inactiva), fecha de creación y usuario que la creó.</td><td class="req">INT-05, DAT-22, DAT-23</td></tr>
+<tr><td><b>Formulario de alta / edición de regla</b></td><td>Medidor al que aplica. Tipo de transformación: factor multiplicador [número], conversión de unidad (ej. Wh → kWh), offset aditivo, fórmula personalizada (expresión validada). Campo de valor de prueba con simulador: ingresa un valor raw y muestra el valor transformado resultante en tiempo real antes de guardar.</td><td class="req">INT-05, DAT-22</td></tr>
+<tr><td><b>Historial de cambios de reglas</b></td><td>Toda modificación registra: regla afectada, campo cambiado, valor anterior, valor nuevo, usuario y timestamp. Inmutable. Permite al auditor verificar cuándo y por qué cambió una regla de conversión.</td><td class="req">DAT-23, DAT-14, CYB-10</td></tr>
+<tr><td><b>Indicador de impacto</b></td><td>Al editar una regla: aviso de cuántos dashboards, exports y alertas activas se ven afectados por el cambio. Solicita confirmación explícita antes de guardar cambios sobre medidores con datos históricos.</td><td class="req">INT-05, DAT-22, DAT-19</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Medidor</b></td><td>Selector por serial / tag</td><td>Todos</td></tr>
+<tr><td><b>Tipo de regla</b></td><td>Factor de escala / Conversión de unidades / Offset / Fórmula personalizada / Todas</td><td>Todas</td></tr>
+<tr><td><b>Estado</b></td><td>Activas / Inactivas / Todas</td><td>Activas</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Simulador de valor de prueba junto al formulario</p><p>Mostrar el valor transformado en tiempo real mientras se define la regla convierte una conversión abstracta en un resultado verificable; el técnico comprueba que 48 200 Wh se vuelven 48,2 kWh antes de comprometer nada.</p>
+<p class="prin">Principio: Feedback inmediato; prevención de errores antes de guardar.</p>
+</div>
+<div class="ux"><p class="uxc">Indicador de impacto antes de confirmar</p><p>Avisar cuántos dashboards, exports y alertas dependen de la regla da al técnico el alcance real del cambio, para que decida sabiendo a cuántos consumidores del dato afecta.</p>
+<p class="prin">Principio: Visibilidad de consecuencias; decisión informada.</p>
+</div>
+<div class="ux"><p class="uxc">Confirmación explícita sobre datos históricos</p><p>Cambiar una conversión reescribe la interpretación de datos pasados, así que el sistema exige una confirmación deliberada cuando el medidor ya tiene historia, elevando la fricción justo donde el error es irreversible.</p>
+<p class="prin">Principio: Fricción proporcional al riesgo; salvaguarda ante acción irreversible.</p>
+</div>
+<div class="ux"><p class="uxc">Lista con entrada → salida visible por fila</p><p>Ver el par esperado en cada regla permite auditar de un vistazo si una transformación hace lo previsto, sin abrir el detalle de cada una.</p>
+<p class="prin">Principio: Transparencia del comportamiento y escaneabilidad.</p>
+</div>
+<div class="ux"><p class="uxc">Historial inmutable al pie</p><p>El registro de quién cambió qué y cuándo permite al auditor reconstruir el porqué de una conversión meses después, cumpliendo CYB-10 y cerrando la pantalla con la evidencia de gobierno del dato.</p>
+<p class="prin">Principio: Trazabilidad; memoria del sistema.</p>
+</div>
+<div class="ux"><p class="uxc">«Guardar» y «Simular» como acciones distintas</p><p>Simular no compromete y guardar sí; separarlas evita que el técnico persista una regla que solo quería probar, distinguiendo la exploración del compromiso.</p>
+<p class="prin">Principio: Distinción entre exploración y compromiso.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="group" id="auditor"><h2>Perfil Auditor</h2>
+<p class="gmeta">MFA obligatorio · solo lectura</p>
+<div class="row" id="6.1-calidad-datos"><h3 class="rowtitle">6.1 · Calidad de datos</h3><div class="wf"><img src="04-auditor/6.1-calidad-datos.svg" alt="Wireframe 6.1"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de verificación de la calidad del dato para el auditor externo. Es de solo lectura y todo acceso queda registrado (DAT-14). Presenta un scorecard por mall con el desglose de lecturas reales, estimadas, CNR y faltantes; la evolución del porcentaje de lecturas reales en el tiempo; y, al seleccionar un mall, el detalle de los medidores que caen por debajo del umbral de calidad configurado.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Scorecard de calidad por mall</b></td><td>Tabla con mall, período, total de lecturas esperadas, lecturas reales (# y %), estimadas (# y %), CNR (# y %), faltantes (# y %) y tendencia vs. período anterior. Semáforo por fila. Exportable a CSV.</td><td class="req">DAT-06, DAT-17</td></tr>
+<tr><td><b>Gráfico de evolución de calidad</b></td><td>Línea del % de lecturas reales por mes para el mall seleccionado, con línea de umbral. Últimos 12 meses o el rango configurado. Permite detectar deterioros sostenidos de la calidad.</td><td class="req">DAT-17, DAT-08</td></tr>
+<tr><td><b>Detalle de medidores con baja calidad</b></td><td>Al hacer clic en un mall: lista de medidores cuyo % de lecturas reales cae bajo el umbral configurado, con la causa más frecuente si está disponible. Fila expandible con el histórico del medidor.</td><td class="req">DAT-06, DAT-17</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Mall / País</b></td><td>Selector jerárquico (país → mall)</td><td>Todos</td></tr>
+<tr><td><b>Período</b></td><td>Rango personalizado hasta 5 años</td><td>Último trimestre</td></tr>
+<tr><td><b>Granularidad</b></td><td>Mensual / Diaria</td><td>Mensual</td></tr>
+<tr><td><b>Umbral de alerta de calidad</b></td><td>Campo numérico % (ej. &lt; 95%)</td><td>95%</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Scorecard como bloque principal a ancho completo</p><p>El auditor no busca un titular sino la evidencia completa: el scorecard ocupa toda la franja superior para mostrar de una vez las cuatro categorías de calidad (real / estimada / CNR / faltante) con su conteo y porcentaje, de modo que la cifra y su base convivan en la misma fila y no haya que confiar en un porcentaje sin ver de cuántas lecturas sale.</p>
+<p class="prin">Principio: Visibilidad de los datos crudos tras cada indicador; no pedir confianza ciega en una métrica agregada.</p>
+</div>
+<div class="ux"><p class="uxc">Conteo absoluto junto al porcentaje en cada celda</p><p>Cada categoría muestra el número (#) y el porcentaje a la vez porque un 5% de CNR significa cosas distintas sobre 200 o sobre 200.000 lecturas; para verificar cumplimiento el auditor necesita el denominador visible y no una proporción descontextualizada.</p>
+<p class="prin">Principio: Relación parte-todo explícita; prevención de interpretación errónea de porcentajes.</p>
+</div>
+<div class="ux"><p class="uxc">Umbral configurable dibujado sobre la línea de evolución</p><p>El límite de aceptación (95% por defecto) se traza como línea en el gráfico y como filtro editable, para que el auditor fije el criterio contra el que audita y vea de inmediato qué meses lo cruzan, en lugar de comparar mentalmente cada punto contra un número recordado.</p>
+<p class="prin">Principio: Reconocer antes que recordar; el criterio de evaluación es visible, no memorizado.</p>
+</div>
+<div class="ux"><p class="uxc">Detalle de medidores solo al descender desde el mall</p><p>La lista de medidores problemáticos aparece a la derecha únicamente cuando el auditor selecciona un mall del scorecard; encadenar el detalle al agregado le permite pasar del hallazgo («este mall incumple») a la prueba («estos medidores lo causan») sin cambiar de pantalla ni perder el caso que está revisando.</p>
+<p class="prin">Principio: Revelación progresiva desde el agregado hacia la evidencia individual.</p>
+</div>
+<div class="ux"><p class="uxc">Ausencia total de controles de edición</p><p>En toda la pantalla no hay ningún botón que modifique una lectura o su flag: el rol es de verificación, no de corrección. La ausencia deliberada de affordances de escritura le confirma al auditor que lo que ve es el dato tal como quedó registrado y que nadie puede alterarlo desde aquí.</p>
+<p class="prin">Principio: Correspondencia rol-affordance; la inmutabilidad se comunica quitando, no explicando.</p>
+</div>
+</div>
+</div>
+<div class="row" id="6.2-cuadratura-agregacion"><h3 class="rowtitle">6.2 · Cuadratura de agregación</h3><div class="wf"><img src="04-auditor/6.2-cuadratura-agregacion.svg" alt="Wireframe 6.2"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de cuadratura que verifica el requisito DAT-16: la suma de los sub-medidores (locatarios) debe coincidir con el medidor general (remarcador) dentro de una tolerancia configurable (±2% por defecto). Muestra la reconciliación con desglose por zona/piso, el análisis histórico de las desviaciones y una exportación firmada con hash SHA-256 para cerrar la evidencia.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Tabla de reconciliación</b></td><td>Por zona/piso: remarcador general [kWh], suma de sub-medidores [kWh], diferencia [kWh] y [%], y bandera «dentro de tolerancia» (sí/no) contra el umbral configurable (ej. ±2%).</td><td class="req">DAT-16</td></tr>
+<tr><td><b>Análisis de desviaciones</b></td><td>Gráfico de barras con la diferencia mensual de los últimos 12 meses, resaltando los meses fuera de tolerancia, junto a una tabla de esos meses con enlace directo a los datos crudos del período.</td><td class="req">DAT-16, DAT-08</td></tr>
+<tr><td><b>Exportación firmada</b></td><td>Descarga de la reconciliación con metadatos (usuario, fecha de consulta) y hash SHA-256 de integridad, para adjuntar como evidencia verificable.</td><td class="req">DAT-12, DAT-07, CYB-10</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Diferencia expresada en kWh y en % lado a lado</p><p>Cada fila muestra la brecha en unidad absoluta y relativa a la vez, porque la tolerancia se define en porcentaje pero el descuadre se investiga en energía; ofrecer ambas evita que el auditor tenga que calcular a mano y le deja cotejar directamente la diferencia contra el umbral del que depende el veredicto.</p>
+<p class="prin">Principio: Datos en la unidad de la decisión; eliminar cálculo mental del flujo de verificación.</p>
+</div>
+<div class="ux"><p class="uxc">Columna «dentro de tolerancia» con veredicto explícito</p><p>La última columna resuelve la pregunta central de la pantalla —cuadra o no cuadra— con un sí/no y color, en vez de dejar que el auditor lo deduzca de la cifra. Colocar el juicio como dato explícito y no implícito acelera el barrido de decenas de zonas y hace autoevidente dónde mirar.</p>
+<p class="prin">Principio: Hacer explícito el estado del sistema; reducir la carga de inferencia.</p>
+</div>
+<div class="ux"><p class="uxc">Enlace de cada mes fuera de tolerancia a sus datos crudos</p><p>Los meses descuadrados no terminan en una alerta: cada uno enlaza a los datos crudos que lo originaron, para que el auditor recorra la cadena descuadre → período → lectura sin reconstruir la ruta manualmente. La evidencia queda a un clic del hallazgo.</p>
+<p class="prin">Principio: Trazabilidad accionable; el hallazgo y su prueba conectados.</p>
+</div>
+<div class="ux"><p class="uxc">Hash SHA-256 mostrado antes de descargar</p><p>El hash de integridad se exhibe en pantalla junto a los metadatos, no solo dentro del archivo, para que el auditor pueda registrar el sello en su bitácora y verificar después que el documento que presenta es exactamente el que consultó. La integridad es comprobable a simple vista.</p>
+<p class="prin">Principio: Verificabilidad de la evidencia; el sello es visible, no está enterrado.</p>
+</div>
+<div class="ux"><p class="uxc">Exportación firmada como cierre del recorrido</p><p>El bloque de descarga se ubica al pie, tras la reconciliación y su análisis, porque materializa el resultado del trabajo: primero el auditor verifica, luego se lleva la prueba sellada. Situar la salida al final alinea la pantalla con la secuencia natural de la tarea de auditoría.</p>
+<p class="prin">Principio: Correspondencia con el flujo de trabajo real; la acción de cierre al término del recorrido.</p>
+</div>
+</div>
+</div>
+<div class="row" id="6.3-pista-auditoria"><h3 class="rowtitle">6.3 · Pista de auditoría</h3><div class="wf"><img src="04-auditor/6.3-pista-auditoria.svg" alt="Wireframe 6.3"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pista de auditoría inmutable que registra cada acción sobre el sistema con retención de 12 meses e integridad garantizada (CYB-10). Presenta un timeline en orden cronológico inverso —sin ningún control de edición o borrado— y un resumen de actividad con heatmap por día/hora y el ranking de los 10 usuarios más activos del período filtrado.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Timeline de eventos (inmutable)</b></td><td>Lista cronológica inversa: timestamp, usuario, acción, recurso afectado, valor anterior/posterior (para modificaciones), IP/sesión. No hay botones de edición ni borrado. Exportable completo a CSV.</td><td class="req">DAT-14, DAT-23, CYB-10</td></tr>
+<tr><td><b>Resumen de actividad</b></td><td>Heatmap de acciones por día y hora que revela patrones y picos de actividad, más el Top 10 de usuarios por número de acciones en el período filtrado.</td><td class="req">DAT-14, CYB-10</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Usuario</b></td><td>Selector de usuario del portafolio</td><td>Todos</td></tr>
+<tr><td><b>Tipo de acción</b></td><td>Consulta / Modificación / Exportación / Login / Todas</td><td>Todas</td></tr>
+<tr><td><b>Recurso afectado</b></td><td>Medidor / CNR / Configuración / Todas</td><td>Todas</td></tr>
+<tr><td><b>Rango de fechas</b></td><td>Date picker (hasta 12 meses de retención)</td><td>Últimos 30 días</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Timeline sin ningún control de edición ni borrado</p><p>El registro se presenta como una columna de eventos que solo se pueden leer: no existe un ícono de lápiz, papelera o menú contextual en ninguna fila. Esa ausencia es el mensaje —la pista es append-only— y le da al auditor la certeza de que lo que ve es lo que ocurrió, sin posibilidad de que alguien lo haya retocado desde la interfaz.</p>
+<p class="prin">Principio: La inmutabilidad se hace creíble eliminando toda affordance de escritura, no con un cartel.</p>
+</div>
+<div class="ux"><p class="uxc">Orden cronológico inverso por defecto</p><p>Lo más reciente encabeza la lista porque la pregunta habitual del auditor es «¿qué pasó último?» y porque investigar un incidente suele empezar por el presente y retroceder. Fijar ese orden evita reordenar en cada visita y da un punto de entrada estable.</p>
+<p class="prin">Principio: Valor por defecto alineado a la tarea dominante; consistencia del punto de entrada.</p>
+</div>
+<div class="ux"><p class="uxc">Valor anterior → posterior en la misma línea de modificación</p><p>Cuando la acción es una modificación, la fila muestra el antes y el después juntos (ej. 812 → 840 kWh); ver ambos estados sin abrir un detalle permite juzgar de un vistazo la magnitud y el sentido del cambio, que es justo lo que el auditor debe evaluar.</p>
+<p class="prin">Principio: Contexto completo en la unidad de lectura; el cambio se entiende sin navegación adicional.</p>
+</div>
+<div class="ux"><p class="uxc">Heatmap día × hora como lectura de patrones</p><p>El resumen usa una matriz de color porque el auditor busca lo anómalo —accesos de madrugada, ráfagas de exportación— y una cuadrícula de densidad delata esos patrones de forma pre-atenta, algo imposible de ver recorriendo miles de filas del timeline una por una.</p>
+<p class="prin">Principio: Codificación pre-atenta para detección de anomalías; la vista agregada complementa al registro lineal.</p>
+</div>
+<div class="ux"><p class="uxc">Exportar CSV completo y verificar integridad al pie del timeline</p><p>Las dos acciones —llevarse el registro y comprobar que no fue alterado— se colocan bajo el timeline, que es su objeto; separarlas del ranking evita que el auditor las confunda con acciones sobre el resumen y refuerza que operan sobre la pista íntegra.</p>
+<p class="prin">Principio: Proximidad entre acción y objeto; agrupación por afinidad funcional.</p>
+</div>
+</div>
+</div>
+<div class="row" id="6.4-trazabilidad-lineage"><h3 class="rowtitle">6.4 · Trazabilidad / lineage</h3><div class="wf"><img src="04-auditor/6.4-trazabilidad-lineage.svg" alt="Wireframe 6.4"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de trazabilidad que reconstruye el linaje de cada lectura y permite verificar que los datos no fueron manipulados manualmente (DAT-20). El panel superior describe la cadena de origen del valor mostrado según su tipo (real / estimado / CNR / backfill); debajo, una comparación lado a lado enfrenta el valor crudo del medidor con el valor procesado y el que finalmente aparece en el dashboard, identificando cada transformación aplicada.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Panel de linaje por lectura</b></td><td>Valor mostrado en la plataforma y su tipo. Si es real: timestamp del medidor, gateway, hora de ingesta y transformaciones aplicadas. Si es estimado: método y período cubierto. Si es CNR: usuario, timestamp, valor original y justificación. Si es backfill: proceso, período y calidad.</td><td class="req">DAT-19, DAT-20, DAT-14</td></tr>
+<tr><td><b>Comparación raw vs. mostrado</b></td><td>Tabla lado a lado: valor crudo del medidor / valor procesado / valor en el dashboard, con cada transformación intermedia identificada explícitamente.</td><td class="req">DAT-20, DAT-19</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Comparación en dos tablas contiguas raw | procesado</p><p>El crudo y el mostrado se enfrentan en dos columnas pegadas, fila a fila y con el mismo timestamp, porque el auditor coteja valor contra valor: alinearlos horizontalmente convierte la pregunta «¿este número salió de aquel?» en un simple barrido lateral, sin saltar entre pantallas ni memorizar cifras.</p>
+<p class="prin">Principio: Comparación lado a lado; minimizar la distancia entre los datos que se contrastan.</p>
+</div>
+<div class="ux"><p class="uxc">Cada transformación nombrada en su propia celda</p><p>Entre el valor raw y el del dashboard se explicita qué operación se aplicó (factor de escala, conversión de unidad, offset), en lugar de mostrar solo el resultado. Hacer visible el paso intermedio es lo que permite verificar que la diferencia es una regla legítima y no una manipulación silenciosa.</p>
+<p class="prin">Principio: Transparencia del proceso; toda transformación es auditable, ninguna es una caja negra.</p>
+</div>
+<div class="ux"><p class="uxc">Panel de linaje adaptado al tipo de dato</p><p>La cadena que se muestra cambia según el valor sea real, estimado, CNR o backfill, porque cada origen exige comprobar cosas distintas —una estimación pide su método; un CNR pide quién y por qué lo ingresó—. Mostrar solo los campos pertinentes evita ruido y dirige la verificación a lo que realmente importa en cada caso.</p>
+<p class="prin">Principio: Revelación contextual; el contenido se ajusta al objeto que se audita.</p>
+</div>
+<div class="ux"><p class="uxc">CNR con valor original y justificación siempre a la vista</p><p>Cuando la lectura es un dato manual (CNR), el panel expone el valor original, el usuario y la justificación registrada, no solo el valor final. Conservar el rastro completo del dato intervenido es la esencia de la trazabilidad: el auditor ve qué había antes de la mano humana.</p>
+<p class="prin">Principio: Preservación del rastro de intervención; nada se sobrescribe sin dejar huella.</p>
+</div>
+<div class="ux"><p class="uxc">Toda la vista en solo lectura</p><p>Ni el panel de linaje ni las tablas de comparación ofrecen editar un valor o una transformación: el auditor reconstruye y verifica, pero no toca. La consistencia de esa restricción en todas las pantallas del perfil sostiene la confianza en que la evidencia observada es fiel al sistema.</p>
+<p class="prin">Principio: Consistencia del modelo de solo lectura entre pantallas; confianza por restricción uniforme.</p>
+</div>
+</div>
+</div>
+<div class="row" id="6.5-datos-crudos"><h3 class="rowtitle">6.5 · Datos crudos (raw)</h3><div class="wf"><img src="04-auditor/6.5-datos-crudos.svg" alt="Wireframe 6.5"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Acceso a los datos crudos sin transformar, en cumplimiento de que PASA es dueño de la data y puede extraerla totalmente sin costo adicional (DAT-07). Muestra una vista previa de las primeras 100 filas y permite exportar en Parquet, CSV o JSON con metadatos y hash SHA-256 en el header. Un aviso permanente reitera la restricción DAT-30 sobre el uso de los datos para entrenar modelos de ML fuera de PASA.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Vista previa de datos raw</b></td><td>Tabla con las primeras 100 filas: timestamp UTC, valor raw, unidad, flag de calidad (real/estimado/CNR) y flag de anomalía si aplica.</td><td class="req">DAT-07, DAT-06, DAT-04</td></tr>
+<tr><td><b>Exportación</b></td><td>Formatos Parquet / CSV / JSON. Los archivos incluyen metadatos en el header: usuario, fecha de exportación, medidor(es), período y hash SHA-256. Retención de exports disponibles: 30 días.</td><td class="req">DAT-12, DAT-07, CYB-10</td></tr>
+<tr><td><b>Restricción DAT-30</b></td><td>Los datos exportados no pueden usarse para entrenar modelos de ML fuera de PASA: restricción contractual y técnica de entrenamiento con datos de PASA.</td><td class="req">DAT-30</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Vista previa antes de exportar</p><p>Se muestran las primeras 100 filas del crudo en pantalla para que el auditor confirme estructura, unidad y flags antes de descargar un dataset potencialmente enorme; previsualizar evita gastar tiempo y espacio en una extracción que resultó ser el medidor o el período equivocado.</p>
+<p class="prin">Principio: Prevención de errores antes de una acción costosa; confirmación por muestra.</p>
+</div>
+<div class="ux"><p class="uxc">Timestamp en UTC y flags declarados en la propia tabla</p><p>El crudo se presenta con la hora en UTC y los flags de calidad y anomalía como columnas, sin normalizar a la zona local ni ocultar los marcadores; para auditar hay que ver el dato tal cual llegó, incluidas sus banderas, no una versión ya interpretada por la plataforma.</p>
+<p class="prin">Principio: Fidelidad al dato de origen; no maquillar lo que se somete a verificación.</p>
+</div>
+<div class="ux"><p class="uxc">Tres formatos con hash embebido en el header</p><p>Parquet, CSV y JSON se ofrecen juntos porque el auditor los lleva a herramientas distintas, y cada archivo incrusta en su encabezado los metadatos y el hash SHA-256; así la prueba de integridad viaja con el dato y puede recomprobarse fuera de la plataforma en cualquier momento.</p>
+<p class="prin">Principio: La evidencia es autocontenida y verificable de forma independiente.</p>
+</div>
+<div class="ux"><p class="uxc">Aviso DAT-30 fijo junto al bloque de exportación</p><p>La restricción de no entrenar ML fuera de PASA se ancla al lado del botón de descarga, no en unos términos legales lejanos, para que el límite de uso se lea en el momento y lugar exactos en que el auditor está a punto de llevarse los datos. La regla acompaña a la acción que la activa.</p>
+<p class="prin">Principio: Ayuda en contexto; la advertencia vive donde ocurre la acción que regula.</p>
+</div>
+<div class="ux"><p class="uxc">Retención de exports de 30 días indicada explícitamente</p><p>Se declara que los archivos generados están disponibles 30 días para que el auditor planifique su descarga y no asuma un repositorio permanente; hacer visible la caducidad fija una expectativa correcta sobre la persistencia de la extracción.</p>
+<p class="prin">Principio: Visibilidad de las restricciones del sistema; expectativas explícitas sobre el ciclo de vida del dato.</p>
+</div>
+</div>
+</div>
+<div class="row" id="6.6-exportar-evidencia"><h3 class="rowtitle">6.6 · Exportar evidencia</h3><div class="wf"><img src="04-auditor/6.6-exportar-evidencia.svg" alt="Wireframe 6.6"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pantalla de cierre del flujo del auditor: arma paquetes de evidencia firmados que consolidan el material verificado en las demás pantallas. Permite elegir el contenido, los malls y el período, genera un ZIP firmado (PDF + CSV) con sello de tiempo del servidor, hash SHA-256 y firma de la plataforma, y conserva un historial de las evidencias exportadas con enlace de descarga válido por 90 días.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Configurador de paquete de evidencia</b></td><td>Contenido a incluir: datos de consumo, cuadratura, pista de auditoría, scorecard de calidad y linaje de lecturas seleccionadas. Mall(es) y período. Formato: PDF + CSV empaquetados en un ZIP firmado.</td><td class="req">DAT-07, DAT-12</td></tr>
+<tr><td><b>Firma digital del paquete</b></td><td>Sello de tiempo del servidor, hash SHA-256 del contenido y firma de la plataforma. El auditor puede verificar la integridad con una herramienta pública de verificación de hash.</td><td class="req">DAT-12, CYB-10, DAT-07</td></tr>
+<tr><td><b>Historial de evidencias exportadas</b></td><td>Fecha, usuario, contenido, período cubierto y link de descarga (válido 90 días), con el hash del paquete a la vista.</td><td class="req">DAT-12, DAT-14</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Configurador a la izquierda, firma y salida a la derecha</p><p>La pantalla lee de izquierda a derecha el flujo «armo el paquete → veo su sello → lo genero»: el formulario en la columna izquierda es el primer paso y la firma, vista previa y botones a la derecha son el resultado. El auditor avanza sin retroceder ni buscar dónde se cierra la tarea.</p>
+<p class="prin">Principio: Flujo secuencial alineado al recorrido de lectura; un único camino hacia el cierre.</p>
+</div>
+<div class="ux"><p class="uxc">Contenido como multi-selección que reúne el trabajo previo</p><p>El paquete se compone marcando qué evidencias incluir (cuadratura, pista, calidad, linaje), de modo que consolida en un solo entregable lo verificado pieza por pieza en las pantallas anteriores. Empaquetar desde una lista evita rehacer o re-exportar cada fuente por separado.</p>
+<p class="prin">Principio: Agregación del trabajo previo en un solo artefacto; reducción de esfuerzo repetido.</p>
+</div>
+<div class="ux"><p class="uxc">Firma digital detallada antes del botón Generar</p><p>El panel de firma enumera los tres componentes del sello —tiempo de servidor, hash SHA-256 y firma de la plataforma— y anuncia que es verificable con herramienta pública, todo antes de generar; así el auditor sabe exactamente qué garantías tendrá el ZIP y no descubre el mecanismo de integridad recién al abrir el archivo.</p>
+<p class="prin">Principio: Visibilidad anticipada de las garantías; el usuario conoce el resultado antes de comprometerse.</p>
+</div>
+<div class="ux"><p class="uxc">Vista previa de la estructura del ZIP</p><p>Antes de emitir se muestra la portada, el índice y la estructura de carpetas del paquete para que el auditor confirme que incluye lo que debe presentar; previsualizar el entregable evita generar y firmar un ZIP incompleto que luego habría que rehacer y re-firmar.</p>
+<p class="prin">Principio: Confirmación previa a una acción irreversible; el sello se aplica una sola vez sobre lo correcto.</p>
+</div>
+<div class="ux"><p class="uxc">Historial con el hash de cada paquete y caducidad de 90 días</p><p>El registro de evidencias muestra el hash junto a cada descarga y advierte que el enlace vive 90 días; conservar el sello permite al auditor demostrar más tarde qué entregó exactamente, y explicitar la caducidad lo impulsa a resguardar el archivo antes de que expire.</p>
+<p class="prin">Principio: El sistema recuerda la evidencia entregada; expectativa clara sobre la vigencia del enlace.</p>
+</div>
+<div class="ux"><p class="uxc">«Generar paquete firmado» como CTA primaria</p><p>El botón que emite el paquete se distingue en acento sólido frente a «Verificar hash», secundario, porque es el acto que cierra toda la auditoría; darle el mayor peso visual elimina cualquier duda sobre cuál es el paso final de la pantalla.</p>
+<p class="prin">Principio: Jerarquía de acciones primaria/secundaria; ley de Fitts sobre el objetivo que cierra la tarea.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="group" id="super-admin"><h2>Perfil Súper-admin</h2>
+<p class="gmeta">Federado + MFA + JIT · máx. privilegio</p>
+<div class="row" id="7.1-tenants-malls"><h3 class="rowtitle">7.1 · Tenants y malls</h3><div class="wf"><img src="05-super-admin/7.1-tenants-malls.svg" alt="Wireframe 7.1"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Administración de los tenants (centros comerciales) sobre el modelo multitenant con aislamiento lógico por mall y consolidación por país y región (ARQ-05). Permite dar de alta nuevos malls sin consultoría específica (FIN-02/FIN-03) y editar la configuración base. Las acciones de creación, activación y desactivación no se ejecutan de forma directa: abren un flujo de aprobación documentado con PASA (CYB-15) y quedan auditadas (DAT-14).</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Lista de tenants</b></td><td>Tenant ID, nombre del mall, país, estado, nº de medidores activos, nº de usuarios activos, fecha de alta y versión de contrato. Filtros por país, estado y con alertas activas.</td><td class="req">ARQ-05, FIN-02, FIN-03</td></tr>
+<tr><td><b>Detalle de tenant</b></td><td>Configuración base: nombre, país, moneda, zona horaria, umbrales de alerta e integración de facturación activa. Estadísticas de uso: usuarios activos en 30 días, nº de consultas API y volumen de datos almacenados. Historial de cambios de configuración.</td><td class="req">ARQ-05, DAT-19, FIN-04</td></tr>
+<tr><td><b>Acciones de tenant</b></td><td>Crear / Activar / Desactivar — requiere aprobación de PASA mediante flujo documentado. Editar la configuración base con auditoría de cada cambio.</td><td class="req">ARQ-05, CYB-15, DAT-14</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Lista como columna dominante y detalle a la derecha</p><p>El súper-administrador entra a esta pantalla para localizar un tenant entre decenas, no para leer uno solo; por eso la tabla ocupa dos tercios del ancho y actúa como único punto de entrada, mientras el detalle se despliega al seleccionar una fila. Así el operador confirma sobre qué mall va a actuar antes de tener a la vista cualquier botón que lo modifique.</p>
+<p class="prin">Principio: Jerarquía visual por tarea dominante; seleccionar el objeto antes que ofrecer la acción.</p>
+</div>
+<div class="ux"><p class="uxc">Botones Crear/Activar/Desactivar separados del detalle</p><p>Las acciones que cambian el estado de un tenant se agrupan en una barra propia, visualmente aparte de los datos de solo lectura, para que el máximo privilegio de este perfil no se traduzca en un clic accidental sobre un control mezclado con la información. Separar &#x27;mirar&#x27; de &#x27;actuar&#x27; reduce el error en operaciones de alto impacto.</p>
+<p class="prin">Principio: Prevención de errores; separación entre visualización y acción destructiva.</p>
+</div>
+<div class="ux"><p class="uxc">Nota de gate PASA siempre visible</p><p>Aunque el perfil tiene permiso técnico para crear o desactivar, la nota fija explica que la acción abre un flujo de aprobación y no se ejecuta de inmediato. Hacer explícito el gate en la propia pantalla evita que el administrador espere un efecto instantáneo y sepa que falta la confirmación de un rol PASA.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema; ajustar el modelo mental al flujo real.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de configuración como bloque permanente</p><p>El historial de cambios no se esconde en un modal: se muestra siempre bajo la lista para que cualquier edición sea trazable de un vistazo. Dado que todo lo que hace este perfil es auditado por PASA, exponer el registro en pantalla refuerza la responsabilidad de cada cambio.</p>
+<p class="prin">Principio: Trazabilidad visible; el registro acompaña a la acción.</p>
+</div>
+<div class="ux"><p class="uxc">Estadísticas de uso junto al detalle del tenant</p><p>Usuarios activos, consultas API y volumen almacenado se colocan pegados al detalle porque el administrador los consulta al decidir un cambio de contrato o una desactivación; tenerlos contiguos evita saltar entre pantallas para reunir el contexto de la decisión.</p>
+<p class="prin">Principio: Proximidad de la información que soporta una misma decisión.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.2-config-releases"><h3 class="rowtitle">7.2 · Config y releases</h3><div class="wf"><img src="05-super-admin/7.2-config-releases.svg" alt="Wireframe 7.2"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Pipeline de gestión de cambios y despliegue basado en infraestructura como código (IaC) versionada y documentada (ARQ-16). El proceso es formal: ninguna modificación pasa a producción sin pruebas de seguridad en QA y aprobación previa (CYB-15), sobre ambientes QA/sandbox y Producción independientes (ARQ-06). El botón de solicitud de despliegue abre un flujo de aprobación que exige la confirmación de al menos un rol PASA configurado.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Pipeline de releases</b></td><td>Lista de releases con versión, descripción de cambios y estado (en desarrollo / QA / aprobación / producción). Para cada release: diff de cambios, resultados de tests en QA y aprobaciones requeridas vs. obtenidas.</td><td class="req">CYB-15, ARQ-16, ARQ-06</td></tr>
+<tr><td><b>Control de despliegue</b></td><td>Botón &#x27;Solicitar despliegue a producción&#x27; que abre el flujo de aprobación (requiere aprobación de al menos un rol PASA). Estado del despliegue con etapas, logs en tiempo real y rollback disponible.</td><td class="req">CYB-15, ARQ-06, ARQ-16</td></tr>
+<tr><td><b>Configuración como código</b></td><td>Diff viewer de los cambios en IaC entre versiones. Todos los cambios versionados en git, con link al commit correspondiente.</td><td class="req">ARQ-16, CYB-15</td></tr>
+<tr><td><b>Historial de despliegues</b></td><td>Versión, fecha, responsable, resultado (éxito / rollback) y link a logs.</td><td class="req">ARQ-16, DAT-14, CYB-10</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Pipeline con estado codificado y etapas ordenadas</p><p>Cada release muestra su fase (desarrollo/QA/aprobación/producción) con un punto de estado en la primera columna, de modo que el administrador reconstruye en un barrido en qué punto del proceso está cada cambio. Ver la etapa evita que alguien intente promover algo que aún no pasó QA.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema; feedback de progreso por etapas.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Solicitar despliegue a producción&#x27; como CTA de acento con gate explícito</p><p>El botón primario no dice &#x27;Desplegar&#x27; sino &#x27;Solicitar despliegue&#x27;, y su meta advierte que exige aprobación de un rol PASA. El lenguaje del propio control comunica que la acción no es inmediata sino sometida a un gate, alineando la expectativa con el proceso formal de gestión de cambios.</p>
+<p class="prin">Principio: Correspondencia entre etiqueta y consecuencia real; prevención de error en acción crítica.</p>
+</div>
+<div class="ux"><p class="uxc">Diff de IaC visible antes de aprobar</p><p>El visor de diferencias con las líneas añadidas y eliminadas y el link al commit está en pantalla para que quien aprueba lea exactamente qué cambia en la infraestructura, sin salir a la herramienta de git. Mostrar el cambio concreto convierte la aprobación en una decisión informada, no en un clic ciego.</p>
+<p class="prin">Principio: Reconocer antes que recordar; revelar el contenido de la decisión.</p>
+</div>
+<div class="ux"><p class="uxc">Rollback como acción siempre presente</p><p>El control de rollback acompaña permanentemente al de despliegue, no aparece solo cuando algo falla, para que ante un incidente en producción la vía de reversión sea inmediata y no haya que buscarla bajo presión. Una salida de emergencia visible reduce el tiempo de recuperación.</p>
+<p class="prin">Principio: Salidas claramente marcadas; control y libertad del usuario.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de despliegues como registro auditado a la derecha</p><p>El historial con resultado (éxito/rollback) y responsable queda fijo junto al control, porque en este perfil todo despliegue es auditado por PASA y el operador necesita ver el precedente de la versión antes de repetir una operación. El registro contiguo sostiene la rendición de cuentas.</p>
+<p class="prin">Principio: Trazabilidad en contexto; el pasado informa la próxima acción.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.3-usuarios-roles"><h3 class="rowtitle">7.3 · Usuarios y roles</h3><div class="wf"><img src="05-super-admin/7.3-usuarios-roles.svg" alt="Wireframe 7.3"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión de identidades y roles bajo RBAC con mínimo privilegio y auditoría trimestral de permisos (CYB-03), integrada con el off-boarding automático desde Azure AD (ARQ-10). Además de la lista y el detalle por usuario, incorpora un panel de revisión de permisos sin uso en más de 90 días que habilita la revocación masiva, y expone los permisos efectivos y el historial de accesos y cambios de rol de cada cuenta.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Lista de usuarios</b></td><td>Nombre, email, tenant/mall asignado, perfil, estado (activo/inactivo/bloqueado), último acceso y MFA activo. Filtros por tenant, perfil, estado y sin acceso en más de 90 días.</td><td class="req">CYB-03, ARQ-10, CYB-02</td></tr>
+<tr><td><b>Detalle de usuario</b></td><td>Permisos efectivos (recursos y acciones permitidas). Historial de accesos: últimas 30 sesiones. Historial de cambios de rol.</td><td class="req">CYB-03, DAT-14, CYB-21</td></tr>
+<tr><td><b>Gestión de usuarios</b></td><td>Asignar/cambiar perfil con justificación. Revocar acceso (off-boarding). Revisión periódica de permisos: panel de &#x27;permisos sin uso en más de 90 días&#x27; con revocación masiva.</td><td class="req">CYB-03, ARQ-10, DAT-14</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Columna de MFA y estado en la lista principal</p><p>El estado de la cuenta y si tiene MFA activo se muestran como columnas fijas, no ocultas en el detalle, porque la primera pregunta de seguridad al revisar el padrón es qué cuentas están activas sin doble factor. Exponerlo en la fila permite auditar el cumplimiento de CYB-02 sin abrir cada usuario.</p>
+<p class="prin">Principio: Información crítica al primer nivel; escaneabilidad de la condición de riesgo.</p>
+</div>
+<div class="ux"><p class="uxc">Panel dedicado de permisos sin uso &gt; 90 días</p><p>El mínimo privilegio se opera desde un bloque propio que aísla los permisos ociosos y ofrece revocarlos en bloque, convirtiendo la auditoría trimestral en una tarea guiada en vez de una búsqueda manual usuario por usuario. Reunir lo revocable en un solo lugar reduce el esfuerzo de mantener el principio de mínimo privilegio.</p>
+<p class="prin">Principio: Agrupar por intención de tarea; reducir la carga de la revisión periódica.</p>
+</div>
+<div class="ux"><p class="uxc">Etiqueta explícita de acción destructiva en la revocación masiva</p><p>El bloque de revocación advierte en su meta que es una acción destructiva y auditada; antes de aplicar sobre múltiples cuentas debe mediar confirmación. Nombrar el riesgo junto al control frena la ejecución impulsiva de una operación que puede dejar sin acceso a varios usuarios a la vez.</p>
+<p class="prin">Principio: Prevención de errores; confirmación proporcional al alcance del daño.</p>
+</div>
+<div class="ux"><p class="uxc">Cambio de perfil que exige justificación</p><p>Asignar o cambiar un rol no es un desplegable suelto: el flujo pide una justificación que quedará en la auditoría. Obligar a explicar el porqué disuade cambios arbitrarios de privilegio y deja una razón trazable para la revisión de PASA.</p>
+<p class="prin">Principio: Fricción deliberada en acciones sensibles; responsabilidad rastreable.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de accesos y cambios de rol como línea de tiempo</p><p>Las últimas sesiones y los cambios de rol se presentan en orden cronológico junto al detalle, de modo que al investigar una cuenta el administrador ve la secuencia de eventos (logins, fallos de MFA, cambios de permiso) sin reconstruirla. La narrativa temporal facilita detectar comportamientos anómalos.</p>
+<p class="prin">Principio: Reconocimiento sobre memoria; la secuencia temporal cuenta la historia de la cuenta.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.4-observabilidad"><h3 class="rowtitle">7.4 · Observabilidad</h3><div class="wf"><img src="05-super-admin/7.4-observabilidad.svg" alt="Wireframe 7.4"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Panel de observabilidad de la plataforma con health-check compatible con herramientas de monitoreo externas (Splunk, CloudWatch, Datadog) según ARQ-08, envío de logs de errores al sistema centralizado de PASA (ARQ-21) y dashboard de uso de APIs y tasas de error (DAT-09). Combina un semáforo de salud por componente, métricas de ingestión de datos y gráficos de tendencia de latencia, errores y throughput.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Health dashboard</b></td><td>Uptime (30 días), latencia media de API [ms], error rate [%] y tiempo de respuesta p95. Semáforo por componente: API / BD / cola de mensajes / ingestión / backfill.</td><td class="req">ARQ-08, ARQ-21, FIN-06</td></tr>
+<tr><td><b>Métricas de ingestión de datos</b></td><td>% de medidores reportando en el último ciclo, mensajes procesados/hora, mensajes en cola y errores de parsing.</td><td class="req">DAT-09, DAT-27, ARQ-08</td></tr>
+<tr><td><b>Gráficos de tendencia</b></td><td>Latencia de API por endpoint (líneas), tasa de errores por tipo 4xx/5xx (barras) y throughput de mensajes (área). Ventanas de últimas 24h / 7 días.</td><td class="req">DAT-09, ARQ-08, ARQ-21</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Fila de KPIs de salud como cabecera de lectura</p><p>Uptime, latencia, error rate y p95 se alinean en una sola fila superior porque son la respuesta inmediata a &#x27;¿está sana la plataforma ahora?&#x27;. El administrador los lee como un tablero de instrumentos antes de descender al detalle, y cada uno referencia su umbral contractual para saber si el número es aceptable.</p>
+<p class="prin">Principio: Jerarquía en F; la conclusión de salud antes que la evidencia gráfica.</p>
+</div>
+<div class="ux"><p class="uxc">Semáforo por componente en tabla de estado</p><p>API, base de datos, cola, ingestión y backfill se listan con su punto de estado y última verificación, de modo que ante una degradación el operador localiza el componente culpable de un vistazo en lugar de correlacionar gráficos. Descomponer la salud por pieza acelera el diagnóstico de causa.</p>
+<p class="prin">Principio: Codificación pre-atenta del color; localización rápida del punto de falla.</p>
+</div>
+<div class="ux"><p class="uxc">Métricas de ingestión separadas de la salud de aplicación</p><p>El flujo de datos (medidores reportando, mensajes en cola, errores de parsing) tiene su propio panel junto al health, porque en un EMS un problema de datos no siempre coincide con uno de infraestructura. Distinguir &#x27;la app responde&#x27; de &#x27;los datos llegan&#x27; evita que el administrador dé por sana la plataforma cuando la ingestión está detenida.</p>
+<p class="prin">Principio: Separación de dominios de problema; evitar conclusiones falsas por agregación.</p>
+</div>
+<div class="ux"><p class="uxc">Tres gráficos de tendencia contiguos y comparables</p><p>Latencia, errores y throughput se colocan lado a lado con el mismo eje temporal para que el administrador correlacione visualmente un pico de errores con una caída de throughput sin cambiar de vista. La alineación temporal convierte tres series en una sola lectura de causa-efecto.</p>
+<p class="prin">Principio: Vistas coordinadas en un eje común; comparación por adyacencia.</p>
+</div>
+<div class="ux"><p class="uxc">Compatibilidad con monitoreo externo declarada en subtítulo</p><p>El encabezado recuerda que estas métricas se exponen a Splunk/Datadog y se envían a los logs centralizados de PASA, para que el administrador entienda que la pantalla es un espejo del monitoreo formal y no una fuente aislada. Situar la herramienta en su ecosistema evita duplicar la vigilancia.</p>
+<p class="prin">Principio: Consistencia con el sistema externo; transparencia del origen del dato.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.5-integraciones"><h3 class="rowtitle">7.5 · Integraciones</h3><div class="wf"><img src="05-super-admin/7.5-integraciones.svg" alt="Wireframe 7.5"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Consola de monitoreo y administración de las integraciones de la plataforma, con estado de salud y latencia de cada conexión (INT-13) y observabilidad de API (DAT-09). Permite ver el detalle técnico de cada integración con credenciales enmascaradas, gestionar su activación y forzar re-sincronización, y consultar el contrato de interfaz (versión de API y esquema) con backward compatibility por 6 meses (INT-06) sin exponer el modelo interno.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Lista de integraciones activas</b></td><td>Nombre, tipo (API REST / Modbus / DLMS / webhook / SFTP), tenant, estado (activo/degradado/error), último heartbeat y tasa de éxito de 7 días.</td><td class="req">INT-13, DAT-09, INT-06</td></tr>
+<tr><td><b>Detalle de integración</b></td><td>Configuración técnica (endpoint, protocolo, credenciales enmascaradas). Métricas: tasa de éxito, errores, latencia y volumen de 24h. Log de los últimos 100 eventos.</td><td class="req">INT-13, DAT-09, INT-06</td></tr>
+<tr><td><b>Gestión de integraciones</b></td><td>Activar/Desactivar con registro de motivo. Forzar re-sincronización. Ver el contrato de interfaz (versión de API, esquema) sin exponer el modelo interno.</td><td class="req">INT-06, INT-07, DAT-25</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Estado y tasa de éxito 7d en la lista</p><p>Cada integración muestra su estado y su tasa de éxito de la última semana como columnas, de modo que el administrador prioriza las conexiones degradadas o con error sin abrirlas una a una. Ordenar la atención hacia lo que falla es el propósito de una consola de salud de interfaces.</p>
+<p class="prin">Principio: Priorización por severidad; lo problemático se hace evidente primero.</p>
+</div>
+<div class="ux"><p class="uxc">Credenciales enmascaradas en el detalle</p><p>Aunque este perfil tiene máximo privilegio, el detalle técnico muestra las credenciales ofuscadas por defecto; verlas en claro sería una acción aparte y auditada. Ocultar el secreto salvo solicitud explícita reduce la exposición accidental en pantalla compartida o captura.</p>
+<p class="prin">Principio: Minimización de exposición de secretos; privilegio no implica revelación por defecto.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Forzar re-sincronización&#x27; junto al log de eventos</p><p>La acción de re-sincronizar se ubica cerca del log de los últimos 100 eventos porque el administrador la ejecuta justo después de leer un error y quiere ver el efecto inmediato en el mismo lugar. Emparejar la acción con su evidencia cierra el ciclo diagnóstico-acción-verificación.</p>
+<p class="prin">Principio: Proximidad acción-feedback; cerrar el bucle de control.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Ver contrato&#x27; sin exponer el modelo interno</p><p>El botón de contrato de interfaz muestra la versión de API y el esquema público, pero no la implementación interna; la etiqueta lo deja claro para que el administrador comparta el contrato con PASA sin filtrar detalles propietarios. Delimitar qué se expone protege la frontera técnica del proveedor.</p>
+<p class="prin">Principio: Correspondencia entre affordance y alcance permitido; protección de la frontera de datos.</p>
+</div>
+<div class="ux"><p class="uxc">Métricas como gráfico con umbral de servicio</p><p>La tasa de éxito y latencia de 24h se grafican con una línea de umbral para que el administrador vea de un vistazo si la integración opera dentro de lo comprometido, en lugar de interpretar cifras sueltas. El umbral dibujado transforma el dato en juicio inmediato de cumplimiento.</p>
+<p class="prin">Principio: Referencia visible para la interpretación; el umbral da significado al valor.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.6-seguridad-pam"><h3 class="rowtitle">7.6 · Seguridad y PAM</h3><div class="wf"><img src="05-super-admin/7.6-seguridad-pam.svg" alt="Wireframe 7.6"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Panel único de postura de seguridad y gestión de accesos privilegiados del proveedor, agrupado en tres bandas de afinidad para reducir la carga cognitiva de una pantalla muy densa: (1) Estado de seguridad — vulnerabilidades, certificados TLS, cifrado en reposo, WAF/DDoS/IDS-IPS, hardening CIS, inventario SBOM y EDR; (2) PAM — cuentas privilegiadas y bóveda de credenciales JIT; (3) Incidentes y continuidad — incidentes de seguridad con notificación de brechas en menos de 24h, BCP/DRP, integridad de backups, DAST, Pentest anual y borrado criptográfico. Las acciones críticas y destructivas se resaltan y quedan auditadas.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Resumen de vulnerabilidades</b></td><td>Vulnerabilidades abiertas por severidad (crítica/alta/media/baja), parches pendientes con fecha límite (críticas ≤ 30 días), fecha del último scan y % de componentes con parche vigente.</td><td class="req">CYB-13, CYB-18</td></tr>
+<tr><td><b>Certificados TLS</b></td><td>Tabla de certificados por servicio: dominio, fecha de expiración, días restantes y estado (válido/por vencer/vencido). Alerta automática a 30 y 7 días del vencimiento.</td><td class="req">CYB-04, INT-04</td></tr>
+<tr><td><b>Estado de cifrado en reposo</b></td><td>Indicador por componente (base de datos, backups, almacenamiento de archivos): cifrado AES-256 activo (sí/no), última verificación y responsable. Alerta si algún componente pierde el cifrado.</td><td class="req">CYB-05</td></tr>
+<tr><td><b>Estado de WAF / DDoS / IDS-IPS</b></td><td>Semáforo por servicio de protección perimetral: WAF activo, protección DDoS activa, IDS/IPS activo y monitoreado 24x7. Última alerta detectada por cada sistema.</td><td class="req">CYB-09, CYB-22</td></tr>
+<tr><td><b>Hardening — cumplimiento CIS Benchmarks</b></td><td>% de cumplimiento del benchmark CIS por componente (servidor, BD). Última auditoría de hardening. Hallazgos abiertos con criticidad y ETA de remediación.</td><td class="req">CYB-17</td></tr>
+<tr><td><b>Inventario de componentes HW/SW (SBOM)</b></td><td>Tabla de todos los componentes tecnológicos: nombre, versión, fabricante, fecha de EOL y estado de soporte. Exportable a PASA. Alerta si algún componente entra en EOL en los próximos 90 días.</td><td class="req">CYB-19, ARQ-20</td></tr>
+<tr><td><b>EDR y antivirus</b></td><td>Estado de cobertura de EDR por componente: activo/inactivo, fecha de última actualización de firmas y última detección. Alerta si algún componente lleva más de 24h sin actualización.</td><td class="req">CYB-14</td></tr>
+<tr><td><b>Lista de cuentas privilegiadas (PAM)</b></td><td>Usuario, rol, fecha de última revisión, próxima revisión programada y estado (activo/suspendido/en revisión). Revisión mensual obligatoria con registro de justificación de uso.</td><td class="req">CYB-20, CYB-03, DAT-14</td></tr>
+<tr><td><b>Bóveda de credenciales JIT</b></td><td>Acceso just-in-time: el técnico solicita acceso, se aprueba por tiempo limitado y se graba la sesión completa. Historial de uso: usuario, recurso accedido, duración y acciones realizadas.</td><td class="req">CYB-20, DAT-14</td></tr>
+<tr><td><b>Lista de incidentes de seguridad</b></td><td>Incidentes abiertos: fecha de detección, tipo, severidad, estado y responsable. Botón &#x27;Notificar a PASA&#x27; que genera y envía el informe de brecha en formato estándar en menos de 24h desde la detección.</td><td class="req">CYB-16, PRI-02</td></tr>
+<tr><td><b>Estado del BCP / DRP</b></td><td>Última prueba realizada, resultado (exitoso/con observaciones), próxima prueba programada y link al documento de DRP vigente. Alerta si la prueba lleva más de 6 meses sin realizarse.</td><td class="req">CYB-11, DAT-13</td></tr>
+<tr><td><b>Integridad de backups</b></td><td>Registro de pruebas de integridad de backups (semestral mínimo): fecha, resultado, tamaño validado y hash de verificación. Alerta si el último backup validado tiene más de 6 meses.</td><td class="req">CYB-23, ARQ-11</td></tr>
+<tr><td><b>Escaneo DAST</b></td><td>Resultado del último ciclo de escaneo dinámico: fecha, interfaces escaneadas (Portal/API/Webhooks), hallazgos por severidad y estado de remediación. Historial de los últimos 12 ciclos.</td><td class="req">CYB-07</td></tr>
+<tr><td><b>Informe Pentest anual</b></td><td>Registro del último informe de Pentest/Ethical Hacking por tercero: fecha, empresa auditora, hallazgos críticos y estado de remediación. Alerta si el último Pentest tiene más de 12 meses.</td><td class="req">CYB-08</td></tr>
+<tr><td><b>Borrado criptográfico</b></td><td>Herramienta de borrado criptográfico al término del contrato: lista de activos a borrar, estado, hash de verificación post-borrado y acta generada.</td><td class="req">CYB-12, DAT-07</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tres bandas de afinidad en una grilla densa uniforme</p><p>Los quince sub-paneles se organizan en bandas horizontales — estado de seguridad, PAM y continuidad — con bloques de igual altura y ancho, de modo que el administrador escanea cada dominio como una unidad en vez de enfrentar una nube de indicadores. Agrupar por afinidad y estandarizar el tamaño convierte una pantalla saturada en algo recorrible.</p>
+<p class="prin">Principio: Agrupación por afinidad y ley de proximidad (Gestalt); reducción de carga cognitiva en alta densidad.</p>
+</div>
+<div class="ux"><p class="uxc">Semáforo homogéneo como lenguaje común de toda la pantalla</p><p>Cada panel expone su condición con el mismo código de estado, para que el ojo detecte el único bloque en rojo entre catorce en verde sin leer texto. En un tablero de seguridad con tantos frentes, un lenguaje visual único es lo que permite encontrar el problema en segundos.</p>
+<p class="prin">Principio: Consistencia de codificación; detección pre-atenta de la excepción.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Notificar a PASA&#x27; resaltado en el bloque de incidentes</p><p>La acción que dispara el informe de brecha en menos de 24h se destaca en el panel de incidentes con su plazo explícito, porque es la obligación contractual más sensible al tiempo de todo el perfil. Anclar la acción a su ventana de 24h evita que el operador subestime la urgencia regulatoria.</p>
+<p class="prin">Principio: Visibilidad de la acción crítica; el plazo forma parte del control.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Ejecutar borrado&#x27; marcado como destructivo e irreversible</p><p>El borrado criptográfico advierte en su meta que es una acción destructiva que genera un acta y no tiene retorno; su ejecución exige aprobación y confirmación. Rotular la irreversibilidad junto al botón es la última barrera contra un borrado accidental de datos al cierre de contrato.</p>
+<p class="prin">Principio: Prevención de errores catastróficos; confirmación explícita ante acción irreversible.</p>
+</div>
+<div class="ux"><p class="uxc">Alertas de caducidad temporal embebidas en cada panel</p><p>Certificados TLS, Pentest, BCP/DRP e integridad de backups muestran su cuenta regresiva o su umbral de antigüedad dentro del propio bloque, para que el administrador vea qué control está por vencer sin abrir cada módulo. Situar el vencimiento junto al estado transforma la vigilancia en una lectura pasiva.</p>
+<p class="prin">Principio: Visibilidad del estado del sistema; anticipación en vez de reacción.</p>
+</div>
+<div class="ux"><p class="uxc">Bóveda JIT y PAM contiguos como flujo de acceso privilegiado</p><p>La lista de cuentas privilegiadas y la bóveda de acceso just-in-time se colocan juntas porque describen el mismo ciclo: quién tiene privilegio permanente y cómo se concede el temporal con sesión grabada. Reunir ambos evita que el administrador razone el control de accesos privilegiados en dos lugares distintos.</p>
+<p class="prin">Principio: Continuidad del modelo mental; agrupar los pasos de un mismo proceso.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.7-replica-datos"><h3 class="rowtitle">7.7 · Réplica y datos</h3><div class="wf"><img src="05-super-admin/7.7-replica-datos.svg" alt="Wireframe 7.7"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión de la base de datos de réplica read-only en AWS con sincronización NRT (DAT-01) y de los contratos de datos versionados que PASA consume en sus procesos ETL (DAT-25). Incluye el estado y el lag de la réplica, el control de acceso por tenant/proceso, el monitor de cambios de esquema con el cálculo del aviso de 30 días de anticipación a PASA (DAT-13) y el catálogo de contratos con su política de compatibilidad hacia atrás (INT-06).</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Panel de estado de réplica</b></td><td>Estado de sincronización NRT (activa/degradada/detenida), lag actual [segundos], timestamp de la última réplica exitosa y volumen replicado en 24h. Alerta si el lag supera el umbral configurado.</td><td class="req">DAT-01, DAT-26</td></tr>
+<tr><td><b>Histograma de lag de réplica</b></td><td>Gráfico del lag en segundos durante las últimas 24h/7 días. Permite identificar degradaciones periódicas o picos de carga que afectan la sincronización.</td><td class="req">DAT-01, DAT-26</td></tr>
+<tr><td><b>Acceso a réplica por tenant</b></td><td>Tabla de credenciales de acceso a la réplica read-only por tenant/proceso ETL de PASA: usuario, permisos, última conexión y volumen consultado. Gestión de acceso con revocación individual.</td><td class="req">DAT-01, CYB-03, DAT-14</td></tr>
+<tr><td><b>Monitor de cambios de esquema</b></td><td>Detecta automáticamente cambios en la estructura de tablas de la réplica o la API. Lista los cambios pendientes de notificar a PASA con tabla/endpoint afectado, tipo de cambio, fecha de detección, fecha planificada de despliegue y estado de notificación (pendiente/enviada/confirmada).</td><td class="req">DAT-13, DAT-25</td></tr>
+<tr><td><b>Alerta de anticipación de 30 días</b></td><td>Para cada cambio de esquema detectado calcula si el despliegue planificado respeta el aviso de 30 días a PASA. Badge rojo si el plazo no se cumple. Botón &#x27;Notificar a PASA ahora&#x27; que genera el aviso formal.</td><td class="req">DAT-13</td></tr>
+<tr><td><b>Contratos de datos versionados</b></td><td>Catálogo de contratos activos: nombre de la integración (API/réplica/webhook/archivo), versión actual, versiones anteriores soportadas, esquema (campos, tipos, validaciones), política de compatibilidad hacia atrás y fecha de deprecación de versiones antiguas.</td><td class="req">DAT-25, INT-06</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Estado de réplica y lag emparejados con su histograma</p><p>El indicador de lag actual se coloca junto al histograma de su evolución para que el administrador distinga un pico puntual de una degradación sostenida en la misma mirada. Un número solo no dice si el problema es transitorio; la serie contigua le da esa lectura.</p>
+<p class="prin">Principio: Dato puntual junto a su tendencia; contexto para interpretar el valor.</p>
+</div>
+<div class="ux"><p class="uxc">Cálculo automático del plazo de 30 días con badge</p><p>El sistema no deja al administrador contar días: calcula si el despliegue de cada cambio de esquema respeta el aviso de 30 días a PASA y marca en rojo el que lo incumple. Automatizar el cómputo del plazo previene el error de notificar tarde una obligación contractual.</p>
+<p class="prin">Principio: Prevención de errores por cálculo manual; el sistema vigila el compromiso.</p>
+</div>
+<div class="ux"><p class="uxc">Botón &#x27;Notificar a PASA ahora&#x27; contiguo a la alerta</p><p>La acción de emitir el aviso formal se ubica junto al panel que detecta el incumplimiento del plazo, para que la respuesta al riesgo sea inmediata y en el mismo lugar donde se descubre. Acercar la solución al problema reduce la latencia entre detectar y actuar.</p>
+<p class="prin">Principio: Proximidad problema-acción; minimizar el costo de la respuesta correcta.</p>
+</div>
+<div class="ux"><p class="uxc">Acceso a la réplica con revocación individual auditada</p><p>La tabla de accesos por tenant/proceso ETL permite revocar credenciales una a una en lugar de en bloque, porque cortar el acceso ETL de PASA de forma masiva interrumpiría procesos legítimos. La granularidad de la revocación protege la operación del cliente mientras se mantiene el control.</p>
+<p class="prin">Principio: Control de grano fino en operaciones sensibles; evitar el daño colateral.</p>
+</div>
+<div class="ux"><p class="uxc">Contratos versionados como catálogo con deprecación visible</p><p>El catálogo muestra versión actual, versiones aún soportadas y fecha de deprecación en columnas, de modo que el administrador comunica a PASA hasta cuándo funciona cada versión sin abrir documentación externa. Exponer el calendario de compatibilidad hace explícito el compromiso de backward compatibility.</p>
+<p class="prin">Principio: Transparencia del ciclo de vida; el compromiso de compatibilidad a la vista.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.8-slos-datos"><h3 class="rowtitle">7.8 · SLOs de datos</h3><div class="wf"><img src="05-super-admin/7.8-slos-datos.svg" alt="Wireframe 7.8"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Panel diferenciado de niveles de servicio (SLOs) para datos críticos, separado del SLA de infraestructura y aplicación. La plataforma compromete SLOs específicos para frescura, completitud, disponibilidad, unicidad operativa y tiempo máximo de recuperación de datasets (DAT-26), más un indicador dedicado de latencia de API en el percentil 95 con umbral contractual de 500 ms (INT-08). Incluye historial de incumplimientos exportable y un configurador que no permite bajar de los mínimos contractuales.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Tabla de SLOs por dimensión de dato</b></td><td>Una fila por dimensión: Frescura [min desde última lectura], Completitud [% recibidas vs. esperadas], Disponibilidad de datos [%], Unicidad operativa [% sin duplicados] y Tiempo de recuperación de dataset [min]. Para cada una: valor objetivo, valor actual, estado (cumple/incumple) y tendencia 7 días.</td><td class="req">DAT-26</td></tr>
+<tr><td><b>SLO de latencia de API (p95 &lt; 500 ms)</b></td><td>Indicador del percentil 95 del tiempo de respuesta de la API de datos. Umbral contractual 500 ms. Valor actual en tiempo real y gráfico de evolución del p95 en los últimos 7 días. Badge rojo si supera el umbral.</td><td class="req">INT-08, DAT-26</td></tr>
+<tr><td><b>Historial de incumplimientos de SLO</b></td><td>Tabla de períodos en que algún SLO fue incumplido: dimensión afectada, período, valor objetivo, valor real, causa raíz registrada y acción tomada. Exportable para revisión con PASA.</td><td class="req">DAT-26, FIN-06, DAT-14</td></tr>
+<tr><td><b>Configurador de SLOs</b></td><td>Permite ajustar los valores objetivo por SLO y por tipo de dato (datos de medidores críticos vs. datos de contexto). Cada cambio queda registrado con usuario y timestamp. Los valores no pueden bajar de los mínimos contractuales.</td><td class="req">DAT-26</td></tr>
+</tbody></table>
+<p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
+<tr><td><b>Dimensión</b></td><td>Frescura / Completitud / Disponibilidad / Unicidad / Tiempo de recuperación / Latencia API / Todas</td><td>Todas</td></tr>
+<tr><td><b>Tenant / mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
+<tr><td><b>Período</b></td><td>Tiempo real / Últimas 24h / 7 días / 30 días</td><td>Últimas 24h</td></tr>
+<tr><td><b>Estado</b></td><td>Todos / Solo incumplidos / Solo en riesgo</td><td>Todos</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Tabla de SLOs con objetivo y actual en columnas contiguas</p><p>Cada dimensión muestra su valor objetivo junto al valor actual y el estado, de modo que el administrador juzga el cumplimiento comparando dos cifras adyacentes en vez de recordar el umbral. Poner el compromiso al lado del dato real elimina el paso mental de buscar contra qué se mide.</p>
+<p class="prin">Principio: Comparación en contexto; reducir la carga de memoria del umbral.</p>
+</div>
+<div class="ux"><p class="uxc">SLO de latencia p95 con línea de umbral dibujada</p><p>El gráfico del p95 traza la línea de 500 ms para que cualquier punto por encima sea visible sin leer valores, y el badge rojo confirma el incumplimiento. Materializar el umbral contractual sobre la serie convierte el SLO en una lectura binaria de cumple/no cumple.</p>
+<p class="prin">Principio: Umbral visible sobre la serie; juicio inmediato de cumplimiento.</p>
+</div>
+<div class="ux"><p class="uxc">Configurador que bloquea bajar del mínimo contractual</p><p>El formulario de ajuste de objetivos impide fijar un valor por debajo del piso pactado con PASA; el propio control es la barrera. Restringir el rango editable previene que, con máximo privilegio, se relaje un compromiso contractual por error o descuido.</p>
+<p class="prin">Principio: Prevención de errores por restricción del rango; el límite vive en el control.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de incumplimientos con causa raíz y exportable</p><p>Cada incumplimiento registra su causa raíz y acción tomada y es exportable, porque la conversación con PASA no es sobre el número aislado sino sobre por qué ocurrió y qué se hizo. Estructurar la evidencia para la revisión externa hace la rendición de cuentas verificable.</p>
+<p class="prin">Principio: Trazabilidad orientada a la auditoría externa; el dato acompañado de su explicación.</p>
+</div>
+<div class="ux"><p class="uxc">Filtros declarados por dimensión, tenant, período y estado</p><p>Esta pantalla sí expone filtros porque el administrador alterna entre revisar una dimensión concreta, un tenant o solo lo incumplido; ubicarlos en la barra superior estándar mantiene el patrón del resto del perfil y evita reconstruir la vista manualmente. La consistencia del lugar del filtro reduce el costo de aprenderlo.</p>
+<p class="prin">Principio: Consistencia entre pantallas; filtrado como reducción del espacio de búsqueda.</p>
+</div>
+<div class="ux"><p class="uxc">Datos críticos separados del SLA de infraestructura</p><p>El subtítulo insiste en que estos SLOs son distintos del uptime de infraestructura, para que el administrador no confunda &#x27;la plataforma está arriba&#x27; con &#x27;los datos son frescos y completos&#x27;. Diferenciar los dominios de servicio evita dar por cumplido un compromiso de datos mirando la salud del sistema.</p>
+<p class="prin">Principio: Distinción explícita de dominios; evitar la confusión entre disponibilidad y calidad de dato.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.9-throttle-cargas"><h3 class="rowtitle">7.9 · Throttle y cargas</h3><div class="wf"><img src="05-super-admin/7.9-throttle-cargas.svg" alt="Wireframe 7.9"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Gestión de los límites de consumo de la API (throttle y quotas) y de la configuración de las extracciones incrementales por tenant. Los quotas están definidos y documentados para que los procesos ETL de PASA no sean bloqueados por rate limiting ni incurran en sobrecostos (DAT-15), con whitelist de IPs exentas y log de eventos para detectar falsos positivos. La sección de cargas soporta el modo incremental por cursor (DAT-21) con ventana de overlap para registros tardíos.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Tabla de quotas por tenant</b></td><td>Tenant, límite de requests/hora y /día, consumo actual (requests en la última hora y en el día), % de uso sobre la cuota y estado (normal/en riesgo/bloqueado). Alerta si algún tenant supera el 80% de su cuota.</td><td class="req">DAT-15</td></tr>
+<tr><td><b>Gráfico de consumo de API por tenant</b></td><td>Línea de requests/hora en las últimas 24h por tenant seleccionado, con línea horizontal en el límite configurado. Permite identificar picos que podrían activar el rate limiting.</td><td class="req">DAT-15, DAT-09</td></tr>
+<tr><td><b>Configurador de quotas</b></td><td>Editar el límite de requests/hora y /día por tenant. Campo de whitelist de IPs exentas de rate limiting (para procesos ETL de PASA). Registro de cambios con usuario y timestamp.</td><td class="req">DAT-15, CYB-03</td></tr>
+<tr><td><b>Log de eventos de throttling</b></td><td>Registro de cada activación del rate limiting: tenant, endpoint, timestamp, nº de requests bloqueadas e IP de origen. Exportable. Permite detectar falsos positivos que afecten procesos ETL legítimos de PASA.</td><td class="req">DAT-15, DAT-14</td></tr>
+<tr><td><b>Estado de extracciones incrementales por integración</b></td><td>Integración, tipo (API/réplica/webhook), modo (incremental/full-load), cursor actual (última marca de tiempo o ID extraído), última extracción exitosa y nº de registros. Indicador si el cursor lleva más de 4h sin avanzar.</td><td class="req">DAT-21, DAT-24</td></tr>
+<tr><td><b>Configurador de modo de extracción</b></td><td>Por integración: selector de modo (incremental / full-load). Para modo incremental: campo de cursor (columna de timestamp o ID incremental) y configuración de ventana de overlap (ej. últimos 5 min para cubrir registros tardíos).</td><td class="req">DAT-21</td></tr>
+<tr><td><b>Historial de extracciones</b></td><td>Log de las últimas 100 extracciones por integración: timestamp de inicio y fin, modo, nº de registros, tamaño [MB] y resultado (éxito/error/parcial). Permite auditar la eficiencia del modo incremental vs. full-load.</td><td class="req">DAT-21, DAT-19</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">% de uso y estado por tenant como semáforo de riesgo</p><p>La tabla de quotas resalta el porcentaje de uso y marca &#x27;en riesgo&#x27; al superar el 80%, para que el administrador intervenga antes de que un tenant crítico de PASA choque contra el rate limiting. Anticipar el bloqueo con un umbral de advertencia protege la continuidad de los ETL del cliente.</p>
+<p class="prin">Principio: Alerta temprana; actuar antes del fallo, no después.</p>
+</div>
+<div class="ux"><p class="uxc">Gráfico de consumo con la línea del límite superpuesta</p><p>El consumo por hora se dibuja contra la línea del límite configurado, de modo que un pico que se acerca al techo se ve venir. Mostrar el margen restante convierte una serie de tráfico en una herramienta de decisión sobre si ampliar la cuota.</p>
+<p class="prin">Principio: Umbral visible como referencia de decisión; margen a la vista.</p>
+</div>
+<div class="ux"><p class="uxc">Whitelist de IPs de PASA en el configurador de quotas</p><p>El configurador incluye un campo explícito de IPs exentas para los ETL de PASA, porque el objetivo del throttle no es frenar al cliente sino a los abusos externos. Hacer de la exención un control de primera clase evita que un límite genérico bloquee por error los procesos legítimos.</p>
+<p class="prin">Principio: El diseño refleja la intención real de la política; excepción legítima como control explícito.</p>
+</div>
+<div class="ux"><p class="uxc">Log de throttling orientado a detectar falsos positivos</p><p>El registro de bloqueos incluye endpoint e IP de origen para que el administrador distinga un ataque de un ETL legítimo mal calibrado. Estructurar el log en torno a esa pregunta hace que la evidencia sirva para corregir la quota, no solo para constatar el bloqueo.</p>
+<p class="prin">Principio: Datos orientados a la acción de corrección; el log responde una pregunta concreta.</p>
+</div>
+<div class="ux"><p class="uxc">Cargas incrementales con indicador de cursor detenido</p><p>El estado de extracciones marca cuándo un cursor lleva más de 4h sin avanzar, señal de que la carga incremental se estancó y PASA podría estar recibiendo datos incompletos. Vigilar el avance del cursor detecta un silencio de datos que un simple &#x27;sin errores&#x27; ocultaría.</p>
+<p class="prin">Principio: Detección de fallo silencioso; ausencia de progreso como señal de alarma.</p>
+</div>
+</div>
+</div>
+<div class="row" id="7.10-retencion-privacidad"><h3 class="rowtitle">7.10 · Retención y privacidad</h3><div class="wf"><img src="05-super-admin/7.10-retencion-privacidad.svg" alt="Wireframe 7.10"></div>
+<div class="detail">
+<h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
+<p class="desc">Configuración y ejecución de políticas de retención, anonimización y eliminación diferenciadas por tipo de dato, obligación legal, país, criticidad y finalidad de uso (PRI-08), junto con la minimización de datos que define qué campos son obligatorios, opcionales, no requeridos o no permitidos según proceso y país (PRI-05). La cola de ejecución exige aprobación del rol PASA antes de una eliminación masiva, y toda ejecución queda registrada de forma inmutable con hash de verificación.</p>
+<p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
+<tr><td><b>Catálogo de políticas de retención</b></td><td>Tabla de políticas activas: nombre, tipo de dato (consumo eléctrico / dato de locatario / log de auditoría / dato personal / dato de configuración), país de aplicación, período de retención activa [años], acción al vencimiento (anonimizar/eliminar/archivar), base legal y estado (activa/pendiente/vencida).</td><td class="req">PRI-08, PRI-05</td></tr>
+<tr><td><b>Formulario de nueva política</b></td><td>Tipo de dato, país de aplicación (Chile/Perú/Colombia/Todos), período de retención activa, período de retención en archivo, acción al vencimiento, base legal (obligación legal / interés legítimo / consentimiento), finalidad de uso (operativo / analítico / legal) y justificación de la política.</td><td class="req">PRI-08, PRI-05</td></tr>
+<tr><td><b>Cola de ejecución de políticas</b></td><td>Lista de políticas cuya fecha de vencimiento se acerca o ya se cumplió: tipo de dato, nº de registros afectados, acción pendiente (anonimizar/eliminar/archivar), fecha límite y responsable. Requiere aprobación del rol PASA antes de ejecutar una eliminación masiva.</td><td class="req">PRI-08, CYB-12, DAT-14</td></tr>
+<tr><td><b>Configurador de campos por proceso y país</b></td><td>Matriz de campos por proceso (ingesta de medidor / integración con locatario / exportación a Data Lake / etc.) y por país. Para cada celda: campo obligatorio / opcional / no requerido / no permitido. Los cambios requieren justificación y quedan en la pista de auditoría.</td><td class="req">PRI-05, DAT-14</td></tr>
+<tr><td><b>Historial de ejecuciones de políticas</b></td><td>Log de cada ejecución: política, fecha, nº de registros procesados, acción ejecutada (anonimización/eliminación/archivo), hash de verificación y usuario que aprobó. Inmutable.</td><td class="req">PRI-08, CYB-10, DAT-14</td></tr>
+</tbody></table>
+<h4>b) Justificación de experiencia de usuario</h4>
+<div class="ux"><p class="uxc">Catálogo a la izquierda y alta de política a la derecha</p><p>El flujo natural es revisar qué políticas existen antes de crear una nueva, así que el catálogo ocupa el punto de entrada y el formulario de alta se sitúa a su derecha como paso siguiente. Ordenar &#x27;consultar&#x27; antes de &#x27;crear&#x27; evita duplicar políticas y refuerza el recorrido de lectura de izquierda a derecha.</p>
+<p class="prin">Principio: Flujo alineado al recorrido de lectura; consultar antes de crear.</p>
+</div>
+<div class="ux"><p class="uxc">Cola de ejecución con gate de aprobación PASA visible</p><p>Las políticas por vencer se listan con el número de registros afectados, y su meta advierte que una eliminación masiva exige aprobación del rol PASA antes de ejecutarse. Mostrar el alcance del borrado junto al gate frena la ejecución de una acción irreversible sin la autorización debida.</p>
+<p class="prin">Principio: Prevención de errores irreversibles; el alcance del daño y el gate a la vista.</p>
+</div>
+<div class="ux"><p class="uxc">&#x27;Ejecutar borrado&#x27; y &#x27;Enviar a aprobación&#x27; diferenciados</p><p>Los dos botones de la cola separan la acción destructiva de la de solicitar autorización, de modo que el administrador no confunda ejecutar con tramitar. Distinguir la acción final de su antesala reduce el riesgo de disparar una eliminación creyendo que solo se pedía permiso.</p>
+<p class="prin">Principio: Jerarquía y separación de acciones; distinguir el trámite de la ejecución.</p>
+</div>
+<div class="ux"><p class="uxc">Configurador de campos como matriz proceso × país</p><p>La minimización de datos se opera en una matriz donde cada celda cruza un proceso con un país y marca si el campo es obligatorio, opcional, no requerido o no permitido; ver la rejilla completa permite detectar un dato exigido donde debería estar prohibido. La representación matricial hace visibles las inconsistencias de política entre países.</p>
+<p class="prin">Principio: Visualización matricial para detectar excepciones; la estructura revela el error.</p>
+</div>
+<div class="ux"><p class="uxc">Historial de ejecuciones inmutable con quién aprobó</p><p>Cada ejecución guarda el hash de verificación y el usuario que la aprobó, sin posibilidad de edición, porque la eliminación o anonimización de datos personales debe poder demostrarse ante PASA y ante la autoridad. Registrar la aprobación junto al resultado convierte la acción en evidencia de cumplimiento.</p>
+<p class="prin">Principio: Inmutabilidad y trazabilidad de aprobación; la ejecución como prueba legal.</p>
+</div>
+<div class="ux"><p class="uxc">País y base legal como campos obligatorios de la política</p><p>El formulario de alta exige país, base legal y finalidad antes de guardar, porque una misma clase de dato retiene distinto según jurisdicción y motivo. Forzar estos campos impide crear una política ambigua que luego se aplique mal en Chile, Perú o Colombia.</p>
+<p class="prin">Principio: Restricciones que garantizan una política completa; prevención de configuración incompleta.</p>
+</div>
+</div>
+</div>
+</section>
+<script>
+(function(){
+  function sync(){
+    var two = window.matchMedia('(min-width:861px)').matches;
+    document.querySelectorAll('.row').forEach(function(r){
+      var wf=r.querySelector('.wf'), d=r.querySelector('.detail');
+      if(!wf||!d) return;
+      if(two){ d.style.maxHeight = Math.round(wf.getBoundingClientRect().height)+'px'; }
+      else { d.style.maxHeight = ''; }
+    });
+  }
+  window.addEventListener('load', sync);
+  window.addEventListener('resize', sync);
+  document.addEventListener('DOMContentLoaded', sync);
+  sync();
+})();
+</script>
+</body></html>
