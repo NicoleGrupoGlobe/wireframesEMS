@@ -42,11 +42,11 @@ nav.anchors a:hover{background:#6d84a0}
 <h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
 <p class="desc">Pantalla de aterrizaje al iniciar sesión. Muestra el estado del portafolio completo en menos de 3 segundos (ARQ-07). La información se filtra progresivamente a través de 3 niveles geográficos interactivos accionados desde el mapa: País → Centro comercial → Tienda/Local. Cada clic refina el nivel de detalle y actualiza los KPIs del panel derecho sin saltar niveles.</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
-<tr><td><b>Nivel 1 — País</b></td><td>Selector de país (Chile por defecto / Perú / Colombia) en tabs superiores; cambia todo el contexto del panel. Marcadores circulares por mall activo.</td><td class="req">ARQ-05, DAT-11, ARQ-07</td></tr>
+<tr><td><b>Nivel 1 — País</b></td><td>País fijo en Chile (operación monopaís por ahora); no hay selector de país. Marcadores circulares por cada mall activo.</td><td class="req">ARQ-05, DAT-11, ARQ-07</td></tr>
 <tr><td><b>Nivel 2 — Centro comercial</b></td><td>Mapa con marcador por mall; color = estado (verde normal / amarillo alerta / rojo crítico / gris sin dato), tamaño proporcional al consumo relativo. Click actualiza KPIs.</td><td class="req">ARQ-05, DAT-11, DAT-03</td></tr>
 <tr><td><b>Nivel 3 — Tienda / Local / Isla</b></td><td>Al seleccionar un mall y piso se despliega el plano de planta vectorial provisto por PASA; cada tienda/local/isla es un bloque coloreado por estado; hover con nombre, consumo actual [kW] y última alarma.</td><td class="req">ARQ-05, DAT-03, DAT-11, ARQ-09</td></tr>
 <tr><td><b>Tarjeta Consumo [MWh]</b></td><td>Consumo total del período en el nivel seleccionado. Variación % vs. mismo período anterior. Mini sparkline de tendencia de las últimas 24 h.</td><td class="req">DAT-22, DAT-08, ARQ-07</td></tr>
-<tr><td><b>Tarjeta Costo [UF]</b></td><td>Costo acumulado del período. Variación % vs. período anterior. Moneda seleccionable (UF/CLP/USD/PEN/COP) según país del nivel activo.</td><td class="req">DAT-22, FIN-07</td></tr>
+<tr><td><b>Tarjeta Costo [UF]</b></td><td>Costo acumulado del período. Variación % vs. período anterior. Moneda seleccionable (UF/CLP/USD) según país del nivel activo.</td><td class="req">DAT-22, FIN-07</td></tr>
 <tr><td><b>Tarjeta Intensidad energética</b></td><td>Consumo / superficie arrendada [kWh/m²]. Variación % vs. período anterior. Aplica desde Nivel 2 (mall) en adelante.</td><td class="req">DAT-11, DAT-22</td></tr>
 <tr><td><b>Tarjeta Cobertura de medición</b></td><td>% de medidores activos / total esperado. Semáforo: verde ≥95%, amarillo 85–95%, rojo &lt;85%.</td><td class="req">DAT-17, DAT-06</td></tr>
 <tr><td><b>Feed de eventos críticos</b></td><td>Lista de los últimos 4–5 eventos del nivel activo: severidad (URGENT/WARNING/INFO), hora, descripción breve, zona afectada. Solo lectura en este perfil.</td><td class="req">DAT-03, DAT-27</td></tr>
@@ -54,7 +54,6 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Sistema de colores de estado</b></td><td>Consistente en todos los niveles y perfiles: verde = operación normal; amarillo = WARNING (sobreconsumo leve, calidad degradada, fase desbalanceada); rojo = alarma crítica (sobrecarga, medidor offline &gt;4 h); gris = sin dato.</td><td class="req">DAT-06, DAT-03, DAT-27</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País (selector de tab)</b></td><td>Chile / Perú / Colombia</td><td>Chile</td></tr>
 <tr><td><b>Colorear marcadores por</b></td><td>Estado de alarma / Consumo actual [kW] / Variación consumo % / Cobertura de medición %</td><td>Estado de alarma</td></tr>
 <tr><td><b>Mostrar solo malls con</b></td><td>Todos / Alarma crítica activa / Alerta warning activa / Sin datos</td><td>Todos</td></tr>
 <tr><td><b>Período de KPIs</b></td><td>Hoy / Mes actual / Trimestre / Últimos 12 meses / Rango personalizado</td><td>Mes actual</td></tr>
@@ -94,14 +93,13 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Tabla de remarcadores</b></td><td>Al seleccionar el mall (sin piso): ID medidor, zona, consumo [MWh], % del total, último valor, timestamp y estado (activo/offline/CNR/estimado).</td><td class="req">DAT-06, DAT-19, DAT-17</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos (multi-selección)</td><td>Chile</td></tr>
 <tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
 <tr><td><b>Métrica principal</b></td><td>Consumo [MWh] / Costo [UF o moneda] / Intensidad [kWh/m²] / Demanda máxima [kW]</td><td>Consumo [MWh]</td></tr>
 <tr><td><b>Granularidad temporal</b></td><td>Mensual / Semanal</td><td>Mensual</td></tr>
 <tr><td><b>Ordenar malls por</b></td><td>Mayor consumo / Mayor costo / Mayor variación % / Nombre A-Z</td><td>Mayor consumo</td></tr>
 <tr><td><b>Mostrar solo malls con</b></td><td>Todos / Alarma crítica / Variación &gt; X% / Sin datos completos</td><td>Todos</td></tr>
 <tr><td><b>Comparar con</b></td><td>Período anterior / Mismo período año anterior / Promedio del portafolio</td><td>Período anterior</td></tr>
-<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD / PEN / COP</td><td>UF</td></tr>
+<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD</td><td>UF</td></tr>
 </tbody></table>
 <h4>b) Justificación de experiencia de usuario</h4>
 <div class="ux"><p class="uxc">Tres paneles sincronizados en una vista</p><p>Mapa, árbol y detalle conviven sin pestañas ni modales porque el gerente compara «dónde» (mapa), «cuánto» (árbol) y «por qué» (detalle) en un mismo golpe de vista. Sincronizar los tres al hacer un solo clic elimina la coordinación manual y evita que pierda el hilo del análisis.</p>
@@ -132,10 +130,9 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Proyecciones</b></td><td>Últimos 2 meses con cifras proyectadas (barras con trama diferente), basadas en la tendencia de los últimos 3 meses.</td><td class="req">DAT-22, FIN-07</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
 <tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
 <tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado</td><td>Año en curso</td></tr>
-<tr><td><b>Moneda</b></td><td>UF / CLP / USD / PEN / COP (conversión al tipo de cambio del último día disponible)</td><td>UF</td></tr>
+<tr><td><b>Moneda</b></td><td>UF / CLP / USD (conversión al tipo de cambio del último día disponible)</td><td>UF</td></tr>
 <tr><td><b>Agrupación de gráficos</b></td><td>Por país / Por mall / Por tipología de mall</td><td>Por país</td></tr>
 <tr><td><b>Ordenar tabla por</b></td><td>Cualquier columna (asc/desc)</td><td>Costo total desc.</td></tr>
 <tr><td><b>Mostrar solo malls con variación</b></td><td>Todos / &gt;5% / &gt;10% / &gt;20% (campo numérico)</td><td>Todos</td></tr>
@@ -168,7 +165,7 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Tabla de historial</b></td><td>Fecha de generación, usuario, alcance, período cubierto, formato, estado (generando/listo/error) y link de descarga. Retención de archivos: 12 meses mínimo.</td><td class="req">DAT-12, DAT-08</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / País / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
+<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
 <tr><td><b>Período</b></td><td>Mes / Trimestre / Año / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
 <tr><td><b>Comparación</b></td><td>vs. período anterior / vs. mismo período año anterior / Sin comparación</td><td>vs. período anterior</td></tr>
 <tr><td><b>Secciones a incluir</b></td><td>KPIs / Tendencia / Ranking / Costos / Calidad / Alarmas / Mapa de cobertura</td><td>Todas activadas</td></tr>
@@ -205,7 +202,6 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Tabla de alarmas por mall</b></td><td>Mall, país, críticas activas, warnings activas, resueltas en período, tiempo medio de resolución [h], última alarma (hora y descripción breve). Sin datos de medidores individuales.</td><td class="req">DAT-03, DAT-11, FIN-06</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
 <tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
 <tr><td><b>Período de análisis</b></td><td>Hoy / Últimas 24h / Últimos 7 días / Últimos 30 días / Rango personalizado</td><td>Últimos 7 días</td></tr>
 <tr><td><b>Severidad</b></td><td>Todas / Solo críticas / Críticas y altas</td><td>Todas</td></tr>
@@ -241,11 +237,11 @@ nav.anchors a:hover{background:#6d84a0}
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
 <tr><td><b>Tipo de contenido</b></td><td>Consumos agregados por mall / Costos y facturación / Calidad del dato / Cobertura de medición / Resumen de alarmas (multi-selección)</td><td>Consumos agregados</td></tr>
-<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / País / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
+<tr><td><b>Alcance geográfico</b></td><td>Portafolio completo / Mall específico (multi-selección con buscador)</td><td>Portafolio completo</td></tr>
 <tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Rango personalizado (hasta 5 años)</td><td>Mes actual</td></tr>
 <tr><td><b>Granularidad temporal</b></td><td>Mensual / Semanal (datos diarios no disponibles en perfil gerencial)</td><td>Mensual</td></tr>
 <tr><td><b>Formato de salida</b></td><td>PDF ejecutivo / Excel / CSV</td><td>Excel</td></tr>
-<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD / PEN / COP</td><td>UF</td></tr>
+<tr><td><b>Moneda de costos</b></td><td>UF / CLP / USD</td><td>UF</td></tr>
 </tbody></table>
 <h4>b) Justificación de experiencia de usuario</h4>
 <div class="ux"><p class="uxc">Formulario a la izquierda con resumen espejo a la derecha</p><p>Mientras el gerente arma la exportación en el formulario, el panel «Resumen» refleja en lenguaje natural lo que va a descargar. Ese eco reduce el error de exportar un alcance o período equivocado sin tener que releer cada control.</p>
@@ -279,7 +275,6 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Feed de eventos recientes</b></td><td>Lista cronológica: medidor pasó a offline, alarma abierta, backfill completado, CNR ingresada. Con timestamp y mall.</td><td class="req">DAT-03, DAT-10, DAT-19</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
 <tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Todos</td></tr>
 <tr><td><b>Estado del medidor</b></td><td>Todos / Online / Offline / Dato estancado &gt; 4h / CNR pendiente</td><td>Todos</td></tr>
 <tr><td><b>Granularidad del histograma</b></td><td>Horaria / Por turno (8h)</td><td>Horaria</td></tr>
@@ -314,7 +309,6 @@ nav.anchors a:hover{background:#6d84a0}
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
 <tr><td><b>Severidad</b></td><td>Crítica / Alta / Media / Baja (multi-selección)</td><td>Todas</td></tr>
 <tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
 <tr><td><b>Estado</b></td><td>Abierta / Asignada / Escalada / Resuelta / Todas</td><td>Abierta</td></tr>
 <tr><td><b>Rango de fecha</b></td><td>Date picker inicio–fin</td><td>Hoy</td></tr>
 <tr><td><b>Responsable asignado</b></td><td>Mías / Todas / Por técnico (selector)</td><td>Todas</td></tr>
@@ -622,7 +616,6 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Pista de cambios del maestro</b></td><td>Toda modificación registra: campo cambiado, valor anterior, valor nuevo, usuario y timestamp. Inmutable.</td><td class="req">DAT-23, DAT-14, CYB-10</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>País</b></td><td>Chile / Perú / Colombia / Todos</td><td>Todos</td></tr>
 <tr><td><b>Mall</b></td><td>Selector con buscador</td><td>Todos</td></tr>
 <tr><td><b>Protocolo</b></td><td>Modbus / DLMS / BACnet / Otro / Todos</td><td>Todos</td></tr>
 <tr><td><b>Estado del activo</b></td><td>Activo / Baja / En mantención / Todos</td><td>Activo</td></tr>
@@ -695,7 +688,7 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Detalle de medidores con baja calidad</b></td><td>Al hacer clic en un mall: lista de medidores cuyo % de lecturas reales cae bajo el umbral configurado, con la causa más frecuente si está disponible. Fila expandible con el histórico del medidor.</td><td class="req">DAT-06, DAT-17</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
-<tr><td><b>Mall / País</b></td><td>Selector jerárquico (país → mall)</td><td>Todos</td></tr>
+<tr><td><b>Mall</b></td><td>Selector de mall (buscador)</td><td>Todos</td></tr>
 <tr><td><b>Período</b></td><td>Rango personalizado hasta 5 años</td><td>Último trimestre</td></tr>
 <tr><td><b>Granularidad</b></td><td>Mensual / Diaria</td><td>Mensual</td></tr>
 <tr><td><b>Umbral de alerta de calidad</b></td><td>Campo numérico % (ej. &lt; 95%)</td><td>95%</td></tr>
@@ -1145,7 +1138,7 @@ nav.anchors a:hover{background:#6d84a0}
 <p class="desc">Configuración y ejecución de políticas de retención, anonimización y eliminación diferenciadas por tipo de dato, obligación legal, país, criticidad y finalidad de uso (PRI-08), junto con la minimización de datos que define qué campos son obligatorios, opcionales, no requeridos o no permitidos según proceso y país (PRI-05). La cola de ejecución exige aprobación del rol PASA antes de una eliminación masiva, y toda ejecución queda registrada de forma inmutable con hash de verificación.</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
 <tr><td><b>Catálogo de políticas de retención</b></td><td>Tabla de políticas activas: nombre, tipo de dato (consumo eléctrico / dato de locatario / log de auditoría / dato personal / dato de configuración), país de aplicación, período de retención activa [años], acción al vencimiento (anonimizar/eliminar/archivar), base legal y estado (activa/pendiente/vencida).</td><td class="req">PRI-08, PRI-05</td></tr>
-<tr><td><b>Formulario de nueva política</b></td><td>Tipo de dato, país de aplicación (Chile/Perú/Colombia/Todos), período de retención activa, período de retención en archivo, acción al vencimiento, base legal (obligación legal / interés legítimo / consentimiento), finalidad de uso (operativo / analítico / legal) y justificación de la política.</td><td class="req">PRI-08, PRI-05</td></tr>
+<tr><td><b>Formulario de nueva política</b></td><td>Tipo de dato, país de aplicación (Chile), período de retención activa, período de retención en archivo, acción al vencimiento, base legal (obligación legal / interés legítimo / consentimiento), finalidad de uso (operativo / analítico / legal) y justificación de la política.</td><td class="req">PRI-08, PRI-05</td></tr>
 <tr><td><b>Cola de ejecución de políticas</b></td><td>Lista de políticas cuya fecha de vencimiento se acerca o ya se cumplió: tipo de dato, nº de registros afectados, acción pendiente (anonimizar/eliminar/archivar), fecha límite y responsable. Requiere aprobación del rol PASA antes de ejecutar una eliminación masiva.</td><td class="req">PRI-08, CYB-12, DAT-14</td></tr>
 <tr><td><b>Configurador de campos por proceso y país</b></td><td>Matriz de campos por proceso (ingesta de medidor / integración con locatario / exportación a Data Lake / etc.) y por país. Para cada celda: campo obligatorio / opcional / no requerido / no permitido. Los cambios requieren justificación y quedan en la pista de auditoría.</td><td class="req">PRI-05, DAT-14</td></tr>
 <tr><td><b>Historial de ejecuciones de políticas</b></td><td>Log de cada ejecución: política, fecha, nº de registros procesados, acción ejecutada (anonimización/eliminación/archivo), hash de verificación y usuario que aprobó. Inmutable.</td><td class="req">PRI-08, CYB-10, DAT-14</td></tr>
@@ -1166,7 +1159,7 @@ nav.anchors a:hover{background:#6d84a0}
 <div class="ux"><p class="uxc">Historial de ejecuciones inmutable con quién aprobó</p><p>Cada ejecución guarda el hash de verificación y el usuario que la aprobó, sin posibilidad de edición, porque la eliminación o anonimización de datos personales debe poder demostrarse ante PASA y ante la autoridad. Registrar la aprobación junto al resultado convierte la acción en evidencia de cumplimiento.</p>
 <p class="prin">Principio: Inmutabilidad y trazabilidad de aprobación; la ejecución como prueba legal.</p>
 </div>
-<div class="ux"><p class="uxc">País y base legal como campos obligatorios de la política</p><p>El formulario de alta exige país, base legal y finalidad antes de guardar, porque una misma clase de dato retiene distinto según jurisdicción y motivo. Forzar estos campos impide crear una política ambigua que luego se aplique mal en Chile, Perú o Colombia.</p>
+<div class="ux"><p class="uxc">País y base legal como campos obligatorios de la política</p><p>El formulario de alta exige país, base legal y finalidad antes de guardar, porque una misma clase de dato retiene distinto según jurisdicción y motivo. Forzar estos campos impide crear una política ambigua que luego se aplique mal según la jurisdicción o la finalidad.</p>
 <p class="prin">Principio: Restricciones que garantizan una política completa; prevención de configuración incompleta.</p>
 </div>
 </div>
