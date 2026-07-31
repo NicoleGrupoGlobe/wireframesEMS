@@ -228,8 +228,7 @@ function render(){
   app.innerHTML=topbar(s.profile)+sidebar(s.profile,s.activeMenu)+
     '<div class="content">'+(s.device==="mobile"?renderMobile(s):renderDesktop(s))+'</div>'+
     '<div class="hint">Prototipo interactivo · escala de grises · <b>'+key+'</b></div>';
-  document.querySelector(".content").scrollIntoView({block:"start"});
-  window.scrollTo(0,0);
+  var c=document.querySelector(".content"); if(c) c.scrollTop=0;
 }
 
 /* ---------------- interacciones ---------------- */
