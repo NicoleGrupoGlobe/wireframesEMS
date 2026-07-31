@@ -12,7 +12,7 @@ var NAV=["Órdenes","Activos","Comms","Bitácora","Más"];
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function h(v){return Math.abs(Math.sin(v))*0.6+0.35;} // pseudo-altura estable 0.35..0.95
-function span(b){var c=((b&&b.col)||0)+1,s=(b&&b.colspan)||12;return 'style="grid-column:'+c+' / span '+s+'"';}
+function span(b){var s=(b&&b.colspan)||12;return 'style="grid-column:span '+s+'"';}
 
 /* ---------------- componentes ---------------- */
 function reqs(b){return b.reqs&&b.reqs.length?'<div class="reqs">['+b.reqs.join(", ")+']</div>':'';}
