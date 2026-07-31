@@ -12,7 +12,7 @@ var NAV=["Órdenes","Activos","Comms","Bitácora","Más"];
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function h(v){return Math.abs(Math.sin(v))*0.6+0.35;} // pseudo-altura estable 0.35..0.95
-function span(b){var s=(b&&b.colspan)||12;return 'style="grid-column:span '+s+'"';}
+function span(b){return 's'+((b&&b.colspan)||12);}
 
 /* ---------------- componentes ---------------- */
 function reqs(b){return b.reqs&&b.reqs.length?'<div class="reqs">['+b.reqs.join(", ")+']</div>':'';}
@@ -154,12 +154,12 @@ function renderBlock(b){
     case "form": inner=head(b)+form(b); break;
     case "heatmap": inner=head(b)+heatmap(b); break;
     case "timeline": inner=head(b)+timeline(b); break;
-    case "actions": return '<div class="bare" '+span(b)+'><div class="actions">'+(b.btns||["Acción"]).map(function(x,i){return '<button class="btn'+(i===0?' btn-primary':'')+'" data-act="btn" data-v="'+esc(x)+'">'+esc(x)+'</button>';}).join("")+'</div></div>';
-    case "tabs": return '<div class="bare" '+span(b)+'><div class="tabs">'+(b.tabs||["Tab"]).map(function(x,i){return '<div class="tab'+(i===(b.active||0)?' active':'')+'" data-act="tab">'+esc(x)+'</div>';}).join("")+'</div></div>';
-    case "legend": return '<div class="bare" '+span(b)+'><div class="legend"><b>Semáforo:</b><span><span class="dot ok"></span>Normal</span><span><span class="dot warn"></span>Alerta</span><span><span class="dot crit"></span>Crítico</span><span><span class="dot null"></span>Sin dato</span></div></div>';
+    case "actions": return '<div class="bare '+span(b)+'"><div class="actions">'+(b.btns||["Acción"]).map(function(x,i){return '<button class="btn'+(i===0?' btn-primary':'')+'" data-act="btn" data-v="'+esc(x)+'">'+esc(x)+'</button>';}).join("")+'</div></div>';
+    case "tabs": return '<div class="bare '+span(b)+'"><div class="tabs">'+(b.tabs||["Tab"]).map(function(x,i){return '<div class="tab'+(i===(b.active||0)?' active':'')+'" data-act="tab">'+esc(x)+'</div>';}).join("")+'</div></div>';
+    case "legend": return '<div class="bare '+span(b)+'"><div class="legend"><b>Semáforo:</b><span><span class="dot ok"></span>Normal</span><span><span class="dot warn"></span>Alerta</span><span><span class="dot crit"></span>Crítico</span><span><span class="dot null"></span>Sin dato</span></div></div>';
     default: inner=head(b)+((b.subs&&b.subs.length)?('<ul class="plist">'+b.subs.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'):placeholder(b));
   }
-  return '<div class="card pad-b" '+span(b)+'>'+inner+reqs(b)+'</div>';
+  return '<div class="card pad-b '+span(b)+'">'+inner+reqs(b)+'</div>';
 }
 
 /* ---------------- filtros ---------------- */
