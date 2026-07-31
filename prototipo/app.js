@@ -137,13 +137,42 @@ function table(b){
   return out+'</tbody></table>';
 }
 
+/* ---- mapa por niveles (un solo mapa, drill-down País→Centro comercial→Tienda/Local) ---- */
+function mallsView(){
+  var mk=[[.22,.32,"ok"],[.55,.5,"crit"],[.72,.28,"warn"],[.4,.7,"ok"],[.84,.64,"null"],[.15,.58,"ok"]];
+  var out='<div class="map" style="height:360px"><div class="maplabel">Nivel 2 · Centro comercial — Chile · click en un mall para ver sus tiendas</div>';
+  mk.forEach(function(m,i){out+='<div class="marker '+m[2]+'" data-act="drilltomall" data-v="'+esc(MALLS[i%MALLS.length])+'" title="'+esc(MALLS[i%MALLS.length])+'" style="left:'+(m[0]*100)+'%;top:'+(m[1]*100)+'%"></div>';});
+  return out+'</div>';
+}
+function floorView(mall){
+  var tones=["ok","ok","warn","ok","crit","null","ok","ok","ok","warn","ok","ok","ok","crit","ok","null","ok","ok"],cells='';
+  for(var i=0;i<18;i++){cells+='<div class="cell" data-act="cell" title="Local '+(i+1)+'" style="background:var(--'+tones[i]+')"></div>';}
+  return '<div class="floorwrap"><div class="planta">'+cells+'</div><div class="floorhint">Nivel 3 · '+esc(mall)+' — Tienda / Local / Isla · hover: consumo [kW] y última alarma</div></div>';
+}
+function crumbHTML(level,mall){
+  if(level===2) return '<span class="lvlchip">Chile</span><span class="lvlsep">›</span><span class="lvlchip lvlnow">Centro comercial</span>';
+  return '<button class="btn btn-sm" data-act="uptomalls">‹ Volver al mapa</button>'+
+    '<span class="lvlchip"><a data-act="uptomalls" style="cursor:pointer;color:var(--accent)">Chile</a></span>'+
+    '<span class="lvlsep">›</span><span class="lvlchip">'+esc(mall)+'</span>'+
+    '<span class="lvlsep">›</span><span class="lvlchip lvlnow">Tienda/Local</span>';
+}
+function leveledMapCard(){
+  return '<div class="card pad-b s12"><div class="ct">Mapa del portafolio</div>'+
+    '<div class="cm">Un solo mapa · País → Centro comercial → Tienda/Local (drill-down por click)</div>'+
+    '<div class="maptools" id="maptools">'+crumbHTML(2)+'</div>'+
+    '<div class="mapstage" id="mapstage">'+mallsView()+'</div>'+
+    reqs({reqs:["ARQ-05","DAT-11","DAT-03","ARQ-09"]})+'</div>';
+}
+function showFloor(mall){var st=document.getElementById("mapstage"),mt=document.getElementById("maptools");if(st)st.innerHTML=floorView(mall);if(mt)mt.innerHTML=crumbHTML(3,mall);}
+function showMalls(){var st=document.getElementById("mapstage"),mt=document.getElementById("maptools");if(st)st.innerHTML=mallsView();if(mt)mt.innerHTML=crumbHTML(2);}
+
 /* mapa tipo→render + si lleva marco .card */
 var FRAMELESS={actions:1,tabs:1,legend:1};
 function renderBlock(b){
   var inner="";
   switch(b.type){
     case "kpi": inner=head(b)+'<div class="kpi"><div class="val num">'+esc(b.value||"—")+'</div><div class="delta">'+esc(b.delta||"")+'</div>'+(b.spark?'<div class="spark">'+spark()+'</div>':'')+'</div>'; break;
-    case "map": inner=head(b)+map(b); break;
+    case "map": if(b._leveled){return leveledMapCard();} inner=head(b)+map(b); break;
     case "planta": inner=head(b)+planta(); break;
     case "tree": inner=head(b)+tree(b); break;
     case "bars": case "stackedbars": case "histogram": case "waterfall": inner=head(b)+bars(b); break;
@@ -183,7 +212,12 @@ function screenHead(s){
   return '<div class="screen-head"><div><h1>'+esc(s.id)+' · '+esc(s.title)+'</h1>'+sub+'</div><div class="head-right">'+right+'</div></div>';
 }
 function renderDesktop(s){
-  return screenHead(s)+filters(s)+'<div class="grid">'+s.blocks.map(renderBlock).join("")+'</div>';
+  var blocks=s.blocks;
+  if(s.id==="3.1"){ // un solo mapa por niveles: fusiona mapa + plano de planta
+    blocks=s.blocks.filter(function(b){return b.type!=="planta";})
+      .map(function(b){return b.type==="map"?Object.assign({},b,{_leveled:true}):b;});
+  }
+  return screenHead(s)+filters(s)+'<div class="grid">'+blocks.map(renderBlock).join("")+'</div>';
 }
 function renderMobile(s){
   var body=filters(s)+s.blocks.map(renderBlock).join("");
@@ -256,6 +290,8 @@ document.addEventListener("click",function(e){
   if(act==="btn"){ toast("Acción: “"+t.getAttribute("data-v")+"” — simulada en el prototipo"); }
   else if(act==="marker"){ toast("Centro comercial: "+t.getAttribute("data-v")+" · click para drill-down"); }
   else if(act==="cell"){ toast("Tienda/local seleccionado (Nivel 3)"); }
+  else if(act==="drilltomall"){ showFloor(t.getAttribute("data-v")); toast("Nivel 3 · "+t.getAttribute("data-v")+" — tiendas/locales"); }
+  else if(act==="uptomalls"){ showMalls(); }
   else if(act==="tree"){ document.querySelectorAll(".tree .tn").forEach(function(n){n.classList.remove("active");}); t.classList.add("active");
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
