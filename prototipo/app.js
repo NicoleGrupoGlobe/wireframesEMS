@@ -138,6 +138,14 @@ function table(b){
 }
 
 /* ---- mapa por niveles (un solo mapa, drill-down País→Centro comercial→Tienda/Local) ---- */
+function countryView(){
+  return '<div class="map" style="height:360px">'+
+    '<div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--ink-3)">Nivel 1 · País — click en Chile para ver sus centros comerciales</div>'+
+    '<div class="marker ok" data-act="drilltomalls" data-v="Chile" title="Chile · 6 centros comerciales" style="left:50%;top:47%;width:38px;height:38px"></div>'+
+    '<div style="position:absolute;left:50%;top:63%;transform:translateX(-50%);font-size:14px;color:var(--ink);font-weight:700">Chile</div>'+
+    '<div style="position:absolute;left:50%;top:70%;transform:translateX(-50%);font-size:11px;color:var(--ink-3)">6 centros comerciales · 2.480 medidores</div>'+
+    '</div>';
+}
 function mallsView(){
   var mk=[[.22,.32,"ok"],[.55,.5,"crit"],[.72,.28,"warn"],[.4,.7,"ok"],[.84,.64,"null"],[.15,.58,"ok"]];
   var out='<div class="map" style="height:360px"><div class="maplabel">Nivel 2 · Centro comercial — Chile · click en un mall para ver sus tiendas</div>';
@@ -149,22 +157,29 @@ function floorView(mall){
   for(var i=0;i<18;i++){cells+='<div class="cell" data-act="cell" title="Local '+(i+1)+'" style="background:var(--'+tones[i]+')"></div>';}
   return '<div class="floorwrap"><div class="planta">'+cells+'</div><div class="floorhint">Nivel 3 · '+esc(mall)+' — Tienda / Local / Isla · hover: consumo [kW] y última alarma</div></div>';
 }
+function crumbLink(act,txt){return '<a data-act="'+act+'" style="cursor:pointer;color:var(--accent)">'+esc(txt)+'</a>';}
 function crumbHTML(level,mall){
-  if(level===2) return '<span class="lvlchip">Chile</span><span class="lvlsep">›</span><span class="lvlchip lvlnow">Centro comercial</span>';
+  if(level===1) return '<span class="lvlchip lvlnow">Chile · País</span>';
+  if(level===2) return '<button class="btn btn-sm" data-act="uptocountry">‹ Volver</button>'+
+    '<span class="lvlchip">'+crumbLink("uptocountry","Chile")+'</span><span class="lvlsep">›</span>'+
+    '<span class="lvlchip lvlnow">Centro comercial</span>';
   return '<button class="btn btn-sm" data-act="uptomalls">‹ Volver al mapa</button>'+
-    '<span class="lvlchip"><a data-act="uptomalls" style="cursor:pointer;color:var(--accent)">Chile</a></span>'+
-    '<span class="lvlsep">›</span><span class="lvlchip">'+esc(mall)+'</span>'+
-    '<span class="lvlsep">›</span><span class="lvlchip lvlnow">Tienda/Local</span>';
+    '<span class="lvlchip">'+crumbLink("uptocountry","Chile")+'</span><span class="lvlsep">›</span>'+
+    '<span class="lvlchip">'+crumbLink("uptomalls",mall)+'</span><span class="lvlsep">›</span>'+
+    '<span class="lvlchip lvlnow">Tienda/Local</span>';
 }
 function leveledMapCard(){
   return '<div class="card pad-b s12"><div class="ct">Mapa del portafolio</div>'+
     '<div class="cm">Un solo mapa · País → Centro comercial → Tienda/Local (drill-down por click)</div>'+
-    '<div class="maptools" id="maptools">'+crumbHTML(2)+'</div>'+
-    '<div class="mapstage" id="mapstage">'+mallsView()+'</div>'+
+    '<div class="maptools" id="maptools">'+crumbHTML(1)+'</div>'+
+    '<div class="mapstage" id="mapstage">'+countryView()+'</div>'+
     reqs({reqs:["ARQ-05","DAT-11","DAT-03","ARQ-09"]})+'</div>';
 }
-function showFloor(mall){var st=document.getElementById("mapstage"),mt=document.getElementById("maptools");if(st)st.innerHTML=floorView(mall);if(mt)mt.innerHTML=crumbHTML(3,mall);}
-function showMalls(){var st=document.getElementById("mapstage"),mt=document.getElementById("maptools");if(st)st.innerHTML=mallsView();if(mt)mt.innerHTML=crumbHTML(2);}
+function stg(){return document.getElementById("mapstage");}
+function tls(){return document.getElementById("maptools");}
+function showCountry(){var s=stg(),t=tls();if(s)s.innerHTML=countryView();if(t)t.innerHTML=crumbHTML(1);}
+function showMalls(){var s=stg(),t=tls();if(s)s.innerHTML=mallsView();if(t)t.innerHTML=crumbHTML(2);}
+function showFloor(mall){var s=stg(),t=tls();if(s)s.innerHTML=floorView(mall);if(t)t.innerHTML=crumbHTML(3,mall);}
 
 /* mapa tipo→render + si lleva marco .card */
 var FRAMELESS={actions:1,tabs:1,legend:1};
@@ -290,8 +305,10 @@ document.addEventListener("click",function(e){
   if(act==="btn"){ toast("Acción: “"+t.getAttribute("data-v")+"” — simulada en el prototipo"); }
   else if(act==="marker"){ toast("Centro comercial: "+t.getAttribute("data-v")+" · click para drill-down"); }
   else if(act==="cell"){ toast("Tienda/local seleccionado (Nivel 3)"); }
+  else if(act==="drilltomalls"){ showMalls(); toast("Nivel 2 · Centro comercial — Chile"); }
   else if(act==="drilltomall"){ showFloor(t.getAttribute("data-v")); toast("Nivel 3 · "+t.getAttribute("data-v")+" — tiendas/locales"); }
   else if(act==="uptomalls"){ showMalls(); }
+  else if(act==="uptocountry"){ showCountry(); }
   else if(act==="tree"){ document.querySelectorAll(".tree .tn").forEach(function(n){n.classList.remove("active");}); t.classList.add("active");
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
