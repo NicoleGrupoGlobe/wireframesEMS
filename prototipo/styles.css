@@ -129,6 +129,13 @@ table.tbl tr.exp td{background:var(--surface-2);color:var(--ink-2);font-size:12p
 .bars .bar.hl{background:var(--accent);border-color:var(--accent)}
 .chartwrap{position:relative}
 .thr{position:absolute;left:0;right:0;border-top:1px dashed var(--ink-3);font-size:9px;color:var(--ink-3)}
+.bars .bar{position:relative}
+.bar .bv{position:absolute;top:-14px;left:0;right:0;text-align:center;font-size:8.5px;color:var(--ink-2)}
+.chart .xlabs{display:flex;font-size:9px;color:var(--ink-3);margin-top:5px}
+.chart .xlabs span{flex:1;text-align:center}
+.clegend{display:flex;gap:16px;font-size:10.5px;color:var(--ink-2);margin-top:9px}
+.clegend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.thrnote{font-size:9.5px;color:var(--ink-3);margin-top:3px}
 
 /* map */
 .map{position:relative;height:280px;background:repeating-linear-gradient(0deg,var(--surface-2),var(--surface-2) 22px,#eff1f4 22px,#eff1f4 23px),repeating-linear-gradient(90deg,var(--surface-2),var(--surface-2) 22px,#eff1f4 22px,#eff1f4 23px);

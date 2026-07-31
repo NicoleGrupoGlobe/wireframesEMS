@@ -9,6 +9,10 @@ EMS.screens.forEach(function(s){ byRoute[s.profile+"/"+s.slug]=s; byProfile[s.pr
 var MALLS=["Costanera Center","Mallplaza Egaña","Alto Las Condes","Arauco Maipú","Mallplaza Vespucio","Portal Ñuñoa"];
 var USERS=["p.soto","m.rivas","c.díaz","a.fuentes","operador N2"];
 var NAV=["Órdenes","Activos","Comms","Bitácora","Más"];
+var MONTHS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+var SER=[64,70,58,78,72,86,90,66,80,60,88,76];          // alturas % (serie mensual)
+var VAL=[1.04,1.12,0.98,1.18,1.10,1.24,1.28,1.06,1.20,0.96,1.26,1.17]; // valor por barra
+var LINEV=[0.42,0.55,0.5,0.66,0.6,0.78,0.72,0.9,0.62,0.8]; // serie de línea
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function h(v){return Math.abs(Math.sin(v))*0.6+0.35;} // pseudo-altura estable 0.35..0.95
@@ -22,25 +26,29 @@ function spark(){var pts=[];for(var i=0;i<12;i++){pts.push((i*10)+","+(24-22*h(i
   return '<svg class="spark" width="130" height="26" viewBox="0 0 120 26"><polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--accent)" stroke-width="1.6"/></svg>';}
 
 function bars(b){
-  var n=b.type==="histogram"?16:8, out='<div class="bars">';
+  var n=(b.type==="histogram")?12:8, i0=12-n, showv=(n<=8&&b.type!=="waterfall"&&b.type!=="stackedbars");
+  var out='<div class="chart"><div class="bars">';
   for(var i=0;i<n;i++){
-    var ph=h(i+1);
+    var idx=i0+i, ph=SER[idx];
     if(b.type==="stackedbars"){
-      out+='<div class="bar stk"><i style="height:'+(ph*40)+'%;background:var(--crit)"></i><i style="height:'+(ph*30)+'%;background:var(--warn)"></i><i style="height:'+(ph*60)+'%;background:var(--surface-3)"></i></div>';
+      out+='<div class="bar stk" style="height:'+ph+'%"><i style="height:50%;background:var(--crit)"></i><i style="height:26%;background:var(--warn)"></i><i style="height:24%;background:var(--surface-3)"></i></div>';
     } else if(b.type==="waterfall"){
-      out+='<div class="bar" style="height:'+(ph*100)+'%;background:'+(i%2?'var(--crit)':'var(--ok)')+'"></div>';
+      out+='<div class="bar" style="height:'+ph+'%;background:'+(i%2?'var(--crit)':'var(--ok)')+'"></div>';
     } else {
-      out+='<div class="bar'+(b.hl===i?' hl':'')+'" style="height:'+(ph*100)+'%"></div>';
+      out+='<div class="bar'+(b.hl===i?' hl':'')+'" style="height:'+ph+'%">'+(showv?'<span class="bv num">'+VAL[idx].toFixed(2)+'</span>':'')+'</div>';
     }
   }
+  out+='</div><div class="xlabs">'+MONTHS.slice(i0).map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>';
+  if(b.type==="stackedbars") out+='<div class="clegend"><span><i style="background:var(--crit)"></i>Abiertas</span><span><i style="background:var(--warn)"></i>Escaladas</span><span><i style="background:var(--surface-3)"></i>Resueltas</span></div>';
   return out+'</div>';
 }
 function line(b){
-  var pts=[],n=12;for(var i=0;i<n;i++){pts.push((i*(300/(n-1)))+","+(120-110*h(i+2)));}
-  var thr=b.threshold!=null?'<div class="thr" style="top:'+(120-110*b.threshold)/150*100+'%">umbral</div>':'';
-  return '<div class="chartwrap" style="height:150px">'+thr+'<svg width="100%" height="150" viewBox="0 0 300 150" preserveAspectRatio="none">'+
-    (b.type==="area"?'<polygon points="0,150 '+pts.join(" ")+' 300,150" fill="var(--surface-3)"/>':'')+
-    '<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>';
+  var n=LINEV.length, pts=LINEV.map(function(v,i){return (i*(300/(n-1)))+","+(120-108*v);}).join(" ");
+  var thrLine="",thrNote="";
+  if(b.threshold!=null){var ty=120-108*b.threshold; thrLine='<line x1="0" y1="'+ty+'" x2="300" y2="'+ty+'" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="5 4"/>'; thrNote='<div class="thrnote">— — umbral SLA / contractual</div>';}
+  var area=(b.type==="area")?'<polygon points="0,120 '+pts+' 300,120" fill="var(--surface-3)" opacity=".7"/>':'';
+  var svg='<svg width="100%" height="150" viewBox="0 0 300 128" preserveAspectRatio="none">'+area+thrLine+'<polyline points="'+pts+'" fill="none" stroke="var(--accent)" stroke-width="2.2"/></svg>';
+  return '<div class="chart">'+svg+thrNote+'<div class="xlabs">'+MONTHS.slice(2).map(function(m){return '<span>'+m+'</span>';}).join('')+'</div></div>';
 }
 function map(b){
   var mk=b.markers||[[.25,.35,"ok"],[.55,.5,"crit"],[.72,.3,"warn"],[.4,.68,"ok"],[.82,.66,"null"],[.15,.6,"ok"]];
@@ -108,10 +116,11 @@ function cellFor(col,ri){
   if(/descrip|motivo|tipo|causa/.test(l))return ["Sobreconsumo","Fase desbalanceada","Dato tardío","Offline >4h","CNR manual"][ri%5];
   if(/sever/.test(l))return '<span class="sev '+["crit","warn","null"][ri%3]+'">'+["CRÍT","ALTA","MEDIA"][ri%3]+'</span>';
   if(/apertura|transcurr|últim|hora|timestamp|fecha|heartbeat/.test(l))return '<span class="num">11:'+(10+ri)+' · 31-07</span>';
+  if(/precio/.test(l))return '<span class="num">'+(3.1+ri*0.18).toFixed(2)+'</span>';
   if(/consumo|mwh|volumen/.test(l))return '<span class="num">'+(120+ri*13.4).toFixed(1)+'</span>';
-  if(/precio/.test(l))return '<span class="num">'+(3.1+ri*0.2).toFixed(2)+'</span>';
   if(/costo|uf/.test(l))return '<span class="num">'+(1200+ri*230).toLocaleString("es-CL")+'</span>';
-  if(/%|variaci|cobert|éxito|exito|online|calidad|disponib/.test(l))return '<span class="num">'+(88+ri*1.3).toFixed(1)+'%</span>';
+  if(/variaci/.test(l))return '<span class="num">'+(ri%2?'▲':'▼')+' '+(0.6+ri*0.7).toFixed(1)+'%</span>';
+  if(/%|cobert|éxito|exito|online|calidad|disponib/.test(l))return '<span class="num">'+(88+ri*1.3).toFixed(1)+'%</span>';
   if(/estado/.test(l))return ["Activo","Offline","Estimado","Activo","CNR"][ri%5];
   if(/usuario|respons|aprob/.test(l))return USERS[ri%USERS.length];
   if(/ticket|orden|versi|política|politica|regla|integr|incidente/.test(l))return "OT-"+(2200+ri*11);
