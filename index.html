@@ -124,21 +124,21 @@ nav.anchors a:hover{background:#6d84a0}
 <h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
 <p class="desc">Vista financiera del consumo para control de gestión y proyecciones. Orientada a directivos y al área de finanzas. Combina la evolución mensual de costos, la descomposición de la variación y una tabla exportable con proyección de cierre.</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
-<tr><td><b>Gráfico de barras apiladas mensual</b></td><td>Eje Y: costo [UF o moneda seleccionada]. Barras apiladas por país o mall (configurable). Línea superpuesta en eje Y secundario: precio medio de la energía [UF/MWh]. Hover con desglose del costo por componente.</td><td class="req">DAT-22, FIN-07</td></tr>
+<tr><td><b>Gráfico de barras apiladas mensual</b></td><td>Eje Y: costo [UF o moneda seleccionada]. Barras apiladas por mall (configurable). Línea superpuesta en eje Y secundario: precio medio de la energía [UF/MWh]. Hover con desglose del costo por componente.</td><td class="req">DAT-22, FIN-07</td></tr>
 <tr><td><b>Waterfall chart de variación</b></td><td>Descompone la variación de costo total entre el período anterior y el actual en: cambio en volumen, cambio en precio y cambio en mix de malls. Barras verdes para reducción, rojas para incremento.</td><td class="req">DAT-22, FIN-07</td></tr>
-<tr><td><b>Tabla de costos por mall</b></td><td>Columnas: mall, país, consumo [MWh], precio medio [UF/MWh], costo total, variación %, proyección cierre de mes y año. Ordenable por columna. Exportable a CSV/Excel.</td><td class="req">DAT-22, FIN-07, DAT-12</td></tr>
+<tr><td><b>Tabla de costos por mall</b></td><td>Columnas: mall, consumo [MWh], precio medio [UF/MWh], costo total, variación %, proyección cierre de mes y año. Ordenable por columna. Exportable a CSV/Excel.</td><td class="req">DAT-22, FIN-07, DAT-12</td></tr>
 <tr><td><b>Proyecciones</b></td><td>Últimos 2 meses con cifras proyectadas (barras con trama diferente), basadas en la tendencia de los últimos 3 meses.</td><td class="req">DAT-22, FIN-07</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
 <tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
 <tr><td><b>Período</b></td><td>Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado</td><td>Año en curso</td></tr>
 <tr><td><b>Moneda</b></td><td>UF / CLP / USD (conversión al tipo de cambio del último día disponible)</td><td>UF</td></tr>
-<tr><td><b>Agrupación de gráficos</b></td><td>Por país / Por mall / Por tipología de mall</td><td>Por país</td></tr>
+<tr><td><b>Agrupación de gráficos</b></td><td>Por mall / Por tipología de mall</td><td>Por mall</td></tr>
 <tr><td><b>Ordenar tabla por</b></td><td>Cualquier columna (asc/desc)</td><td>Costo total desc.</td></tr>
 <tr><td><b>Mostrar solo malls con variación</b></td><td>Todos / &gt;5% / &gt;10% / &gt;20% (campo numérico)</td><td>Todos</td></tr>
 </tbody></table>
 <h4>b) Justificación de experiencia de usuario</h4>
-<div class="ux"><p class="uxc">Barras apiladas como pieza principal a la izquierda</p><p>La evolución mensual del costo es lo que el área de control de gestión revisa primero, así que ocupa el mayor bloque y el punto de entrada de lectura. Apilar por país/mall en una sola barra por mes permite ver a la vez el total y su composición sin cambiar de gráfico.</p>
+<div class="ux"><p class="uxc">Barras apiladas como pieza principal a la izquierda</p><p>La evolución mensual del costo es lo que el área de control de gestión revisa primero, así que ocupa el mayor bloque y el punto de entrada de lectura. Apilar por mall en una sola barra por mes permite ver a la vez el total y su composición sin cambiar de gráfico.</p>
 <p class="prin">Principio: Jerarquía visual por frecuencia de uso; densidad informativa controlada.</p>
 </div>
 <div class="ux"><p class="uxc">Waterfall junto a las barras, no en otra pestaña</p><p>El waterfall responde la pregunta que surge inmediatamente al ver subir el costo: «¿fue volumen, precio o mix?». Colocarlo al lado —no en otra pantalla— permite leer el «cuánto» y el «por qué» en el mismo movimiento ocular, respetando el sentido de lectura izquierda→derecha.</p>
@@ -199,7 +199,7 @@ nav.anchors a:hover{background:#6d84a0}
 <tr><td><b>Mapa geográfico de alarmas</b></td><td>Misma lógica del Panel consolidado, pero los marcadores se colorean siempre por estado de alarma (ignora la métrica de otras pantallas). Click: panel lateral con resumen del mall.</td><td class="req">DAT-03, DAT-27</td></tr>
 <tr><td><b>Gráfico de evolución — 30 días</b></td><td>Barras apiladas por día: abiertas (rojo) / escaladas (naranja) / resueltas (verde). Hover con conteo exacto por severidad.</td><td class="req">DAT-27, DAT-03</td></tr>
 <tr><td><b>Top 5 malls con más alarmas</b></td><td>Nombre, país, nº críticas, nº warnings y tendencia (↑/↓/→) vs. semana anterior.</td><td class="req">DAT-27, DAT-11</td></tr>
-<tr><td><b>Tabla de alarmas por mall</b></td><td>Mall, país, críticas activas, warnings activas, resueltas en período, tiempo medio de resolución [h], última alarma (hora y descripción breve). Sin datos de medidores individuales.</td><td class="req">DAT-03, DAT-11, FIN-06</td></tr>
+<tr><td><b>Tabla de alarmas por mall</b></td><td>Mall, críticas activas, warnings activas, resueltas en período, tiempo medio de resolución [h], última alarma (hora y descripción breve). Sin datos de medidores individuales.</td><td class="req">DAT-03, DAT-11, FIN-06</td></tr>
 </tbody></table>
 <p class="lbl">Filtros disponibles</p><table><thead><tr><th>Filtro</th><th>Opciones</th><th>Por defecto</th></tr></thead><tbody>
 <tr><td><b>Mall</b></td><td>Multi-selección con buscador</td><td>Todos</td></tr>
@@ -270,7 +270,7 @@ nav.anchors a:hover{background:#6d84a0}
 <p class="desc">Pantalla principal del turno del perfil Operacional. Muestra el estado en tiempo real del parque completo de medidores, actualizado cada 15 minutos, con carga en menos de 3 segundos (ARQ-07). Combina indicadores de cabecera, un mapa/grilla de centros comerciales que abre la grilla de medidores al hacer click, un histograma de comportamiento del parque en las últimas 24 h y un feed cronológico de eventos recientes.</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
 <tr><td><b>Indicadores de cabecera (refresco 15 min)</b></td><td>Total medidores / En línea [%] / Offline / Con dato estancado &gt; 4h (badge rojo, alerta automática DAT-24) / CNR pendientes.</td><td class="req">DAT-24, DAT-27, ARQ-08</td></tr>
-<tr><td><b>Mapa / grilla de centros comerciales</b></td><td>Tarjeta por mall: nombre, país, % medidores online, última lectura y semáforo general. Click en la tarjeta despliega la grilla de medidores del mall: serial, zona, estado, último valor, timestamp y variación vs. día anterior.</td><td class="req">ARQ-08, DAT-11, DAT-19</td></tr>
+<tr><td><b>Mapa / grilla de centros comerciales</b></td><td>Tarjeta por mall: nombre, % medidores online, última lectura y semáforo general. Click en la tarjeta despliega la grilla de medidores del mall: serial, zona, estado, último valor, timestamp y variación vs. día anterior.</td><td class="req">ARQ-08, DAT-11, DAT-19</td></tr>
 <tr><td><b>Histograma de comportamiento del parque</b></td><td>% de medidores online por hora en las últimas 24 h. Permite detectar caídas masivas o parciales y correlacionarlas con eventos externos.</td><td class="req">DAT-27, DAT-24</td></tr>
 <tr><td><b>Feed de eventos recientes</b></td><td>Lista cronológica: medidor pasó a offline, alarma abierta, backfill completado, CNR ingresada. Con timestamp y mall.</td><td class="req">DAT-03, DAT-10, DAT-19</td></tr>
 </tbody></table>
@@ -486,7 +486,7 @@ nav.anchors a:hover{background:#6d84a0}
 <h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
 <p class="desc">Inventario de medidores accesible desde terreno con búsqueda y filtros, y ficha técnica detallada del medidor seleccionado. La ficha reúne identificación, ubicación física, estado de comunicación con disponibilidad de 72 h, serie temporal de 48 h con gaps marcados por tipo de valor, e historial de fallas e intervenciones.</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
-<tr><td><b>Búsqueda y filtros</b></td><td>Por serial, tag, mall, zona, gateway, protocolo y estado. Filtros: país / mall / estado de comunicación / tipo / con alarma activa.</td><td class="req">INT-14, ARQ-15</td></tr>
+<tr><td><b>Búsqueda y filtros</b></td><td>Por serial, tag, mall, zona, gateway, protocolo y estado. Filtros: mall / estado de comunicación / tipo / con alarma activa.</td><td class="req">INT-14, ARQ-15</td></tr>
 <tr><td><b>Lista de medidores</b></td><td>Serial, nombre/tag, mall, zona, estado (online / offline / sin dato &gt; 4 h), protocolo (Modbus / DLMS / otro), último dato y timestamp.</td><td class="req">INT-14, DAT-06, DAT-24</td></tr>
 <tr><td><b>Ficha del medidor — Identificación</b></td><td>Serial, fabricante, modelo, firmware, protocolo, dirección Modbus/IP y gateway asignado.</td><td class="req">INT-14, DAT-23</td></tr>
 <tr><td><b>Ficha del medidor — Ubicación física</b></td><td>Tipo de sala (ref. Estándar Técnico Salas), rack / tablero / posición.</td><td class="req">INT-14, ARQ-15</td></tr>
@@ -861,7 +861,7 @@ nav.anchors a:hover{background:#6d84a0}
 <h4>a) Detalle de la pantalla <span class="src">(según informe EMS PASA)</span></h4>
 <p class="desc">Administración de los tenants (centros comerciales) sobre el modelo multitenant con aislamiento lógico por mall y consolidación por país y región (ARQ-05). Permite dar de alta nuevos malls sin consultoría específica (FIN-02/FIN-03) y editar la configuración base. Las acciones de creación, activación y desactivación no se ejecutan de forma directa: abren un flujo de aprobación documentado con PASA (CYB-15) y quedan auditadas (DAT-14).</p>
 <p class="lbl">Componentes / elementos</p><table><thead><tr><th>Componente</th><th>Descripción</th><th>Reqs. PASA</th></tr></thead><tbody>
-<tr><td><b>Lista de tenants</b></td><td>Tenant ID, nombre del mall, país, estado, nº de medidores activos, nº de usuarios activos, fecha de alta y versión de contrato. Filtros por país, estado y con alertas activas.</td><td class="req">ARQ-05, FIN-02, FIN-03</td></tr>
+<tr><td><b>Lista de tenants</b></td><td>Tenant ID, nombre del mall, estado, nº de medidores activos, nº de usuarios activos, fecha de alta y versión de contrato. Filtros por estado y con alertas activas.</td><td class="req">ARQ-05, FIN-02, FIN-03</td></tr>
 <tr><td><b>Detalle de tenant</b></td><td>Configuración base: nombre, país, moneda, zona horaria, umbrales de alerta e integración de facturación activa. Estadísticas de uso: usuarios activos en 30 días, nº de consultas API y volumen de datos almacenados. Historial de cambios de configuración.</td><td class="req">ARQ-05, DAT-19, FIN-04</td></tr>
 <tr><td><b>Acciones de tenant</b></td><td>Crear / Activar / Desactivar — requiere aprobación de PASA mediante flujo documentado. Editar la configuración base con auditoría de cada cambio.</td><td class="req">ARQ-05, CYB-15, DAT-14</td></tr>
 </tbody></table>
