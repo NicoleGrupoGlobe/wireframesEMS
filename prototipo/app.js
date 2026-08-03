@@ -6,6 +6,14 @@ var byRoute = {}, byProfile = {};
 EMS.order.forEach(function(p){ byProfile[p]=[]; });
 EMS.screens.forEach(function(s){ byRoute[s.profile+"/"+s.slug]=s; byProfile[s.profile].push(s); });
 var collapsed=false; try{collapsed=localStorage.getItem("ems_nav")==="1";}catch(e){}
+var CREDS={
+  "gerencial":{email:"gerencia@pasa.cl", pass:"pasa2026", mfa:"Solo lectura · sin MFA"},
+  "operacional":{email:"operaciones@pasa.cl", pass:"pasa2026", mfa:"MFA obligatorio"},
+  "tecnico":{email:"tecnico@pasa.cl", pass:"pasa2026", mfa:"MFA obligatorio · terreno"},
+  "auditor":{email:"auditor@pasa.cl", pass:"pasa2026", mfa:"MFA obligatorio · solo lectura"},
+  "super-admin":{email:"admin@globepower.cl", pass:"globe2026", mfa:"Federado + MFA + JIT"}
+};
+var session=null;
 function applyCollapse(){ document.body.classList.toggle("nav-collapsed",collapsed); try{localStorage.setItem("ems_nav",collapsed?"1":"0");}catch(e){} }
 
 var MALLS=["Costanera Center","Mallplaza Egaña","Alto Las Condes","Arauco Maipú","Mallplaza Vespucio","Portal Ñuñoa"];
@@ -371,7 +379,7 @@ function topbar(prof){
     '<span class="auth">'+esc(EMS.auth[prof])+'</span>'+
     '<div class="search"><span class="ic">⌕</span><input placeholder="Buscar medidor, mall, ticket, usuario…" data-act="search"></div>'+
     '<div class="top-right"><div class="bell" data-act="bell">⌁ Alertas <span class="badge">5</span></div>'+
-    '<div class="user"><div class="em">nmatus@grupoglobe.com</div><div class="se">Sesión 15 min · MFA activo</div></div></div></div>';
+    '<div class="user"><div class="em">'+esc((CREDS[prof]||{}).email||"usuario@ems")+'</div><div class="se">Sesión 15 min · <a class="lnk" data-act="logout">Cerrar sesión</a></div></div></div></div>';
 }
 function sidebar(prof,active){
   var items=EMS.menus[prof].map(function(m){
@@ -383,6 +391,45 @@ function sidebar(prof,active){
     '<div class="foot">PASA · Anexo 07 · Prototipo mid-fi</div></div>';
 }
 
+/* ---------------- login ---------------- */
+function renderLogin(){
+  document.body.classList.remove("nav-collapsed");
+  var creds=EMS.order.map(function(p){var c=CREDS[p];
+    return '<div class="lc-row"><div class="lc-info"><div class="lc-p">'+esc(EMS.labels[p])+'</div>'+
+      '<div class="lc-e">'+esc(c.email)+'  ·  '+esc(c.pass)+'</div><div class="lc-m">'+esc(c.mfa)+'</div></div>'+
+      '<button class="btn btn-sm" data-act="usecred" data-p="'+p+'">Usar</button></div>';}).join("");
+  document.getElementById("app").innerHTML=
+    '<div class="login"><div class="login-inner">'+
+      '<div class="login-card">'+
+        '<div class="brand-lg"><span class="logo">E</span> EMS · Globe Power</div>'+
+        '<div class="login-sub">Energy Management System — Parque Arauco (PASA)</div>'+
+        '<div class="lfield"><label>Correo / usuario</label><input id="lg-user" data-lg placeholder="tu.correo@empresa.cl"></div>'+
+        '<div class="lfield"><label>Contraseña</label><input id="lg-pass" data-lg type="password" placeholder="••••••••"></div>'+
+        '<div class="lg-err" id="lg-err"></div>'+
+        '<button class="btn btn-primary lg-go" data-act="login">Ingresar</button>'+
+        '<div class="lg-mfa">Inicio de sesión SSO con Azure AD · MFA según perfil (CYB-01 / CYB-02)</div>'+
+      '</div>'+
+      '<div class="login-card creds">'+
+        '<div class="lc-title">Credenciales de demo</div>'+
+        '<div class="lc-note">Wireframe interactivo — inicia sesión con cualquiera para entrar con ese perfil.</div>'+
+        creds+
+      '</div>'+
+    '</div><div class="login-foot">PASA · Anexo 07 · Prototipo mid-fi · escala de grises</div></div>';
+}
+function enter(profile){
+  session=profile;
+  var target="#/"+profile+"/"+firstSlug(profile);
+  if(location.hash===target) render(); else location.hash=target;
+}
+function doLogin(){
+  var u=(document.getElementById("lg-user").value||"").trim().toLowerCase();
+  var p=(document.getElementById("lg-pass").value||"");
+  var match=null;
+  EMS.order.forEach(function(pr){ var c=CREDS[pr]; if(c.email.toLowerCase()===u && c.pass===p) match=pr; });
+  if(match){ enter(match); }
+  else { var e=document.getElementById("lg-err"); if(e) e.textContent="Credenciales inválidas. Usa alguna de las de demo (columna derecha)."; }
+}
+
 /* ---------------- router ---------------- */
 function parse(){
   var hash=(location.hash||"").replace(/^#\/?/,"");
@@ -391,6 +438,7 @@ function parse(){
 }
 function render(){
   closePops();
+  if(!session){ renderLogin(); return; }
   var key=parse(), s=byRoute[key];
   var app=document.getElementById("app");
   app.innerHTML=topbar(s.profile)+sidebar(s.profile,s.activeMenu)+
@@ -713,6 +761,9 @@ document.addEventListener("click",function(e){
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
   else if(act==="sort"){ sortTable(t); }
+  else if(act==="login"){ doLogin(); }
+  else if(act==="usecred"){ enter(t.getAttribute("data-p")); }
+  else if(act==="logout"){ session=null; location.hash=""; render(); }
   else if(act==="navtoggle"){ collapsed=!collapsed; applyCollapse(); }
   else if(act==="clearfilters"){ clearFilters(); }
   else if(act==="clearone"){ var k=t.getAttribute("data-key"); filterSelects().forEach(function(s){if(s.getAttribute("data-key")===k)s.selectedIndex=0;}); applyFilters(); refreshFilterState(); }
@@ -742,6 +793,9 @@ document.addEventListener("focusin",function(e){
   if(t.getAttribute&&t.getAttribute("data-act")==="search"){ openSearch(t.value); }
 });
 window.addEventListener("hashchange",render);
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closePops();});
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closePops();
+  if(e.key==="Enter"&&e.target&&e.target.getAttribute&&e.target.getAttribute("data-lg")!==null&&e.target.hasAttribute("data-lg")) doLogin();
+});
 render();
 })();
