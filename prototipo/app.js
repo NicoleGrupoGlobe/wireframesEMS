@@ -569,16 +569,44 @@ function setActionStatus(el,html){
   var s=wrap.querySelector(".actstatus"); if(!s){ s=document.createElement("span"); s.className="actstatus"; wrap.appendChild(s); }
   s.innerHTML=html;
 }
+function alarmsTable(){return [].slice.call(document.querySelectorAll('.content table.tbl')).filter(function(t){var h=t.textContent.toLowerCase();return h.indexOf("sev")>=0&&h.indexOf("estado")>=0;})[0];}
+function markAlarmAssigned(who){
+  var tb=alarmsTable(); if(!tb) return;
+  var ths=[].slice.call(tb.querySelectorAll('thead th')).map(function(x){return x.textContent.toLowerCase();});
+  var respI=-1,estI=-1; ths.forEach(function(h,i){ if(h.indexOf("respons")>=0)respI=i; if(h.indexOf("estado")>=0)estI=i; });
+  var row=[].slice.call(tb.querySelectorAll('tbody tr.row')).filter(function(r){return r.style.display!=="none";})[0];
+  if(!row) return;
+  if(respI>=0&&row.children[respI]) row.children[respI].textContent=who;
+  if(estI>=0&&row.children[estI]) row.children[estI].innerHTML='<span class="pill-ok">Asignada</span>';
+  row.classList.add("newrow"); setTimeout(function(){row.classList.remove("newrow");},1800);
+}
+function alarmAssign(el){
+  var ctx='<div class="alarmctx"><span class="sev crit">CRÍT</span> <b>Sobrecarga transformador</b> — Costanera Center · P2 · <span class="muted">abierta hace 2 h · baseline superado 38%</span></div>';
+  var body='<div class="form">'+
+    '<div class="fg"><label>Responsable</label><select id="fa-who"><option>Yo (nmatus)</option><option>p.soto</option><option>m.rivas</option><option>c.díaz</option><option>a.fuentes</option><option>operador N2</option></select></div>'+
+    '<div class="frow2"><div class="fg"><label>Nivel de soporte (SLA)</label><select id="fa-lvl"><option>N1</option><option selected>N2</option><option>N3</option></select></div>'+
+    '<div class="fg"><label>Prioridad</label><select id="fa-pri"><option selected>Crítica</option><option>Alta</option><option>Media</option><option>Baja</option></select></div></div>'+
+    '<div class="fg"><label>Fecha compromiso (SLA)</label><select id="fa-sla"><option>Hoy 16:30 · SLA 2 h (Crítica)</option><option>Hoy 20:30 · 4 h</option><option>Mañana 09:00</option></select></div>'+
+    '<div class="fg"><label>Comentario inicial (opcional)</label><textarea id="fa-com" placeholder="Contexto, hipótesis o próximos pasos…"></textarea></div>'+
+    '<div class="mnote">La asignación y el comentario quedan en la pista de auditoría (DAT-14).</div></div>';
+  var m=openModal('<div class="modal-hd"><span>Asignar alarma</span><button class="mx" data-mclose>✕</button></div>'+
+    '<div class="modal-bd">'+ctx+body+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Asignar alarma</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){
+    var who=m.querySelector("#fa-who").value.replace(/^Yo \(([^)]+)\)$/,"$1");
+    var lvl=m.querySelector("#fa-lvl").value;
+    m.remove();
+    setActionStatus(el,'<span class="pill-ok">Asignada a '+esc(who)+' · '+esc(lvl)+'</span>');
+    markAlarmAssigned(who);
+    toast("Alarma asignada a "+who+" ("+lvl+") · en pista de auditoría");
+  });
+}
 /* acciones sobre una alarma (Asignar / Escalar / Cerrar / Iniciar backfill) */
 function alarmAction(v,el){
   var l=v.toLowerCase();
-  if(/asignar/.test(l)){
-    var m=openModal('<div class="modal-hd"><span>Asignar alarma</span><button class="mx" data-mclose>✕</button></div>'+
-      '<div class="modal-bd"><div class="form"><div class="fg"><label>Responsable</label><select id="masig"><option>p.soto</option><option>m.rivas</option><option>c.díaz</option><option>a.fuentes</option><option>operador N2</option></select></div></div></div>'+
-      '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Asignar</button></div>');
-    closeBtns(m);
-    m.querySelector("#mok").addEventListener("click",function(){ var who=m.querySelector("#masig").value; m.remove(); setActionStatus(el,'<span class="pill-ok">Asignada a '+esc(who)+'</span>'); toast("Alarma asignada a "+who); });
-  } else if(/escalar/.test(l)){
+  if(/asignar/.test(l)){ alarmAssign(el); }
+  else if(/escalar/.test(l)){
     modalConfirm("Escalar alarma","La alarma se escalará a <b>soporte N2</b> y quedará registrada en la pista de auditoría (FIN-05).","Escalar",function(){ setActionStatus(el,'<span class="pill-warn">Escalada a N2</span>'); toast("Alarma escalada a soporte N2"); });
   } else if(/cerrar/.test(l)){
     modalConfirm("Cerrar alarma","¿Confirmas el cierre de la alarma? No se elimina: queda registrada en la pista de auditoría (CYB-10).","Cerrar alarma",function(){ setActionStatus(el,'<span class="pill-ok">Cerrada ✓</span>'); toast("Alarma cerrada · en pista de auditoría"); });
