@@ -127,6 +127,16 @@ table.tbl tr.exp td{background:var(--surface-2);color:var(--ink-2);font-size:12p
 .chev{display:inline-block;transition:.15s;color:var(--ink-3)}
 .chev.open{transform:rotate(90deg)}
 
+/* tabla como cards (móvil) */
+.tcards{display:flex;flex-direction:column;gap:8px}
+.tcard{border:1px solid var(--line-2);border-radius:8px;padding:10px 12px;background:var(--surface)}
+.tcard[data-act]{cursor:pointer}
+.tc-title{font-weight:700;font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.tc-row{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-size:12px;border-top:1px dashed var(--line-2)}
+.tc-k{color:var(--ink-3);white-space:nowrap}
+.tc-v{color:var(--ink);text-align:right;min-width:0}
+.tc-exp{margin-top:8px;padding-top:8px;border-top:1px solid var(--line-2);font-size:11.5px;color:var(--ink-2)}
+
 /* dots / status */
 .dot{width:10px;height:10px;border-radius:50%;display:inline-block;vertical-align:middle;border:1px solid var(--line)}
 .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.crit{background:var(--crit)} .dot.null{background:var(--null)}
