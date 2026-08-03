@@ -519,6 +519,67 @@ function flowCreate(label){
     toast(ent.charAt(0).toUpperCase()+ent.slice(1)+" creado · agregado a la tabla");
   });
 }
+/* Nuevo ticket → formulario + alta en el tablero */
+function flowNewTicket(){
+  var body='<div class="form">'+
+    '<div class="fg"><label>Título del ticket</label><input id="t-tit" placeholder="Ej. Medidor sin lectura > 4 h — Costanera P2"></div>'+
+    '<div class="frow2"><div class="fg"><label>Tipo</label><select id="t-tipo"><option>Alarma</option><option>CNR</option><option>Solicitud</option><option>Mantención</option></select></div>'+
+    '<div class="fg"><label>Prioridad</label><select id="t-pri"><option>Crítica</option><option selected>Alta</option><option>Media</option><option>Baja</option></select></div></div>'+
+    '<div class="frow2"><div class="fg"><label>Mall</label><select id="t-mall">'+MALLS.map(function(x){return '<option>'+esc(x)+'</option>';}).join("")+'</select></div>'+
+    '<div class="fg"><label>Zona / medidor</label><input id="t-med" placeholder="SN-4471 · P2"></div></div>'+
+    '<div class="frow2"><div class="fg"><label>Asignar a</label><select id="t-who"><option>Sin asignar</option><option>p.soto</option><option>m.rivas</option><option>Cola N2</option></select></div>'+
+    '<div class="fg"><label>Compromiso SLA</label><select id="t-sla"><option>4 h (Alta)</option><option>2 h (Crítica)</option><option>24 h (Media)</option></select></div></div>'+
+    '<div class="fg"><label>Descripción</label><textarea id="t-desc" placeholder="Detalle del problema…"></textarea></div>'+
+    '<div class="mnote">Se registra con SLA según prioridad (FIN-05/FIN-06) y queda en la pista de auditoría.</div></div>';
+  var m=openModal('<div class="modal-hd"><span>Nuevo ticket</span><button class="mx" data-mclose>✕</button></div><div class="modal-bd">'+body+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Crear ticket</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){
+    var tit=m.querySelector("#t-tit").value.trim()||"Ticket sin título", tipo=m.querySelector("#t-tipo").value,
+        pri=m.querySelector("#t-pri").value, mall=m.querySelector("#t-mall").value;
+    m.remove();
+    var tb=mainTable(); var id="OT-"+(2300+(tb?tb.querySelectorAll("tbody tr.row").length:0));
+    prependRow(tb,function(h){
+      if(/(^|\s)id(\s|$)/.test(h)||/ticket|orden/.test(h)) return id;
+      if(h.indexOf("descrip")>=0) return esc(tit);
+      if(h.indexOf("tipo")>=0) return esc(tipo);
+      if(h.indexOf("priorid")>=0||h.indexOf("sever")>=0) return esc(pri);
+      if(h.indexOf("mall")>=0) return esc(mall);
+      if(h.indexOf("estado")>=0) return '<span class="pill-ok">Abierto</span>';
+      if(h.indexOf("fecha")>=0||h.indexOf("apertura")>=0||h.indexOf("compromiso")>=0) return nowStr();
+      if(h.indexOf("restan")>=0||h.indexOf("vencid")>=0||h.indexOf("días")>=0||h.indexOf("dias")>=0) return "En SLA";
+      return cellFor(h,0);
+    });
+    toast("Ticket "+id+" creado · prioridad "+pri);
+  });
+}
+/* Ingreso de CNR manual → formulario (norma CNR) + firma inmutable */
+function flowCNR(){
+  var body='<div class="form">'+
+    '<div class="frow2"><div class="fg"><label>Medidor</label><input id="c-med" value="SN-4471"></div>'+
+    '<div class="fg"><label>Mall / zona</label><input id="c-mall" value="Costanera Center · P2"></div></div>'+
+    '<div class="frow2"><div class="fg"><label>Inicio del período</label><input id="c-ini" placeholder="31-07 08:00"></div>'+
+    '<div class="fg"><label>Fin del período</label><input id="c-fin" placeholder="31-07 12:00"></div></div>'+
+    '<div class="frow2"><div class="fg"><label>Valor real [kWh]</label><input id="c-val" placeholder="Ej. 128,5"></div>'+
+    '<div class="fg"><label>Motivo del CNR</label><select id="c-mot"><option>Falla de comunicación</option><option>Medidor en mantención</option><option>Corte programado</option><option>Otro</option></select></div></div>'+
+    '<div class="fg"><label>Justificación</label><textarea id="c-just" placeholder="Sustento del consumo no registrado…"></textarea></div>'+
+    '<div class="fg"><label>Evidencia</label><div class="dropzone">Adjunta foto o documento de respaldo</div></div>'+
+    '<div class="mnote">Al firmar, el valor se marca como <b>“dato manual — CNR”</b> en todos los dashboards y el registro queda <b>inmutable</b> (DAT-20 · DAT-14 · CYB-10). No se puede retroeditar.</div></div>';
+  var m=openModal('<div class="modal-hd"><span>Ingreso de CNR manual</span><button class="mx" data-mclose>✕</button></div><div class="modal-bd">'+body+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Firmar e ingresar</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){
+    var med=m.querySelector("#c-med").value||"SN-4471", val=m.querySelector("#c-val").value||"—", mot=m.querySelector("#c-mot").value;
+    m.querySelector(".modal").innerHTML='<div class="modal-hd"><span>✓ CNR ingresada y firmada</span><button class="mx" data-mclose>✕</button></div>'+
+      '<div class="modal-bd"><ul class="mlist"><li>Medidor: <b>'+esc(med)+'</b></li><li>Valor real: <b>'+esc(val)+' kWh</b> · Motivo: <b>'+esc(mot)+'</b></li><li>Estado: <b>En revisión (Operacional)</b></li></ul>'+
+      '<div class="mok">Marcada como “dato manual — CNR”, inmutable y registrada en la pista de auditoría (DAT-20).</div></div>'+
+      '<div class="modal-ft"><button class="btn btn-primary" data-mclose>Listo</button></div>';
+    closeBtns(m);
+    var tb=[].slice.call(document.querySelectorAll('.content table.tbl')).filter(function(t){return /cnr|medidor|serial/i.test(t.textContent);})[0];
+    if(tb) prependRow(tb,function(h){ if(h.indexOf("medidor")>=0||h.indexOf("serial")>=0)return esc(med); if(h.indexOf("estado")>=0)return '<span class="pill-warn">En revisión</span>'; if(/valor|kwh/.test(h))return esc(val); if(h.indexOf("fecha")>=0)return nowStr(); if(h.indexOf("tipo")>=0)return "Manual"; return cellFor(h,0); });
+    toast("CNR ingresada y firmada · inmutable");
+  });
+}
 /* Firmar → confirmación de inmutabilidad */
 function flowSign(label){
   modalConfirm(label,'Al firmar, el registro queda <b>inmutable</b> (no editable), con sello de tiempo del servidor, usuario y hash de integridad (DAT-19 · CYB-10).','Firmar',function(){ toast("Registro firmado · inmutable ✓"); });
@@ -623,7 +684,9 @@ function alarmAction(v,el){
   }
 }
 function runButton(v,el){
-  if(/^(generar|exportar)/i.test(v)) flowProduce(v);
+  if(/nuevo ticket/i.test(v)) flowNewTicket();
+  else if(/cnr/i.test(v)&&/(firmar|ingres|nuevo)/i.test(v)) flowCNR();
+  else if(/^(generar|exportar)/i.test(v)) flowProduce(v);
   else if(/^(nuevo|nueva)/i.test(v)) flowCreate(v);
   else if(/solicitar despliegue/i.test(v)) flowDeploy();
   else if(/^firmar/i.test(v)) flowSign(v);
