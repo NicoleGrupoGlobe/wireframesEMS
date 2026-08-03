@@ -773,6 +773,42 @@ function alarmAction(v,el){
     },1400);
   }
 }
+/* Iniciar orden (Técnico móvil, 5.1) → contexto + arranque de SLA + atajo a intervención */
+function orderCard(){
+  return document.querySelector('.p-body .tcards .tcard');
+}
+function markOrderInProgress(){
+  var card=orderCard(); if(!card) return;
+  [].slice.call(card.querySelectorAll('.tc-row')).forEach(function(r){
+    var k=r.querySelector('.tc-k'), val=r.querySelector('.tc-v');
+    if(k&&val&&/estado/i.test(k.textContent)) val.innerHTML='<span class="pill-warn">En curso</span>';
+  });
+  var dot=card.querySelector('.tc-title .dot'); if(dot){ dot.className='dot warn'; }
+  card.classList.add("newrow"); setTimeout(function(){ card.classList.remove("newrow"); },1600);
+}
+function flowStartOrder(){
+  var ctx='<div class="alarmctx"><b>OT-2291</b> · Medidor <b>SN-4471</b> — Costanera Center · P2<br>'+
+    '<span class="muted">Problema: sin lectura &gt; 4 h en remarcador · prioridad Alta · SLA 4 h</span></div>';
+  var body='<div class="form">'+ctx+
+    '<div class="fg"><label>Confirma tu ubicación</label><select id="o-loc"><option>En terreno — Costanera Center P2</option><option>En ruta</option><option>Remoto</option></select></div>'+
+    '<div class="fg"><label>Nota de inicio (opcional)</label><textarea id="o-note" placeholder="Ej. Acceso por sala eléctrica P2, medidor sin display…"></textarea></div>'+
+    '<div class="mnote">Al iniciar, la orden pasa a <b>En curso</b>, se registra la hora de inicio, arranca el <b>cronómetro de SLA</b> y quedas como responsable (DAT-19 · DAT-23).</div></div>';
+  var m=openModal('<div class="modal-hd"><span>Iniciar orden</span><button class="mx" data-mclose>✕</button></div><div class="modal-bd">'+body+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Iniciar orden</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){
+    markOrderInProgress();
+    m.querySelector(".modal").innerHTML='<div class="modal-hd"><span>✓ Orden en curso</span><button class="mx" data-mclose>✕</button></div>'+
+      '<div class="modal-bd"><ul class="mlist"><li>Orden: <b>OT-2291</b> · Medidor SN-4471</li>'+
+      '<li>Estado: <b>En curso</b> · inicio '+nowStr()+'</li>'+
+      '<li>Responsable: <b>tecnico@pasa.cl</b> · SLA <b>4 h</b> en marcha</li></ul>'+
+      '<div class="mok">Cronómetro de SLA iniciado. Al terminar en terreno, registra la intervención para cerrar la orden.</div></div>'+
+      '<div class="modal-ft"><button class="btn" data-mclose>Cerrar</button>'+
+      '<button class="btn btn-primary" data-act="mnav" data-slug="registro-intervencion" data-mclose>Registrar intervención ›</button></div>';
+    closeBtns(m);
+    toast("Orden OT-2291 iniciada · en curso");
+  });
+}
 function runButton(v,el){
   if(/nuevo ticket/i.test(v)) flowNewTicket();
   else if(/cnr/i.test(v)&&/(firmar|ingres|nuevo)/i.test(v)) flowCNR();
@@ -781,6 +817,7 @@ function runButton(v,el){
   else if(/solicitar despliegue/i.test(v)) flowDeploy();
   else if(/^firmar/i.test(v)) flowSign(v);
   else if(/probar conexi/i.test(v)) flowTest();
+  else if(/iniciar orden/i.test(v)) flowStartOrder();
   else if(/^(asignar|escalar|cerrar)/i.test(v)||/iniciar backfill/i.test(v)) alarmAction(v,el);
   else if(/^(rollback|ejecutar|desactivar|revocar|borrado)/i.test(v)) modalConfirm(v,'Acción sensible: puede afectar producción o datos y <b>quedará auditada</b>. ¿Confirmas?',v,function(){toast('“'+v+'” ejecutada (demo)');},true);
   else if(/^(iniciar|pausar|forzar|programar|activar|notificar|ver log)/i.test(v)) toast(actionMsg(v));
