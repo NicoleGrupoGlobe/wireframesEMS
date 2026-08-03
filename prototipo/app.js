@@ -207,11 +207,13 @@ function applyFilters(){
   });
 }
 function refreshFilterState(){
-  var chips=filterSelects().filter(function(s){return s.selectedIndex>0;}).map(function(s){
+  var actives=filterSelects().filter(function(s){return s.selectedIndex>0;});
+  var chips=actives.map(function(s){
     var k=s.getAttribute("data-key");
     return '<span class="achip">'+esc(k)+': '+esc(s.value)+'<b data-act="clearone" data-key="'+esc(k)+'" title="Quitar">✕</b></span>';
   }).join("");
   var box=document.getElementById("fchips"); if(box) box.innerHTML=chips;
+  var clr=document.getElementById("fclear"); if(clr) clr.style.display=actives.length?"":"none";
   var cnt=document.getElementById("fcount");
   if(cnt){
     var tb=document.querySelector(".content table.tbl");
@@ -328,7 +330,7 @@ function filters(s){
     out+='<label class="filter"><span class="fn">'+esc(f.name)+':</span><select data-act="filter" data-key="'+esc(f.name)+'">'+opts+'</select></label>';
   });
   out+='<span class="fspacer"></span><span class="fcount" id="fcount"></span>'+
-       '<button class="fclear" data-act="clearfilters">✕ Limpiar filtros</button></div>'+
+       '<button class="fclear" id="fclear" data-act="clearfilters" style="display:none">✕ Limpiar filtros</button></div>'+
        '<div class="fchips" id="fchips"></div>';
   return out+'</div>';
 }
