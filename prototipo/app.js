@@ -564,14 +564,45 @@ function actionMsg(v){
   if(/iniciar/.test(l)) return "Proceso iniciado";
   return "“"+v+"” — acción simulada";
 }
-function runButton(v){
+function setActionStatus(el,html){
+  var wrap=el&&el.closest?el.closest(".actions"):null; if(!wrap) return;
+  var s=wrap.querySelector(".actstatus"); if(!s){ s=document.createElement("span"); s.className="actstatus"; wrap.appendChild(s); }
+  s.innerHTML=html;
+}
+/* acciones sobre una alarma (Asignar / Escalar / Cerrar / Iniciar backfill) */
+function alarmAction(v,el){
+  var l=v.toLowerCase();
+  if(/asignar/.test(l)){
+    var m=openModal('<div class="modal-hd"><span>Asignar alarma</span><button class="mx" data-mclose>✕</button></div>'+
+      '<div class="modal-bd"><div class="form"><div class="fg"><label>Responsable</label><select id="masig"><option>p.soto</option><option>m.rivas</option><option>c.díaz</option><option>a.fuentes</option><option>operador N2</option></select></div></div></div>'+
+      '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Asignar</button></div>');
+    closeBtns(m);
+    m.querySelector("#mok").addEventListener("click",function(){ var who=m.querySelector("#masig").value; m.remove(); setActionStatus(el,'<span class="pill-ok">Asignada a '+esc(who)+'</span>'); toast("Alarma asignada a "+who); });
+  } else if(/escalar/.test(l)){
+    modalConfirm("Escalar alarma","La alarma se escalará a <b>soporte N2</b> y quedará registrada en la pista de auditoría (FIN-05).","Escalar",function(){ setActionStatus(el,'<span class="pill-warn">Escalada a N2</span>'); toast("Alarma escalada a soporte N2"); });
+  } else if(/cerrar/.test(l)){
+    modalConfirm("Cerrar alarma","¿Confirmas el cierre de la alarma? No se elimina: queda registrada en la pista de auditoría (CYB-10).","Cerrar alarma",function(){ setActionStatus(el,'<span class="pill-ok">Cerrada ✓</span>'); toast("Alarma cerrada · en pista de auditoría"); });
+  } else { // iniciar backfill
+    var m2=openModal('<div class="modal-hd"><span>Backfill automático…</span></div>'+
+      '<div class="modal-bd"><div class="progress"><i id="pgi"></i></div><div class="mnote">Reponiendo lecturas faltantes del período (DAT-10)…</div></div>');
+    var pgi=m2.querySelector("#pgi"); setTimeout(function(){ if(pgi) pgi.style.width="100%"; },60);
+    setTimeout(function(){ if(!m2.parentNode) return;
+      m2.querySelector(".modal").innerHTML='<div class="modal-hd"><span>✓ Backfill completado</span><button class="mx" data-mclose>✕</button></div>'+
+        '<div class="modal-bd"><div class="mok">Se repusieron las lecturas del gap y se actualizó la calidad del dato.</div></div>'+
+        '<div class="modal-ft"><button class="btn btn-primary" data-mclose>Cerrar</button></div>';
+      closeBtns(m2); setActionStatus(el,'<span class="pill-ok">Backfill OK</span>'); toast("Backfill completado");
+    },1400);
+  }
+}
+function runButton(v,el){
   if(/^(generar|exportar)/i.test(v)) flowProduce(v);
   else if(/^(nuevo|nueva)/i.test(v)) flowCreate(v);
   else if(/solicitar despliegue/i.test(v)) flowDeploy();
   else if(/^firmar/i.test(v)) flowSign(v);
   else if(/probar conexi/i.test(v)) flowTest();
+  else if(/^(asignar|escalar|cerrar)/i.test(v)||/iniciar backfill/i.test(v)) alarmAction(v,el);
   else if(/^(rollback|ejecutar|desactivar|revocar|borrado)/i.test(v)) modalConfirm(v,'Acción sensible: puede afectar producción o datos y <b>quedará auditada</b>. ¿Confirmas?',v,function(){toast('“'+v+'” ejecutada (demo)');},true);
-  else if(/^(asignar|escalar|cerrar|iniciar|pausar|forzar|programar|activar|notificar|ver log)/i.test(v)) toast(actionMsg(v));
+  else if(/^(iniciar|pausar|forzar|programar|activar|notificar|ver log)/i.test(v)) toast(actionMsg(v));
   else toast("Acción: “"+v+"” — simulada en el prototipo");
 }
 
@@ -579,7 +610,7 @@ document.addEventListener("click",function(e){
   var t=e.target.closest("[data-act]");
   if(!t){return;}
   var act=t.getAttribute("data-act");
-  if(act==="btn"){ runButton(t.getAttribute("data-v")||""); }
+  if(act==="btn"){ runButton(t.getAttribute("data-v")||"", t); }
   else if(act==="dlreport"){ toast("Descarga iniciada (simulada) · archivo."+((cfgVal(/formato/)||"PDF").toLowerCase())); }
   else if(act==="marker"){ toast("Centro comercial: "+t.getAttribute("data-v")+" · click para drill-down"); }
   else if(act==="cell"){ toast("Tienda/local seleccionado (Nivel 3)"); }
