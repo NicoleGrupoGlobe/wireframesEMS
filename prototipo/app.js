@@ -450,33 +450,137 @@ function addHistoryRow(alc,fmt){
   var tbody=tb.querySelector("tbody"); tbody.insertBefore(tr,tbody.firstChild);
   setTimeout(function(){tr.classList.remove("newrow");},1600);
 }
-function generateReport(label){
-  var alc=cfgVal(/alcance/)||"Portafolio completo", per=cfgVal(/período|periodo/)||"Mes actual",
-      fmt=cfgVal(/formato/)||"PDF", met=cfgVal(/métrica|metrica/)||"Consumo";
-  var noun=(label||"reporte").replace(/^generar\s+/i,"").toLowerCase()||"reporte";
+function mainTable(){return document.querySelector(".content table.tbl");}
+function prependRow(tb,get){
+  if(!tb) return;
+  var ths=[].slice.call(tb.querySelectorAll("thead th")).map(function(x){return x.textContent.toLowerCase();});
+  var tr=document.createElement("tr"); tr.className="row newrow"; var c="";
+  ths.forEach(function(h,i){ c+='<td>'+get(h,i)+'</td>'; });
+  tr.innerHTML=c; var tbody=tb.querySelector("tbody"); tbody.insertBefore(tr,tbody.firstChild);
+  setTimeout(function(){tr.classList.remove("newrow");},1600);
+}
+function closeBtns(m){m.querySelectorAll('[data-mclose]').forEach(function(b){b.addEventListener("click",function(){m.remove();});});}
+function modalConfirm(title,bodyHtml,confirmLabel,onConfirm,danger){
+  var m=openModal('<div class="modal-hd"><span>'+esc(title)+'</span><button class="mx" data-mclose>✕</button></div>'+
+    '<div class="modal-bd">'+bodyHtml+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn '+(danger?'btn-danger':'btn-primary')+'" id="mok">'+esc(confirmLabel)+'</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){ m.remove(); if(onConfirm) onConfirm(); });
+}
+/* Generar / Exportar → progreso + descarga + historial */
+function flowProduce(label){
+  var isExp=/^exportar/i.test(label);
+  var noun=(label||"reporte").replace(/^(generar|exportar)\s+/i,"").toLowerCase()||(isExp?"exportación":"reporte");
   var nounCap=noun.charAt(0).toUpperCase()+noun.slice(1);
-  var summary='<ul class="mlist"><li>Alcance: <b>'+esc(alc)+'</b></li><li>Período: <b>'+esc(per)+'</b> · Métrica: <b>'+esc(met)+'</b></li><li>Formato: <b>'+esc(fmt)+'</b></li></ul>';
-  var m=openModal('<div class="modal-hd"><span>Generando '+esc(noun)+'…</span></div>'+
-    '<div class="modal-bd">'+summary+'<div class="progress"><i id="pgi"></i></div><div class="mnote">Compilando KPIs, gráficos y tablas del período…</div></div>');
+  var fmt=cfgVal(/formato/)||(isExp?"Excel":"PDF"), alc=cfgVal(/alcance/)||"Portafolio completo", per=cfgVal(/período|periodo/)||"Mes actual";
+  var summary='<ul class="mlist"><li>Contenido: <b>'+esc(nounCap)+'</b></li><li>Alcance: <b>'+esc(alc)+'</b> · Período: <b>'+esc(per)+'</b></li><li>Formato: <b>'+esc(fmt)+'</b></li></ul>';
+  var m=openModal('<div class="modal-hd"><span>'+(isExp?"Exportando":"Generando")+' '+esc(noun)+'…</span></div>'+
+    '<div class="modal-bd">'+summary+'<div class="progress"><i id="pgi"></i></div><div class="mnote">Preparando el archivo…</div></div>');
   var pgi=m.querySelector("#pgi"); setTimeout(function(){ if(pgi) pgi.style.width="100%"; },60);
   setTimeout(function(){
     if(!m.parentNode) return;
+    var hasTable=!!mainTable();
     m.querySelector(".modal").innerHTML=
-      '<div class="modal-hd"><span>✓ '+esc(nounCap)+' generado</span><button class="mx" data-mclose aria-label="Cerrar">✕</button></div>'+
-      '<div class="modal-bd">'+summary+'<div class="mok">El archivo quedó disponible y se agregó al historial de reportes.</div></div>'+
+      '<div class="modal-hd"><span>✓ '+(isExp?"Exportación lista":(esc(nounCap)+" generado"))+'</span><button class="mx" data-mclose>✕</button></div>'+
+      '<div class="modal-bd">'+summary+'<div class="mok">El archivo quedó disponible'+(hasTable?' y se registró en el historial.':'.')+'</div></div>'+
       '<div class="modal-ft"><button class="btn" data-mclose>Cerrar</button><button class="btn btn-primary" data-act="dlreport" data-mclose>⬇ Descargar '+esc(fmt)+'</button></div>';
-    m.querySelectorAll('[data-mclose]').forEach(function(b){b.addEventListener("click",function(){m.remove();});});
-    addHistoryRow(alc,fmt);
-    toast("Reporte generado y guardado en el historial");
-  },1600);
+    closeBtns(m); addHistoryRow(alc,fmt);
+    toast((isExp?"Exportación lista":"Reporte generado")+" · en historial");
+  },1500);
+}
+/* Nuevo / Nueva → formulario + alta de fila */
+var CREATE_FIELDS={
+  "tenant":["Nombre del mall","Moneda","Zona horaria"],
+  "usuario":["Nombre","Email","Perfil"],
+  "medidor":["Serial","Mall","Protocolo"],
+  "ticket":["Descripción","Prioridad","Mall"],
+  "regla":["Medidor","Tipo de transformación","Valor"],
+  "política":["Tipo de dato","Retención (años)","Acción al vencer"],
+  "integración":["Nombre","Tipo","Endpoint"]
+};
+function flowCreate(label){
+  var ent=label.replace(/^nuev[oa]\s+/i,"").toLowerCase();
+  var fs=CREATE_FIELDS[ent]||["Nombre","Descripción"];
+  var body='<div class="form">'+fs.map(function(f){return '<div class="fg"><label>'+esc(f)+'</label><input data-mf placeholder="'+esc(f)+'"></div>';}).join("")+'</div>';
+  var m=openModal('<div class="modal-hd"><span>'+esc(label)+'</span><button class="mx" data-mclose>✕</button></div>'+
+    '<div class="modal-bd">'+body+'</div>'+
+    '<div class="modal-ft"><button class="btn" data-mclose>Cancelar</button><button class="btn btn-primary" id="mok">Crear</button></div>');
+  closeBtns(m);
+  m.querySelector("#mok").addEventListener("click",function(){
+    var vals=[].slice.call(m.querySelectorAll('[data-mf]')).map(function(i){return i.value.trim();});
+    m.remove();
+    prependRow(mainTable(),function(h,i){
+      if(i===0&&vals[0]) return esc(vals[0]);
+      for(var k=1;k<fs.length;k++){ var key=fs[k].toLowerCase().split(" ")[0]; if(vals[k]&&h.indexOf(key)>=0) return esc(vals[k]); }
+      if(h.indexOf("estado")>=0) return '<span class="pill-ok">Activo</span>';
+      if(h.indexOf("fecha")>=0) return nowStr();
+      return cellFor(h,0);
+    });
+    toast(ent.charAt(0).toUpperCase()+ent.slice(1)+" creado · agregado a la tabla");
+  });
+}
+/* Firmar → confirmación de inmutabilidad */
+function flowSign(label){
+  modalConfirm(label,'Al firmar, el registro queda <b>inmutable</b> (no editable), con sello de tiempo del servidor, usuario y hash de integridad (DAT-19 · CYB-10).','Firmar',function(){ toast("Registro firmado · inmutable ✓"); });
+}
+/* Probar conexión → test con resultado */
+function flowTest(){
+  var m=openModal('<div class="modal-hd"><span>Probando conexión…</span></div>'+
+    '<div class="modal-bd"><div class="progress"><i id="pgi"></i></div><div class="mnote">Enviando ping al gateway y solicitando lectura…</div></div>');
+  var pgi=m.querySelector("#pgi"); setTimeout(function(){ if(pgi) pgi.style.width="100%"; },60);
+  setTimeout(function(){ if(!m.parentNode) return;
+    m.querySelector(".modal").innerHTML='<div class="modal-hd"><span>✓ Conexión establecida</span><button class="mx" data-mclose>✕</button></div>'+
+      '<div class="modal-bd"><ul class="mlist"><li>Estado: <b>Online</b></li><li>Latencia: <b>214 ms</b> · Reintentos: <b>0</b></li><li>Último dato: <b>hace 2 min</b> · Tasa de éxito 24h: <b>99,2%</b></li></ul></div>'+
+      '<div class="modal-ft"><button class="btn btn-primary" data-mclose>Cerrar</button></div>';
+    closeBtns(m);
+  },1300);
+}
+/* Solicitar despliegue → gate de aprobación PASA */
+function flowDeploy(){
+  modalConfirm('Solicitar despliegue a producción','Ningún cambio pasa a producción sin pruebas de seguridad y <b>aprobación de al menos un rol PASA</b> (CYB-15). Se abrirá el flujo de aprobación y quedará auditado.','Solicitar aprobación',function(){
+    prependRow(mainTable(),function(h){
+      if(h.indexOf("estado")>=0) return '<span class="pill-warn">En aprobación</span>';
+      if(h.indexOf("fecha")>=0) return nowStr();
+      if(h.indexOf("responsable")>=0) return "nmatus";
+      if(h.indexOf("versi")>=0) return "v2.4.1";
+      return cellFor(h,0);
+    });
+    toast("Solicitud enviada · esperando aprobación de PASA");
+  });
+}
+function actionMsg(v){
+  var l=v.toLowerCase();
+  if(/asignar/.test(l)) return "Alarma asignada a nmatus";
+  if(/escalar/.test(l)) return "Alarma escalada a soporte N2";
+  if(/cerrar/.test(l)) return "Alarma cerrada · queda en pista de auditoría";
+  if(/backfill/.test(l)) return "Backfill iniciado · reponiendo datos…";
+  if(/iniciar orden/.test(l)) return "Orden iniciada · estado: en curso";
+  if(/pausar/.test(l)) return "Orden pausada";
+  if(/forzar/.test(l)) return "Re-intento de lectura forzado…";
+  if(/programar/.test(l)) return "Programado correctamente";
+  if(/activar/.test(l)) return "Estado actualizado";
+  if(/notificar/.test(l)) return "Notificación enviada a PASA (< 24 h)";
+  if(/ver log/.test(l)) return "Abriendo log de comunicación (últimas 100 líneas)…";
+  if(/iniciar/.test(l)) return "Proceso iniciado";
+  return "“"+v+"” — acción simulada";
+}
+function runButton(v){
+  if(/^(generar|exportar)/i.test(v)) flowProduce(v);
+  else if(/^(nuevo|nueva)/i.test(v)) flowCreate(v);
+  else if(/solicitar despliegue/i.test(v)) flowDeploy();
+  else if(/^firmar/i.test(v)) flowSign(v);
+  else if(/probar conexi/i.test(v)) flowTest();
+  else if(/^(rollback|ejecutar|desactivar|revocar|borrado)/i.test(v)) modalConfirm(v,'Acción sensible: puede afectar producción o datos y <b>quedará auditada</b>. ¿Confirmas?',v,function(){toast('“'+v+'” ejecutada (demo)');},true);
+  else if(/^(asignar|escalar|cerrar|iniciar|pausar|forzar|programar|activar|notificar|ver log)/i.test(v)) toast(actionMsg(v));
+  else toast("Acción: “"+v+"” — simulada en el prototipo");
 }
 
 document.addEventListener("click",function(e){
   var t=e.target.closest("[data-act]");
   if(!t){return;}
   var act=t.getAttribute("data-act");
-  if(act==="btn"){ var v=t.getAttribute("data-v")||""; if(/^generar/i.test(v)){ generateReport(v); } else { toast("Acción: “"+v+"” — simulada en el prototipo"); } }
-  else if(act==="dlreport"){ toast("Descarga iniciada (simulada) · reporte_ejecutivo."+((cfgVal(/formato/)||"PDF").toLowerCase())); }
+  if(act==="btn"){ runButton(t.getAttribute("data-v")||""); }
+  else if(act==="dlreport"){ toast("Descarga iniciada (simulada) · archivo."+((cfgVal(/formato/)||"PDF").toLowerCase())); }
   else if(act==="marker"){ toast("Centro comercial: "+t.getAttribute("data-v")+" · click para drill-down"); }
   else if(act==="cell"){ toast("Tienda/local seleccionado (Nivel 3)"); }
   else if(act==="drilltomalls"){ showMalls(); toast("Nivel 2 · Centro comercial — Chile"); }
