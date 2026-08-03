@@ -360,14 +360,29 @@ function renderDesktop(s){
   }
   return screenHead(s)+filters(s)+'<div class="grid">'+blocks.map(renderBlock).join("")+'</div>';
 }
-function renderMobile(s){
+var MNAV=[["Órdenes","mis-ordenes"],["Activos","activos-medidores"],["Comms","diagnostico-comms"],["Bitácora","registro-intervencion"],["Más",""]];
+function renderMobileFull(s){
+  document.body.classList.remove("nav-collapsed");
   var body=filters(s)+s.blocks.map(renderBlock).join("");
   var prim=s.mobilePrimary?'<div class="p-primary"><button class="btn btn-primary" data-act="btn" data-v="'+esc(s.mobilePrimary)+'">'+esc(s.mobilePrimary)+'</button></div>':'';
-  var nav='<div class="p-nav">'+NAV.map(function(n,i){return '<div class="n'+(i===(s.navActive||0)?' active':'')+'"><span class="d"></span>'+n+'</div>';}).join("")+'</div>';
-  var phone='<div class="phone"><div class="p-top"><span style="font-size:16px">☰</span><div><div style="font-size:12px;font-weight:700">GLOBE · EMS</div><div style="font-size:9px;color:var(--ink-3)">Técnico · PWA</div></div></div>'+
-    '<div class="p-body">'+body+'</div>'+prim+nav+'</div>';
-  var note='<div class="phone-note"><h3>Vista de terreno (PWA)</h3><p>Pantalla optimizada para uso con una mano y baja señal: menos densidad, targets grandes y la acción principal fija sobre el nav inferior (alcance del pulgar).</p><p>Usá el menú lateral para recorrer las demás pantallas del perfil Técnico.</p></div>';
-  return screenHead(s)+'<div class="phonewrap">'+phone+note+'</div>';
+  var nav='<div class="p-nav">'+MNAV.map(function(n,i){var act=n[1]?('data-act="mnav" data-slug="'+n[1]+'"'):'data-act="mmenu"';
+      return '<div class="n'+(i===(s.navActive||0)?' active':'')+'" '+act+'><span class="d"></span>'+n[0]+'</div>';}).join("")+'</div>';
+  var top='<div class="p-top"><span class="phamb" data-act="mmenu" aria-label="Menú">☰</span>'+
+    '<div class="p-brand"><div class="pb1">GLOBE · EMS</div><div class="pb2">'+esc(s.title)+' · Técnico · PWA</div></div>'+
+    '<span class="pexit" data-act="logout" title="Cerrar sesión">⏻</span></div>';
+  document.getElementById("app").innerHTML=
+    '<div class="mobile-only"><div class="phone big">'+top+
+      '<div class="p-body">'+body+'</div>'+prim+nav+
+      '<div class="mmenu" id="mmenu" style="display:none"></div>'+
+    '</div></div>';
+}
+function toggleMMenu(){
+  var el=document.getElementById("mmenu"); if(!el) return;
+  if(el.style.display!=="none"){ el.style.display="none"; el.innerHTML=""; return; }
+  var items=EMS.menus["tecnico"].map(function(m){var sc=byProfile["tecnico"].filter(function(x){return x.activeMenu===m;})[0];
+      return '<a class="mm-item" data-act="mnav" data-slug="'+(sc?sc.slug:"")+'">'+esc(m)+'</a>';}).join("");
+  el.innerHTML='<div class="mm-hd">MENÚ · TÉCNICO</div>'+items+'<a class="mm-item mm-exit" data-act="logout">⏻ Cerrar sesión</a>';
+  el.style.display="block";
 }
 
 /* ---------------- shell ---------------- */
@@ -375,7 +390,7 @@ function topbar(prof){
   return '<div class="topbar">'+
     '<button class="navtoggle" data-act="navtoggle" title="Contraer / expandir menú" aria-label="Contraer o expandir el menú lateral">☰</button>'+
     '<div class="brand"><span class="logo">E</span>EMS</div>'+
-    '<div class="profile-btn" data-act="profmenu"><span class="lbl">Perfil activo</span><span class="val">'+esc(EMS.labels[prof])+' ▾</span></div>'+
+    '<div class="profile-tag"><span class="lbl">Perfil activo</span><span class="val">'+esc(EMS.labels[prof])+'</span></div>'+
     '<span class="auth">'+esc(EMS.auth[prof])+'</span>'+
     '<div class="search"><span class="ic">⌕</span><input placeholder="Buscar medidor, mall, ticket, usuario…" data-act="search"></div>'+
     '<div class="top-right"><div class="bell" data-act="bell">⌁ Alertas <span class="badge">5</span></div>'+
@@ -440,9 +455,10 @@ function render(){
   closePops();
   if(!session){ renderLogin(); return; }
   var key=parse(), s=byRoute[key];
+  if(s.device==="mobile"){ renderMobileFull(s); refreshFilterState(); return; }
   var app=document.getElementById("app");
   app.innerHTML=topbar(s.profile)+sidebar(s.profile,s.activeMenu)+
-    '<div class="content">'+(s.device==="mobile"?renderMobile(s):renderDesktop(s))+'</div>'+
+    '<div class="content">'+renderDesktop(s)+'</div>'+
     '<div class="hint">Prototipo interactivo · escala de grises · <b>'+key+'</b></div>';
   var c=document.querySelector(".content"); if(c) c.scrollTop=0;
   refreshFilterState();
@@ -768,12 +784,8 @@ document.addEventListener("click",function(e){
   else if(act==="clearfilters"){ clearFilters(); }
   else if(act==="clearone"){ var k=t.getAttribute("data-key"); filterSelects().forEach(function(s){if(s.getAttribute("data-key")===k)s.selectedIndex=0;}); applyFilters(); refreshFilterState(); }
   else if(act==="exprow"){ var ex=t.nextElementSibling; if(ex&&ex.classList.contains("exp")){var open=ex.style.display!=="none";ex.style.display=open?"none":"table-row";var c2=t.querySelector(".chev");if(c2)c2.classList.toggle("open",!open);} }
-  else if(act==="profmenu"){
-    var html=EMS.order.map(function(p){return '<div class="pi" data-go="'+p+'"><b style="min-width:96px;display:inline-block">'+esc(EMS.labels[p])+'</b><span style="color:var(--ink-3);font-size:11px">'+esc(EMS.auth[p]).split("·")[0]+'</span></div>';}).join("");
-    var p=popUnder(t,html);
-    p.querySelectorAll("[data-go]").forEach(function(it){it.addEventListener("click",function(){var pr=it.getAttribute("data-go");closePops();location.hash="#/"+pr+"/"+firstSlug(pr);});});
-    e.stopPropagation();
-  }
+  else if(act==="mmenu"){ toggleMMenu(); }
+  else if(act==="mnav"){ var sl=t.getAttribute("data-slug"); if(sl) location.hash="#/tecnico/"+sl; else toggleMMenu(); }
   else if(act==="bell"){
     var al=[["crit","Sobrecarga transformador — Costanera P2"],["warn","Fase desbalanceada — Egaña"],["warn","Dato estancado >4h — Maipú"],["null","Backfill completado — Vespucio"],["crit","Medidor offline — Alto Las Condes"]];
     var html=al.map(function(a){return '<div class="pi" data-al="1"><span class="sev '+a[0]+'">'+(a[0]==="crit"?"CRÍT":a[0]==="warn"?"WARN":"INFO")+'</span>'+esc(a[1])+'</div>';}).join("");

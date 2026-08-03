@@ -25,6 +25,9 @@ a{color:inherit;text-decoration:none}
   border-radius:var(--radius);padding:5px 12px;cursor:pointer;min-width:150px}
 .profile-btn .lbl{font-size:9px;color:var(--ink-3)}
 .profile-btn .val{font-size:12px;color:var(--accent);font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.profile-tag{display:flex;flex-direction:column;line-height:1.1;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:5px 12px;min-width:130px}
+.profile-tag .lbl{font-size:9px;color:var(--ink-3)}
+.profile-tag .val{font-size:12px;color:var(--ink);font-weight:700}
 .auth{font-size:10.5px;color:var(--ink-3);white-space:nowrap}
 .search{flex:1;min-width:0;max-width:420px;position:relative}
 .search input{width:100%;height:34px;border:1px solid var(--line);border-radius:18px;padding:0 14px 0 34px;
@@ -242,6 +245,20 @@ table.tbl tr.exp td{background:var(--surface-2);color:var(--ink-2);font-size:12p
 .phone .p-nav .n.active{color:var(--accent)} .phone .p-nav .n.active .d{background:var(--accent)}
 .phone-note{max-width:320px;font-size:12.5px;color:var(--ink-2)}
 .phone-note h3{font-size:14px;margin:0 0 8px}
+/* vista móvil a pantalla completa (solo el teléfono) */
+.mobile-only{position:fixed;inset:0;background:var(--surface-3);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.phone.big{width:404px;height:calc(100vh - 56px);max-height:880px}
+.p-top .phamb{font-size:18px;cursor:pointer;color:var(--ink)}
+.p-top .p-brand{min-width:0}
+.p-top .p-brand .pb1{font-size:12px;font-weight:700}
+.p-top .p-brand .pb2{font-size:9px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.p-top .pexit{margin-left:auto;font-size:16px;color:var(--ink-3);cursor:pointer}
+.p-nav .n{cursor:pointer}
+.mmenu{position:absolute;top:52px;left:0;right:0;bottom:0;background:var(--surface);z-index:6;padding:10px;overflow:auto}
+.mm-hd{font-size:10px;color:var(--ink-3);font-weight:700;letter-spacing:.4px;padding:6px 10px 10px}
+.mm-item{display:block;padding:13px 12px;border-radius:8px;font-size:14px;color:var(--ink);border-bottom:1px solid var(--line-2);cursor:pointer}
+.mm-item:hover{background:var(--surface-2)}
+.mm-exit{color:var(--accent);border-bottom:none;margin-top:10px;font-weight:600}
 
 /* ---------- overlays ---------- */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
