@@ -403,7 +403,7 @@ function render(){
 
 /* ---------------- interacciones ---------------- */
 var openEl=null;
-function closePops(){document.querySelectorAll(".pop,.backdrop").forEach(function(e){e.remove();});openEl=null;}
+function closePops(){document.querySelectorAll(".pop,.backdrop,.modal-backdrop").forEach(function(e){e.remove();});openEl=null;}
 function toast(msg){
   var t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
   clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove("show");},2200);
@@ -419,11 +419,64 @@ function popUnder(anchor,html){
 }
 function firstSlug(prof){return byProfile[prof][0].slug;}
 
+/* ---- flujo: Generar reporte ---- */
+function cfgVal(re){var s=filterSelects().filter(function(x){return re.test((x.getAttribute("data-key")||"").toLowerCase());})[0];return s?s.value:null;}
+function nowStr(){var d=new Date();function p(n){return(n<10?"0":"")+n;}return p(d.getDate())+"-"+p(d.getMonth()+1)+" "+p(d.getHours())+":"+p(d.getMinutes());}
+function openModal(inner){
+  closePops();
+  var bd=document.createElement("div"); bd.className="modal-backdrop";
+  bd.innerHTML='<div class="modal">'+inner+'</div>';
+  bd.addEventListener("click",function(e){ if(e.target===bd) bd.remove(); });
+  document.body.appendChild(bd);
+  bd.querySelectorAll('[data-mclose]').forEach(function(b){b.addEventListener("click",function(){bd.remove();});});
+  return bd;
+}
+function addHistoryRow(alc,fmt){
+  var tb=[].slice.call(document.querySelectorAll(".content table.tbl")).filter(function(t){var h=t.textContent.toLowerCase();return h.indexOf("estado")>=0&&(h.indexOf("fecha")>=0||h.indexOf("formato")>=0);})[0];
+  if(!tb) return;
+  var ths=[].slice.call(tb.querySelectorAll("thead th")).map(function(x){return x.textContent.toLowerCase();});
+  var tr=document.createElement("tr"); tr.className="row newrow"; var cells="";
+  ths.forEach(function(h){
+    var v="—";
+    if(h.indexOf("fecha")>=0) v=nowStr();
+    else if(h.indexOf("usuario")>=0) v="nmatus";
+    else if(h.indexOf("alcance")>=0) v=esc(alc);
+    else if(h.indexOf("formato")>=0) v=esc(fmt);
+    else if(h.indexOf("estado")>=0) v='<span class="pill-ok">Listo</span>';
+    else if(h.indexOf("descarga")>=0||h.indexOf("link")>=0) v='<a class="lnk" data-act="dlreport">Descargar</a>';
+    cells+='<td>'+v+'</td>';
+  });
+  tr.innerHTML=cells;
+  var tbody=tb.querySelector("tbody"); tbody.insertBefore(tr,tbody.firstChild);
+  setTimeout(function(){tr.classList.remove("newrow");},1600);
+}
+function generateReport(label){
+  var alc=cfgVal(/alcance/)||"Portafolio completo", per=cfgVal(/período|periodo/)||"Mes actual",
+      fmt=cfgVal(/formato/)||"PDF", met=cfgVal(/métrica|metrica/)||"Consumo";
+  var noun=(label||"reporte").replace(/^generar\s+/i,"").toLowerCase()||"reporte";
+  var nounCap=noun.charAt(0).toUpperCase()+noun.slice(1);
+  var summary='<ul class="mlist"><li>Alcance: <b>'+esc(alc)+'</b></li><li>Período: <b>'+esc(per)+'</b> · Métrica: <b>'+esc(met)+'</b></li><li>Formato: <b>'+esc(fmt)+'</b></li></ul>';
+  var m=openModal('<div class="modal-hd"><span>Generando '+esc(noun)+'…</span></div>'+
+    '<div class="modal-bd">'+summary+'<div class="progress"><i id="pgi"></i></div><div class="mnote">Compilando KPIs, gráficos y tablas del período…</div></div>');
+  var pgi=m.querySelector("#pgi"); setTimeout(function(){ if(pgi) pgi.style.width="100%"; },60);
+  setTimeout(function(){
+    if(!m.parentNode) return;
+    m.querySelector(".modal").innerHTML=
+      '<div class="modal-hd"><span>✓ '+esc(nounCap)+' generado</span><button class="mx" data-mclose aria-label="Cerrar">✕</button></div>'+
+      '<div class="modal-bd">'+summary+'<div class="mok">El archivo quedó disponible y se agregó al historial de reportes.</div></div>'+
+      '<div class="modal-ft"><button class="btn" data-mclose>Cerrar</button><button class="btn btn-primary" data-act="dlreport" data-mclose>⬇ Descargar '+esc(fmt)+'</button></div>';
+    m.querySelectorAll('[data-mclose]').forEach(function(b){b.addEventListener("click",function(){m.remove();});});
+    addHistoryRow(alc,fmt);
+    toast("Reporte generado y guardado en el historial");
+  },1600);
+}
+
 document.addEventListener("click",function(e){
   var t=e.target.closest("[data-act]");
   if(!t){return;}
   var act=t.getAttribute("data-act");
-  if(act==="btn"){ toast("Acción: “"+t.getAttribute("data-v")+"” — simulada en el prototipo"); }
+  if(act==="btn"){ var v=t.getAttribute("data-v")||""; if(/^generar/i.test(v)){ generateReport(v); } else { toast("Acción: “"+v+"” — simulada en el prototipo"); } }
+  else if(act==="dlreport"){ toast("Descarga iniciada (simulada) · reporte_ejecutivo."+((cfgVal(/formato/)||"PDF").toLowerCase())); }
   else if(act==="marker"){ toast("Centro comercial: "+t.getAttribute("data-v")+" · click para drill-down"); }
   else if(act==="cell"){ toast("Tienda/local seleccionado (Nivel 3)"); }
   else if(act==="drilltomalls"){ showMalls(); toast("Nivel 2 · Centro comercial — Chile"); }
