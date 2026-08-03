@@ -114,7 +114,7 @@ function cellFor(col,ri){
   if(/zona|piso|sala|rack|tablero|ubicaci/.test(l))return "Piso "+((ri%3)+1)+" · Z"+((ri%4)+1);
   if(/serial|medidor|tag|gateway/.test(l))return "SN-"+(4400+ri*7);
   if(/descrip|motivo|tipo|causa/.test(l))return ["Sobreconsumo","Fase desbalanceada","Dato tardío","Offline >4h","CNR manual"][ri%5];
-  if(/sever/.test(l))return '<span class="sev '+["crit","warn","null"][ri%3]+'">'+["CRÍT","ALTA","MEDIA"][ri%3]+'</span>';
+  if(/sev/.test(l))return '<span class="sev '+["crit","warn","null"][ri%3]+'">'+["CRÍT","ALTA","MEDIA"][ri%3]+'</span>';
   if(/apertura|transcurr|últim|hora|timestamp|fecha|heartbeat/.test(l))return '<span class="num">11:'+(10+ri)+' · 31-07</span>';
   if(/precio/.test(l))return '<span class="num">'+(3.1+ri*0.18).toFixed(2)+'</span>';
   if(/consumo|mwh|volumen/.test(l))return '<span class="num">'+(120+ri*13.4).toFixed(1)+'</span>';
@@ -130,7 +130,7 @@ function cellFor(col,ri){
 function table(b){
   var cols=b.cols||["Col A","Col B","Col C"], nr=b.nrows||5, exp=!!b.expand, st=!!b.statuscol;
   var out='<table class="tbl"><thead><tr>';
-  cols.forEach(function(c){out+='<th>'+esc(c)+'</th>';});
+  cols.forEach(function(c){out+='<th data-act="sort" title="Ordenar por '+esc(c)+'">'+esc(c)+' ⇅</th>';});
   out+='</tr></thead><tbody>';
   for(var ri=0;ri<nr;ri++){
     out+='<tr class="row"'+(exp?' data-act="exprow"':'')+'>';
@@ -144,6 +144,70 @@ function table(b){
     if(exp){out+='<tr class="exp" style="display:none"><td colspan="'+cols.length+'">Detalle: valor que disparó · baseline esperado · historial de acciones · lineage de la lectura.</td></tr>';}
   }
   return out+'</tbody></table>';
+}
+
+/* ---- índice de búsqueda (datos dummy) ---- */
+var INDEX=[
+  {t:"Medidor",l:"SN-4471 · Costanera Center · P2",r:"tecnico/activos-medidores"},
+  {t:"Medidor",l:"SN-4408 · Mallplaza Egaña · P1",r:"tecnico/activos-medidores"},
+  {t:"Medidor",l:"SN-4414 · Alto Las Condes · P3",r:"tecnico/activos-medidores"},
+  {t:"Medidor",l:"SN-4421 · Arauco Maipú",r:"tecnico/activos-medidores"},
+  {t:"Mall",l:"Costanera Center",r:"gerencial/consumo-jerarquico"},
+  {t:"Mall",l:"Mallplaza Egaña",r:"gerencial/consumo-jerarquico"},
+  {t:"Mall",l:"Alto Las Condes",r:"gerencial/consumo-jerarquico"},
+  {t:"Mall",l:"Arauco Maipú",r:"gerencial/consumo-jerarquico"},
+  {t:"Ticket",l:"OT-2291 · Sin lectura >4h · Costanera",r:"operacional/tickets-sla"},
+  {t:"Ticket",l:"OT-2304 · Backfill pendiente · Maipú",r:"operacional/tickets-sla"},
+  {t:"CNR",l:"CNR #182 · Alto Las Condes · pendiente",r:"operacional/cnr-pendientes"},
+  {t:"Alarma",l:"Sobrecarga transformador · Costanera P2",r:"operacional/alarmas-eventos"},
+  {t:"Alarma",l:"Fase desbalanceada · Egaña",r:"operacional/alarmas-eventos"},
+  {t:"Orden",l:"OT-2291 · Diagnóstico comms · Maipú",r:"tecnico/mis-ordenes"},
+  {t:"Regla",l:"Factor Wh→kWh · SN-4471",r:"tecnico/reglas-transformacion"},
+  {t:"Usuario",l:"p.soto · Operacional",r:"super-admin/usuarios-roles"},
+  {t:"Usuario",l:"m.rivas · Técnico",r:"super-admin/usuarios-roles"},
+  {t:"Tenant",l:"Mallplaza Vespucio · tenant",r:"super-admin/tenants-malls"}
+];
+function openSearch(q){
+  q=(q||"").trim().toLowerCase();
+  var box=document.querySelector(".search"); if(!box) return;
+  var list = q ? INDEX.filter(function(e){return (e.t+" "+e.l).toLowerCase().indexOf(q)>=0;}) : INDEX.slice(0,6);
+  var html = list.length ? list.slice(0,8).map(function(e){
+      return '<div class="pi" data-nav="'+e.r+'"><span class="stag">'+esc(e.t)+'</span>'+esc(e.l)+'</div>';
+    }).join("") : '<div class="pi" style="color:var(--ink-3)">Sin resultados para “'+esc(q)+'”</div>';
+  var old=box.querySelector(".searchpop"); if(old) old.remove();
+  if(!document.querySelector(".backdrop")){var bd=document.createElement("div");bd.className="backdrop";bd.addEventListener("click",closePops);document.body.appendChild(bd);}
+  var p=document.createElement("div");p.className="pop searchpop";p.innerHTML=html;box.appendChild(p);openEl=p;
+  p.querySelectorAll("[data-nav]").forEach(function(it){it.addEventListener("click",function(){var inp=box.querySelector("input");if(inp)inp.value="";closePops();location.hash="#/"+it.getAttribute("data-nav");});});
+}
+function applyFilter(sel){
+  var key=(sel.getAttribute("data-key")||"").toLowerCase(), val=(sel.value||"").toLowerCase();
+  var colKey=/mall|tenant|centro/.test(key)?"mall":/sever/.test(key)?"sev":null;
+  var all=/^tod/.test(val), hits=0, shown=0;
+  document.querySelectorAll(".content table.tbl").forEach(function(tb){
+    var ci=-1, ths=[].slice.call(tb.querySelectorAll("thead th"));
+    if(colKey) ths.forEach(function(th,i){ if(th.textContent.toLowerCase().indexOf(colKey)>=0) ci=i; });
+    if(ci<0) return; hits++;
+    [].slice.call(tb.querySelectorAll("tbody tr.row")).forEach(function(tr){
+      var cell=tr.children[ci]?tr.children[ci].textContent.toLowerCase().trim():"";
+      var show=all||(cell&&(cell.indexOf(val)>=0||val.indexOf(cell)>=0)); tr.style.display=show?"":"none"; if(show)shown++;
+      var ex=tr.nextElementSibling; if(ex&&ex.classList.contains("exp")) ex.style.display="none";
+    });
+  });
+  toast(hits? (all?"Filtro quitado: "+sel.getAttribute("data-key"):("Filtro: "+sel.getAttribute("data-key")+" = "+sel.value+" · "+shown+" filas")) : "Filtro aplicado (demo)");
+}
+function sortTable(th){
+  var tb=th.closest("table"), tbody=tb.querySelector("tbody");
+  var ci=[].slice.call(th.parentNode.children).indexOf(th);
+  var rows=[].slice.call(tbody.querySelectorAll("tr.row"));
+  th._asc=!th._asc; var dir=th._asc;
+  rows.sort(function(a,b){
+    var x=(a.children[ci]||{}).textContent||"", y=(b.children[ci]||{}).textContent||"";
+    var nx=parseFloat(x.replace(/[^\d.\-]/g,"")), ny=parseFloat(y.replace(/[^\d.\-]/g,""));
+    if(!isNaN(nx)&&!isNaN(ny)&&x.replace(/[^\d]/g,"")!=="") return dir?nx-ny:ny-nx;
+    return dir?x.localeCompare(y):y.localeCompare(x);
+  });
+  rows.forEach(function(r){var ex=r.nextElementSibling;tbody.appendChild(r);if(ex&&ex.classList.contains("exp"))tbody.appendChild(ex);});
+  toast("Ordenado por “"+th.textContent.replace("⇅","").trim()+"” "+(dir?"▲":"▼"));
 }
 
 /* ---- mapa por niveles (un solo mapa, drill-down País→Centro comercial→Tienda/Local) ---- */
@@ -216,12 +280,27 @@ function renderBlock(b){
 }
 
 /* ---------------- filtros ---------------- */
+function filterOptions(name,def){
+  var l=(name||"").toLowerCase(), o=null;
+  if(/severidad/.test(l)) o=["Todas","Crítica","Alta","Media","Baja"];
+  else if(/estado del medidor|estado de comunicaci/.test(l)) o=["Todos","Online","Offline","Dato estancado >4h","CNR pendiente"];
+  else if(/estado/.test(l)) o=["Todas","Abierta","Asignada","Escalada","Resuelta"];
+  else if(/mall|tenant|centro/.test(l)) o=["Todos"].concat(MALLS);
+  else if(/prioridad/.test(l)) o=["Todas","Alta","Media","Baja"];
+  else if(/período|periodo|rango|fecha/.test(l)) o=["Hoy","Últimos 7 días","Últimos 30 días","Mes actual","Trimestre","Año en curso"];
+  else if(/moneda/.test(l)) o=["UF","CLP","USD"];
+  else if(/granularidad/.test(l)) o=["Mensual","Semanal","Diaria","Horaria"];
+  else if(/responsable|usuario|técnico|tecnico/.test(l)) o=["Todas"].concat(USERS);
+  if(!o) o=[def,"Opción B","Opción C"];
+  var arr=[def].concat(o.filter(function(x){return x!==def;})), seen={}, res=[];
+  arr.forEach(function(x){if(!seen[x]){seen[x]=1;res.push(x);}}); return res;
+}
 function filters(s){
   if(!s.filters||!s.filters.length) return '<div class="filters"><span class="flabel">Filtros:</span><span class="none">(esta pantalla no declara filtros en el informe)</span></div>';
   var out='<div class="filters"><span class="flabel">Filtros:</span>';
   s.filters.forEach(function(f){
-    out+='<label class="filter"><span class="fn">'+esc(f.name)+':</span><select data-act="filter">'+
-      '<option>'+esc(f.default)+'</option><option>Opción B</option><option>Opción C</option></select></label>';
+    var opts=filterOptions(f.name,f.default).map(function(o){return '<option>'+esc(o)+'</option>';}).join("");
+    out+='<label class="filter"><span class="fn">'+esc(f.name)+':</span><select data-act="filter" data-key="'+esc(f.name)+'">'+opts+'</select></label>';
   });
   return out+'</div>';
 }
@@ -321,6 +400,7 @@ document.addEventListener("click",function(e){
   else if(act==="tree"){ document.querySelectorAll(".tree .tn").forEach(function(n){n.classList.remove("active");}); t.classList.add("active");
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
+  else if(act==="sort"){ sortTable(t); }
   else if(act==="exprow"){ var ex=t.nextElementSibling; if(ex&&ex.classList.contains("exp")){var open=ex.style.display!=="none";ex.style.display=open?"none":"table-row";var c2=t.querySelector(".chev");if(c2)c2.classList.toggle("open",!open);} }
   else if(act==="profmenu"){
     var html=EMS.order.map(function(p){return '<div class="pi" data-go="'+p+'"><b style="min-width:96px;display:inline-block">'+esc(EMS.labels[p])+'</b><span style="color:var(--ink-3);font-size:11px">'+esc(EMS.auth[p]).split("·")[0]+'</span></div>';}).join("");
@@ -337,20 +417,14 @@ document.addEventListener("click",function(e){
   }
 });
 document.addEventListener("input",function(e){
-  var t=e.target;
-  if(t.getAttribute&&t.getAttribute("data-act")==="filter"){ toast("Filtro aplicado (demo)"); }
+  var t=e.target; if(!t.getAttribute) return;
+  var act=t.getAttribute("data-act");
+  if(act==="filter"){ applyFilter(t); }
+  else if(act==="search"){ openSearch(t.value); }
 });
 document.addEventListener("focusin",function(e){
   var t=e.target;
-  if(t.getAttribute&&t.getAttribute("data-act")==="search"){
-    var res=[["Medidor SN-4471 · Costanera","tecnico/activos-medidores"],["Mall Mallplaza Egaña","gerencial/consumo-jerarquico"],["Ticket OT-2291","operacional/tickets-sla"],["CNR pendiente #182","operacional/cnr-pendientes"],["Usuario p.soto","super-admin/usuarios-roles"]];
-    var html=res.map(function(r){return '<div class="pi" data-nav="'+r[1]+'">⌕ '+esc(r[0])+'</div>';}).join("");
-    var box=t.closest(".search");
-    closePops();
-    var bd=document.createElement("div");bd.className="backdrop";bd.addEventListener("click",closePops);document.body.appendChild(bd);
-    var p=document.createElement("div");p.className="pop searchpop";p.innerHTML=html;box.appendChild(p);openEl=p;
-    p.querySelectorAll("[data-nav]").forEach(function(it){it.addEventListener("click",function(){closePops();t.value="";location.hash="#/"+it.getAttribute("data-nav");});});
-  }
+  if(t.getAttribute&&t.getAttribute("data-act")==="search"){ openSearch(t.value); }
 });
 window.addEventListener("hashchange",render);
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closePops();});
