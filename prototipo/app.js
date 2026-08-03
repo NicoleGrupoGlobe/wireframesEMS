@@ -364,9 +364,11 @@ var MNAV=[["Órdenes","mis-ordenes"],["Activos","activos-medidores"],["Comms","d
 function renderMobileFull(s){
   document.body.classList.remove("nav-collapsed");
   var body=filters(s)+s.blocks.map(renderBlock).join("");
-  var prim=s.mobilePrimary?'<div class="p-primary"><button class="btn btn-primary" data-act="btn" data-v="'+esc(s.mobilePrimary)+'">'+esc(s.mobilePrimary)+'</button></div>':'';
+  var pa=s.mobilePrimary||s.primaryAction;
+  var prim=pa?'<div class="p-primary"><button class="btn btn-primary" data-act="btn" data-v="'+esc(pa)+'">'+esc(pa)+'</button></div>':'';
+  var actIdx=4; MNAV.forEach(function(n,i){ if(n[1]===s.slug) actIdx=i; });
   var nav='<div class="p-nav">'+MNAV.map(function(n,i){var act=n[1]?('data-act="mnav" data-slug="'+n[1]+'"'):'data-act="mmenu"';
-      return '<div class="n'+(i===(s.navActive||0)?' active':'')+'" '+act+'><span class="d"></span>'+n[0]+'</div>';}).join("")+'</div>';
+      return '<div class="n'+(i===actIdx?' active':'')+'" '+act+'><span class="d"></span>'+n[0]+'</div>';}).join("")+'</div>';
   var top='<div class="p-top"><span class="phamb" data-act="mmenu" aria-label="Menú">☰</span>'+
     '<div class="p-brand"><div class="pb1">GLOBE · EMS</div><div class="pb2">'+esc(s.title)+' · Técnico · PWA</div></div>'+
     '<span class="pexit" data-act="logout" title="Cerrar sesión">⏻</span></div>';
@@ -455,7 +457,7 @@ function render(){
   closePops();
   if(!session){ renderLogin(); return; }
   var key=parse(), s=byRoute[key];
-  if(s.device==="mobile"){ renderMobileFull(s); refreshFilterState(); return; }
+  if(s.device==="mobile"||s.profile==="tecnico"){ renderMobileFull(s); refreshFilterState(); return; }
   var app=document.getElementById("app");
   app.innerHTML=topbar(s.profile)+sidebar(s.profile,s.activeMenu)+
     '<div class="content">'+renderDesktop(s)+'</div>'+
