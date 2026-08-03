@@ -5,6 +5,8 @@ var EMS = window.EMS;
 var byRoute = {}, byProfile = {};
 EMS.order.forEach(function(p){ byProfile[p]=[]; });
 EMS.screens.forEach(function(s){ byRoute[s.profile+"/"+s.slug]=s; byProfile[s.profile].push(s); });
+var collapsed=false; try{collapsed=localStorage.getItem("ems_nav")==="1";}catch(e){}
+function applyCollapse(){ document.body.classList.toggle("nav-collapsed",collapsed); try{localStorage.setItem("ems_nav",collapsed?"1":"0");}catch(e){} }
 
 var MALLS=["Costanera Center","Mallplaza Egaña","Alto Las Condes","Arauco Maipú","Mallplaza Vespucio","Portal Ñuñoa"];
 var USERS=["p.soto","m.rivas","c.díaz","a.fuentes","operador N2"];
@@ -361,6 +363,7 @@ function renderMobile(s){
 /* ---------------- shell ---------------- */
 function topbar(prof){
   return '<div class="topbar">'+
+    '<button class="navtoggle" data-act="navtoggle" title="Contraer / expandir menú" aria-label="Contraer o expandir el menú lateral">☰</button>'+
     '<div class="brand"><span class="logo">E</span>EMS</div>'+
     '<div class="profile-btn" data-act="profmenu"><span class="lbl">Perfil activo</span><span class="val">'+esc(EMS.labels[prof])+' ▾</span></div>'+
     '<span class="auth">'+esc(EMS.auth[prof])+'</span>'+
@@ -393,6 +396,7 @@ function render(){
     '<div class="hint">Prototipo interactivo · escala de grises · <b>'+key+'</b></div>';
   var c=document.querySelector(".content"); if(c) c.scrollTop=0;
   refreshFilterState();
+  applyCollapse();
 }
 
 /* ---------------- interacciones ---------------- */
@@ -428,6 +432,7 @@ document.addEventListener("click",function(e){
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
   else if(act==="sort"){ sortTable(t); }
+  else if(act==="navtoggle"){ collapsed=!collapsed; applyCollapse(); }
   else if(act==="clearfilters"){ clearFilters(); }
   else if(act==="clearone"){ var k=t.getAttribute("data-key"); filterSelects().forEach(function(s){if(s.getAttribute("data-key")===k)s.selectedIndex=0;}); applyFilters(); refreshFilterState(); }
   else if(act==="exprow"){ var ex=t.nextElementSibling; if(ex&&ex.classList.contains("exp")){var open=ex.style.display!=="none";ex.style.display=open?"none":"table-row";var c2=t.querySelector(".chev");if(c2)c2.classList.toggle("open",!open);} }
