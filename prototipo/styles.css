@@ -70,9 +70,19 @@ a{color:inherit;text-decoration:none}
 .btn-sm{padding:6px 11px;font-size:12px}
 
 /* ---------- Filters ---------- */
-.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:8px 12px;margin:14px 0 18px}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 12px;margin:14px 0 18px}
+.filters .frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .filters .flabel{font-size:11px;color:var(--ink-2);font-weight:700;margin-right:2px}
+.fspacer{flex:1 1 auto;min-width:12px}
+.fcount{font-size:11.5px;color:var(--ink-2);font-weight:600;white-space:nowrap}
+.fclear{border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;padding:4px 6px;border-radius:6px}
+.fclear:hover{background:var(--accent-bg)}
+.fchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.fchips:empty{display:none}
+.achip{display:inline-flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid var(--accent);color:var(--accent);
+  border-radius:14px;padding:3px 6px 3px 11px;font-size:11px;font-weight:600}
+.achip b{cursor:pointer;font-weight:700;padding:0 3px;border-radius:8px}
+.achip b:hover{background:var(--accent);color:#fff}
 .filter{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface-2);
   border-radius:16px;padding:5px 10px;font-size:12px;color:var(--ink-2);cursor:pointer;transition:.12s}
 .filter:hover{border-color:var(--accent);color:var(--accent)}

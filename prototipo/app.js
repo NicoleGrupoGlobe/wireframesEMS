@@ -179,22 +179,45 @@ function openSearch(q){
   var p=document.createElement("div");p.className="pop searchpop";p.innerHTML=html;box.appendChild(p);openEl=p;
   p.querySelectorAll("[data-nav]").forEach(function(it){it.addEventListener("click",function(){var inp=box.querySelector("input");if(inp)inp.value="";closePops();location.hash="#/"+it.getAttribute("data-nav");});});
 }
-function applyFilter(sel){
-  var key=(sel.getAttribute("data-key")||"").toLowerCase(), val=(sel.value||"").toLowerCase();
-  var colKey=/mall|tenant|centro/.test(key)?"mall":/sever/.test(key)?"sev":null;
-  var all=/^tod/.test(val), hits=0, shown=0;
+function filterSelects(){return [].slice.call(document.querySelectorAll('.filters select[data-act="filter"]'));}
+function colKeyOf(key){key=(key||"").toLowerCase();return /mall|tenant|centro/.test(key)?"mall":/sev/.test(key)?"sev":null;}
+function applyFilters(){
+  // restricciones activas (select ≠ opción por defecto) que mapean a una columna
+  var cons=[];
+  filterSelects().forEach(function(s){
+    if(s.selectedIndex===0) return;
+    var ck=colKeyOf(s.getAttribute("data-key")); if(!ck) return;
+    cons.push({ck:ck,val:s.value.toLowerCase().trim()});
+  });
   document.querySelectorAll(".content table.tbl").forEach(function(tb){
-    var ci=-1, ths=[].slice.call(tb.querySelectorAll("thead th"));
-    if(colKey) ths.forEach(function(th,i){ if(th.textContent.toLowerCase().indexOf(colKey)>=0) ci=i; });
-    if(ci<0) return; hits++;
+    var idx={}, ths=[].slice.call(tb.querySelectorAll("thead th"));
+    ths.forEach(function(th,i){var h=th.textContent.toLowerCase(); if(h.indexOf("mall")>=0)idx.mall=i; if(h.indexOf("sev")>=0)idx.sev=i;});
     [].slice.call(tb.querySelectorAll("tbody tr.row")).forEach(function(tr){
-      var cell=tr.children[ci]?tr.children[ci].textContent.toLowerCase().trim():"";
-      var show=all||(cell&&(cell.indexOf(val)>=0||val.indexOf(cell)>=0)); tr.style.display=show?"":"none"; if(show)shown++;
+      var ok=true;
+      cons.forEach(function(c){
+        var i=idx[c.ck]; if(i==null) return; // esta tabla no tiene esa columna → no aplica
+        var cell=tr.children[i]?tr.children[i].textContent.toLowerCase().trim():"";
+        if(!(cell&&(cell.indexOf(c.val)>=0||c.val.indexOf(cell)>=0))) ok=false;
+      });
+      tr.style.display=ok?"":"none";
       var ex=tr.nextElementSibling; if(ex&&ex.classList.contains("exp")) ex.style.display="none";
     });
   });
-  toast(hits? (all?"Filtro quitado: "+sel.getAttribute("data-key"):("Filtro: "+sel.getAttribute("data-key")+" = "+sel.value+" · "+shown+" filas")) : "Filtro aplicado (demo)");
 }
+function refreshFilterState(){
+  var chips=filterSelects().filter(function(s){return s.selectedIndex>0;}).map(function(s){
+    var k=s.getAttribute("data-key");
+    return '<span class="achip">'+esc(k)+': '+esc(s.value)+'<b data-act="clearone" data-key="'+esc(k)+'" title="Quitar">✕</b></span>';
+  }).join("");
+  var box=document.getElementById("fchips"); if(box) box.innerHTML=chips;
+  var cnt=document.getElementById("fcount");
+  if(cnt){
+    var tb=document.querySelector(".content table.tbl");
+    if(tb){var rows=[].slice.call(tb.querySelectorAll("tbody tr.row"));var vis=rows.filter(function(r){return r.style.display!=="none";}).length;cnt.textContent=vis+" de "+rows.length+" filas";}
+    else cnt.textContent="";
+  }
+}
+function clearFilters(){ filterSelects().forEach(function(s){s.selectedIndex=0;}); applyFilters(); refreshFilterState(); toast("Filtros limpiados"); }
 function sortTable(th){
   var tb=th.closest("table"), tbody=tb.querySelector("tbody");
   var ci=[].slice.call(th.parentNode.children).indexOf(th);
@@ -296,12 +319,15 @@ function filterOptions(name,def){
   arr.forEach(function(x){if(!seen[x]){seen[x]=1;res.push(x);}}); return res;
 }
 function filters(s){
-  if(!s.filters||!s.filters.length) return '<div class="filters"><span class="flabel">Filtros:</span><span class="none">(esta pantalla no declara filtros en el informe)</span></div>';
-  var out='<div class="filters"><span class="flabel">Filtros:</span>';
+  if(!s.filters||!s.filters.length) return '<div class="filters"><div class="frow"><span class="flabel">Filtros:</span><span class="none">(esta pantalla no declara filtros en el informe)</span></div></div>';
+  var out='<div class="filters"><div class="frow"><span class="flabel">Filtros:</span>';
   s.filters.forEach(function(f){
     var opts=filterOptions(f.name,f.default).map(function(o){return '<option>'+esc(o)+'</option>';}).join("");
     out+='<label class="filter"><span class="fn">'+esc(f.name)+':</span><select data-act="filter" data-key="'+esc(f.name)+'">'+opts+'</select></label>';
   });
+  out+='<span class="fspacer"></span><span class="fcount" id="fcount"></span>'+
+       '<button class="fclear" data-act="clearfilters">✕ Limpiar filtros</button></div>'+
+       '<div class="fchips" id="fchips"></div>';
   return out+'</div>';
 }
 
@@ -366,6 +392,7 @@ function render(){
     '<div class="content">'+(s.device==="mobile"?renderMobile(s):renderDesktop(s))+'</div>'+
     '<div class="hint">Prototipo interactivo · escala de grises · <b>'+key+'</b></div>';
   var c=document.querySelector(".content"); if(c) c.scrollTop=0;
+  refreshFilterState();
 }
 
 /* ---------------- interacciones ---------------- */
@@ -401,6 +428,8 @@ document.addEventListener("click",function(e){
       var c=t.querySelector(".chev"); if(c)c.classList.toggle("open"); }
   else if(act==="tab"){ var box=t.parentNode; box.querySelectorAll(".tab").forEach(function(n){n.classList.remove("active");}); t.classList.add("active"); }
   else if(act==="sort"){ sortTable(t); }
+  else if(act==="clearfilters"){ clearFilters(); }
+  else if(act==="clearone"){ var k=t.getAttribute("data-key"); filterSelects().forEach(function(s){if(s.getAttribute("data-key")===k)s.selectedIndex=0;}); applyFilters(); refreshFilterState(); }
   else if(act==="exprow"){ var ex=t.nextElementSibling; if(ex&&ex.classList.contains("exp")){var open=ex.style.display!=="none";ex.style.display=open?"none":"table-row";var c2=t.querySelector(".chev");if(c2)c2.classList.toggle("open",!open);} }
   else if(act==="profmenu"){
     var html=EMS.order.map(function(p){return '<div class="pi" data-go="'+p+'"><b style="min-width:96px;display:inline-block">'+esc(EMS.labels[p])+'</b><span style="color:var(--ink-3);font-size:11px">'+esc(EMS.auth[p]).split("·")[0]+'</span></div>';}).join("");
@@ -419,7 +448,7 @@ document.addEventListener("click",function(e){
 document.addEventListener("input",function(e){
   var t=e.target; if(!t.getAttribute) return;
   var act=t.getAttribute("data-act");
-  if(act==="filter"){ applyFilter(t); }
+  if(act==="filter"){ applyFilters(); refreshFilterState(); }
   else if(act==="search"){ openSearch(t.value); }
 });
 document.addEventListener("focusin",function(e){
