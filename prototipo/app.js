@@ -376,7 +376,7 @@ function screenHead(s){
 }
 function renderDesktop(s){
   var blocks=s.blocks;
-  if(s.id==="3.1"){ // un solo mapa por niveles: fusiona mapa + plano de planta
+  if(s.id==="3.1"||s.id==="3.2"){ // un solo mapa por niveles: fusiona mapa + plano de planta
     blocks=s.blocks.filter(function(b){return b.type!=="planta";})
       .map(function(b){return b.type==="map"?Object.assign({},b,{_leveled:true}):b;});
   }
