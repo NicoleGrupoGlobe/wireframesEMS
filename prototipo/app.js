@@ -366,21 +366,38 @@ function filters(s){
 }
 
 /* ---------------- pantallas ---------------- */
-function screenHead(s){
+/* Pantallas donde la acción primaria del header ya está cubierta por la barra
+   de acciones de página → se omite para no repetir el mismo botón. */
+var DROP_PRIMARY={"3.4":1,"3.6":1,"4.2":1,"4.5":1,"5.3":1,"6.2":1,"6.3":1,"6.5":1,"6.6":1,"7.1":1,"7.2":1};
+/* Una barra de acciones es de "formulario" (se queda junto a su formulario, no
+   sube al header) si incluye un botón Cancelar. */
+function isFormActions(b){ return (b.btns||[]).some(function(x){return /^cancelar$/i.test((x||"").trim());}); }
+function headerBtns(s,moved){
+  var list=[];
+  if(s.primaryAction && !DROP_PRIMARY[s.id]) list.push(s.primaryAction);
+  moved.forEach(function(ab){ (ab.btns||[]).forEach(function(b){ if(list.indexOf(b)<0) list.push(b); }); });
+  return list;
+}
+function screenHead(s,hdr){
+  hdr = hdr || (s.primaryAction?[s.primaryAction]:[]);
   var right='';
   if(s.live) right+='<span class="live"><span class="d"></span>'+esc(s.live)+'</span>';
   right+='<span class="devtag">'+(s.device==="mobile"?"Móvil · PWA":"Escritorio · 1440×900")+'</span>';
-  if(s.primaryAction) right+='<button class="btn btn-primary" data-act="btn" data-v="'+esc(s.primaryAction)+'">'+esc(s.primaryAction)+'</button>';
+  hdr.forEach(function(b,i){ right+='<button class="btn'+(i===0?' btn-primary':'')+'" data-act="btn" data-v="'+esc(b)+'">'+esc(b)+'</button>'; });
   var sub = s.breadcrumb?'<div class="crumb">'+s.breadcrumb.map(esc).join("  ›  ")+'</div>':(s.subtitle?'<div class="subtitle">'+esc(s.subtitle)+'</div>':'');
   return '<div class="screen-head"><div><h1>'+esc(s.id)+' · '+esc(s.title)+'</h1>'+sub+'</div><div class="head-right">'+right+'</div></div>';
 }
 function renderDesktop(s){
   var blocks=s.blocks;
   if(s.id==="3.1"||s.id==="3.2"){ // un solo mapa por niveles: fusiona mapa + plano de planta
-    blocks=s.blocks.filter(function(b){return b.type!=="planta";})
+    blocks=blocks.filter(function(b){return b.type!=="planta";})
       .map(function(b){return b.type==="map"?Object.assign({},b,{_leveled:true}):b;});
   }
-  return screenHead(s)+filters(s)+'<div class="grid">'+blocks.map(renderBlock).join("")+'</div>';
+  // Acciones de página → al header (arriba a la derecha), sin repetirlas en el contenido.
+  // Los controles de formulario (con "Cancelar") se quedan junto a su formulario.
+  var moved=[], content=[];
+  blocks.forEach(function(b){ if(b.type==="actions"&&!isFormActions(b)) moved.push(b); else content.push(b); });
+  return screenHead(s,headerBtns(s,moved))+filters(s)+'<div class="grid">'+content.map(renderBlock).join("")+'</div>';
 }
 var MNAV=[["Órdenes","mis-ordenes"],["Activos","activos-medidores"],["Comms","diagnostico-comms"],["Bitácora","registro-intervencion"],["Más",""]];
 function renderMobileFull(s){
