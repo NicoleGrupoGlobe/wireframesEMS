@@ -534,7 +534,9 @@ function openModal(inner){
   var bd=document.createElement("div"); bd.className="modal-backdrop";
   bd.innerHTML='<div class="modal">'+inner+'</div>';
   bd.addEventListener("click",function(e){ if(e.target===bd) bd.remove(); });
-  document.body.appendChild(bd);
+  // En perfil móvil el modal se confina dentro del teléfono (simula uso real en pantalla).
+  var phone=document.querySelector('.mobile-only .phone');
+  (phone||document.body).appendChild(bd);
   bd.querySelectorAll('[data-mclose]').forEach(function(b){b.addEventListener("click",function(){bd.remove();});});
   return bd;
 }
