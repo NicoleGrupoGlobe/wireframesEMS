@@ -26,7 +26,7 @@ var LINEV=[0.42,0.55,0.5,0.66,0.6,0.78,0.72,0.9,0.62,0.8]; // serie de línea
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function h(v){return Math.abs(Math.sin(v))*0.6+0.35;} // pseudo-altura estable 0.35..0.95
-function span(b){return 's'+((b&&b.colspan)||12);}
+function span(b){return 's'+((b&&(b.pspan||b.colspan))||12);}
 
 /* ---------------- componentes ---------------- */
 function reqs(b){return b.reqs&&b.reqs.length?'<div class="reqs">['+b.reqs.join(", ")+']</div>':'';}
