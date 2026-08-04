@@ -102,7 +102,7 @@ body.nav-collapsed .content{left:0}
 .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-flow:row dense;gap:16px;align-items:start}
 .s1{grid-column:span 1}.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}
 .s7{grid-column:span 7}.s8{grid-column:span 8}.s9{grid-column:span 9}.s10{grid-column:span 10}.s11{grid-column:span 11}.s12{grid-column:span 12}
-.card{grid-column:span 12;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
   box-shadow:var(--shadow);padding:14px 16px;position:relative;min-width:0}
 .card > .ct{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 2px}
 .card > .cm{font-size:11px;color:var(--ink-3);margin:0 0 10px}
