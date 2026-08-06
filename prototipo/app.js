@@ -298,8 +298,8 @@ function crumbHTML(level,mall){
     '<span class="lvlchip">'+crumbLink("uptomalls",mall)+'</span><span class="lvlsep">›</span>'+
     '<span class="lvlchip lvlnow">Tienda/Local</span>';
 }
-function leveledMapCard(){
-  return '<div class="card pad-b s12"><div class="ct">Mapa del portafolio</div>'+
+function leveledMapCard(b){
+  return '<div class="card pad-b '+span(b||{colspan:12})+'"><div class="ct">Mapa del portafolio</div>'+
     '<div class="cm">Un solo mapa · País → Centro comercial → Tienda/Local (drill-down por click)</div>'+
     '<div class="maptools" id="maptools">'+crumbHTML(1)+'</div>'+
     '<div class="mapstage" id="mapstage">'+countryView()+'</div>'+
@@ -317,7 +317,7 @@ function renderBlock(b){
   var inner="";
   switch(b.type){
     case "kpi": inner=head(b)+'<div class="kpi"><div class="val num">'+esc(b.value||"—")+'</div><div class="delta">'+esc(b.delta||"")+'</div>'+(b.spark?'<div class="spark">'+spark()+'</div>':'')+'</div>'; break;
-    case "map": if(b._leveled){return leveledMapCard();} inner=head(b)+map(b); break;
+    case "map": if(b._leveled){return leveledMapCard(b);} inner=head(b)+map(b); break;
     case "planta": inner=head(b)+planta(); break;
     case "tree": inner=head(b)+tree(b); break;
     case "bars": case "stackedbars": case "histogram": case "waterfall": inner=head(b)+bars(b); break;
@@ -397,6 +397,10 @@ function renderDesktop(s){
   // Los controles de formulario (con "Cancelar") se quedan junto a su formulario.
   var moved=[], content=[];
   blocks.forEach(function(b){ if(b.type==="actions"&&!isFormActions(b)) moved.push(b); else content.push(b); });
+  // Orden denso del prototipo: 'porder' reordena para empacar filas (sin afectar el SVG).
+  content=content.map(function(b,i){return {b:b,i:i};}).sort(function(a,c){
+    var pa=(a.b.porder==null?1000+a.i:a.b.porder), pc=(c.b.porder==null?1000+c.i:c.b.porder); return pa-pc;
+  }).map(function(x){return x.b;});
   return screenHead(s,headerBtns(s,moved))+filters(s)+'<div class="grid">'+content.map(renderBlock).join("")+'</div>';
 }
 var MNAV=[["Órdenes","mis-ordenes"],["Activos","activos-medidores"],["Comms","diagnostico-comms"],["Bitácora","registro-intervencion"],["Más",""]];
