@@ -99,7 +99,7 @@ function timeline(b){
 }
 function form(b){
   var fs=b.fields||["Campo 1","Campo 2","Campo 3"];
-  return '<div class="form">'+fs.map(function(f){
+  var out='<div class="form">'+fs.map(function(f){
     var low=f.toLowerCase(), ctrl;
     if(/adjunt|foto|evidencia/.test(low)) ctrl='<div class="dropzone">Arrastra fotos (JPG/PNG) o PDF · máx. 5</div>';
     else if(/firma/.test(low)) ctrl='<div class="sign">Firma digital del técnico</div>';
@@ -107,7 +107,12 @@ function form(b){
     else if(/\(/.test(f)) {var opts=(f.match(/\(([^)]+)\)/)||["",""])[1].split("/").map(function(o){return '<option>'+esc(o.trim())+'</option>';}).join("");ctrl='<select>'+opts+'</select>';}
     else ctrl='<input placeholder="'+esc(f)+'">';
     return '<div class="fg"><label>'+esc(f.replace(/\s*\(.*\)/,''))+'</label>'+ctrl+'</div>';
-  }).join("")+'</div>';
+  }).join("");
+  if(b.checks&&b.checks.length){
+    out+='<div class="fg fg-full"><label>'+esc(b.checksLabel||"Secciones a incluir")+'</label>'+
+      '<div class="checks">'+b.checks.map(function(c){return '<label class="chk"><input type="checkbox" checked> <span>'+esc(c)+'</span></label>';}).join("")+'</div></div>';
+  }
+  return out+'</div>';
 }
 function skeleton(){var ws=[92,72,84,60,78];return '<div style="padding-top:4px">'+ws.map(function(w){return '<div style="height:10px;border-radius:5px;background:var(--surface-3);margin:10px 0;width:'+w+'%"></div>';}).join("")+'</div>';}
 function placeholder(b){
@@ -396,7 +401,11 @@ function renderDesktop(s){
   // Acciones de página → al header (arriba a la derecha), sin repetirlas en el contenido.
   // Los controles de formulario (con "Cancelar") se quedan junto a su formulario.
   var moved=[], content=[];
-  blocks.forEach(function(b){ if(b.type==="actions"&&!isFormActions(b)) moved.push(b); else content.push(b); });
+  blocks.forEach(function(b){
+    if(b.phide) return;                                   // oculto solo en el prototipo
+    if(b.type==="actions"&&!isFormActions(b)) moved.push(b);
+    else content.push(b);
+  });
   // Orden denso del prototipo: 'porder' reordena para empacar filas (sin afectar el SVG).
   content=content.map(function(b,i){return {b:b,i:i};}).sort(function(a,c){
     var pa=(a.b.porder==null?1000+a.i:a.b.porder), pc=(c.b.porder==null?1000+c.i:c.b.porder); return pa-pc;
