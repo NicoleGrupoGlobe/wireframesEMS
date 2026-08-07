@@ -301,6 +301,16 @@ def draw_block(b):
             s.append(text(x+pad,fy+11,f,size=11,fill=INK2))
             s.append(rect(x+pad,fy+16,w-2*pad,20,fill=BG,stroke=LINE,rx=4))
             fy+=44
+        checks=b.get("checks")
+        if checks:
+            s.append(text(x+pad,fy+11,b.get("checksLabel","Secciones a incluir"),size=11,fill=INK2)); fy+=20
+            colw=(w-2*pad)/2
+            for i,c in enumerate(checks):
+                cxp=x+pad+(i%2)*colw; cyp=fy+(i//2)*22
+                s.append(rect(cxp,cyp,12,12,fill=ACCENT,stroke=ACCENT,rx=2))
+                s.append(text(cxp+6,cyp+10,"✓",size=8.5,fill="#ffffff",anchor="middle"))
+                s.append(text(cxp+19,cyp+10,c,size=10.5,fill=INK2))
+            fy+=((len(checks)+1)//2)*22+6
     elif t=="heatmap":
         gx,gy,gw,gh=x+pad,body_y,w-2*pad,y+h-body_y-14
         cols_,rows_=b.get("cols",12),b.get("rowsn",7)
@@ -356,6 +366,39 @@ def reqtag_br(x,y,w,h,reqs):
     s="["+", ".join(reqs)+"]"
     return text(x+w-8, y+h-8, s, size=10.5, fill=ACCENT, weight="600", anchor="end")
 
+# --- acciones consolidadas en el header (coherente con el prototipo) ---
+# Pantallas cuya acción primaria ya está cubierta por la barra de acciones.
+DROP_PRIMARY_SVG={"3.4","3.6","4.2","4.5","5.3","6.2","6.3","6.5","6.6","7.1","7.2"}
+def is_form_actions(b):
+    return any((x or "").strip().lower()=="cancelar" for x in b.get("btns",[]))
+def header_actions(scr):
+    """Botones de acción que van en el header (primaria + acciones de página,
+    deduplicadas). Los controles de formulario (con Cancelar) NO suben."""
+    btns=[]; pa=scr.get("primaryAction")
+    if pa and scr.get("id") not in DROP_PRIMARY_SVG: btns.append(pa)
+    for b in scr.get("blocks",[]):
+        if b.get("type")=="actions" and not is_form_actions(b) and not b.get("phide"):
+            for x in b.get("btns",[]):
+                if x not in btns: btns.append(x)
+    if not btns and pa: btns.append(pa)
+    return btns
+
+# Cambios de esta iteración (mid-fi) — se muestran en el índice y en la portada del PDF.
+CHANGELOG=[
+    ("Acciones en el header, sin repetir",
+     "Todas las acciones de página se consolidan arriba a la derecha; se eliminó la barra de botones duplicada al pie. Los controles de formulario (Guardar/Cancelar) permanecen junto a su formulario."),
+    ("Reportes ejecutivos (3.4): un solo formulario",
+     "La configuración y los checkboxes de «Secciones a incluir» quedan integrados en un único contenedor de formulario a la izquierda, con la vista previa a la derecha y el historial a lo ancho abajo."),
+    ("Consumo jerárquico (3.2): un solo mapa por niveles",
+     "La navegación País → Centro comercial → Tienda/Local ocurre dentro del mismo mapa (igual que en el Panel consolidado); se quitó el contenedor de planta aparte y los KPIs del mall se muestran en 3 tarjetas separadas."),
+    ("Densificación de layouts",
+     "Métricas en una fila y bloques lado a lado (p. ej. mapa junto al feed en el Panel consolidado) para ver más información sin scroll extenso; la grilla de 12 columnas se mantiene en anchos de laptop."),
+    ("Prototipo interactivo (mid-fi)",
+     "Login por perfil con credenciales demo, flujos funcionales (Iniciar orden, Nuevo ticket, Ingreso CNR, Asignar alarma, Generar/Exportar…), filtros con chips y buscador. En el perfil Técnico las pantallas son móviles y los modales se muestran dentro del teléfono."),
+    ("Apertura del prototipo",
+     "El botón «Abrir prototipo interactivo» abre en una pestaña nueva del navegador."),
+]
+
 # ------------------------------------------------------------------ chrome
 def chrome_desktop(scr):
     W,H=1440,900
@@ -398,13 +441,19 @@ def chrome_desktop(scr):
     s.append(text(20,H-20,"PASA · Anexo 07",size=9,fill=INK3))
     # título de contenido
     s.append(text(264,88,f'{scr["id"]}  {scr["title"]}',size=20,fill=INK,weight="700"))
-    # zona de acción primaria (arriba-derecha, siempre visible) + tag de dispositivo
-    pa=scr.get("primaryAction"); dev="Escritorio · 1440×900"
-    if pa:
-        paw=26+len(pa)*7.4; pax=1416-paw
-        s.append(rect(pax,71,paw,30,fill=ACCENT,stroke=ACCENT,rx=6))
-        s.append(text(pax+paw/2,90,pa,size=12,fill="#ffffff",weight="700",anchor="middle"))
-        s.append(text(pax-14,90,dev,size=9.5,fill=INK3,anchor="end"))
+    # zona de acciones (arriba-derecha): todas las acciones de página van aquí,
+    # sin repetirse en el contenido. Los controles de formulario quedan abajo.
+    hb=header_actions(scr); dev="Escritorio · 1440×900"
+    if hb:
+        widths=[max(78,20+len(t)*6.6) for t in hb]
+        total=sum(widths)+8*(len(hb)-1)
+        bx=1416-total
+        s.append(text(bx-12,90,dev,size=9.5,fill=INK3,anchor="end"))
+        for i,t in enumerate(hb):
+            wbt=widths[i]; primary=(i==0)
+            s.append(rect(bx,71,wbt,30,fill=(ACCENT if primary else BG),stroke=ACCENT,rx=6))
+            s.append(text(bx+wbt/2,90,t,size=11,fill=("#ffffff" if primary else ACCENT),weight="700" if primary else "600",anchor="middle"))
+            bx+=wbt+8
     else:
         s.append(rect(1416-118,74,118,22,fill=BG,stroke=LINE,rx=11))
         s.append(text(1416-59,89,dev,size=10,fill=INK2,anchor="middle"))
@@ -497,7 +546,11 @@ def render_svg(scr):
         for i,ln in enumerate(lines):
             s.append(text(nx+10,ny+30+i*14,ln,size=10,fill=INK2))
     # bloques
+    desktop = device!="mobile"
     for b in scr.get("blocks",[]):
+        if b.get("phide"): continue                                   # oculto (integrado en otro bloque)
+        if desktop and b.get("type")=="actions" and not is_form_actions(b):
+            continue                                                  # acción de página → va en el header
         s.append(draw_block(b))
         if b.get("reqs") and b.get("type") not in ("title","kpirow","tabs","actions","legend"):
             s.append(reqtag_br(b["x"],b["y"],b["w"],b["h"],b["reqs"]))
@@ -596,6 +649,11 @@ nav.anchors a{font-size:11.5px;color:#e7ecf1;background:#5b7089;padding:4px 10px
 nav.anchors a:hover{background:#6d84a0}
 header.top a.pdf{display:inline-block;margin:0 0 12px;font-size:12px;color:#fff;background:#5b7089;border:1px solid #7d93ad;padding:6px 14px;border-radius:6px;text-decoration:none;font-weight:600}
 header.top a.pdf:hover{background:#6d84a0}
+details.chlog{margin:2px 0 12px;background:#343a44;border:1px solid #4b5563;border-radius:8px;padding:8px 14px;max-width:1100px}
+details.chlog summary{cursor:pointer;font-size:12.5px;font-weight:700;color:#fff}
+details.chlog ul{margin:10px 0 4px;padding-left:18px}
+details.chlog li{font-size:12px;color:#d7dbe1;margin:0 0 7px;line-height:1.45}
+details.chlog li b{color:#fff}
 .group{padding:22px 24px}.group h2{font-size:15px;border-left:4px solid #5b7089;padding-left:10px;margin:18px 0 6px;scroll-margin-top:104px}
 .group .gmeta{font-size:12px;color:#6b7280;margin:0 0 14px 14px}
 .row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:auto auto;column-gap:18px;background:#fff;border:1px solid #c3c8d0;border-radius:10px;padding:16px;margin-bottom:20px;scroll-margin-top:104px}
@@ -621,7 +679,11 @@ header.top a.pdf:hover{background:#6d84a0}
     H.append('<header class="top"><h1>EMS PASA — Wireframes de baja fidelidad por perfil de usuario</h1>')
     H.append('<p>Globe Power SpA · Fuente: Especificación de Pantallas v2.0 · Mapa gerencial reconciliado a 3 niveles (País → Centro comercial → Tienda/Local) · operación monopaís (Chile)</p>')
     H.append('<a class="pdf" href="EMS_PASA_wireframes.pdf" target="_blank" rel="noopener">⬇ Descargar documentación (PDF · 35 pantallas)</a>')
-    H.append('<a class="pdf" href="prototipo/" style="background:#48596e">▶ Abrir prototipo interactivo (mid-fi)</a>')
+    H.append('<a class="pdf" href="prototipo/" target="_blank" rel="noopener" style="background:#48596e">▶ Abrir prototipo interactivo (mid-fi)</a>')
+    H.append('<details class="chlog" open><summary>Cambios de esta iteración (mid-fi)</summary><ul>')
+    for tit,txt in CHANGELOG:
+        H.append(f'<li><b>{esc(tit)}.</b> {esc(txt)}</li>')
+    H.append('</ul></details>')
     H.append('<nav class="anchors">')
     for p in order:
         if p in by: H.append(f'<a href="#{p}">{PROFILE_LABEL[p]} ({len(by[p])})</a>')

@@ -53,6 +53,12 @@ h1,h2,h3,h4{margin:0}
 .detail .uxc{font-weight:700;margin:0 0 2px;font-size:9.5pt}
 .detail .ux p{margin:0 0 3px}
 .detail .prin{color:#5b7089;font-style:italic;font-size:9pt}
+.chlog{padding:22mm 18mm;break-after:page}
+.chlog h2{font-size:16pt;color:#2b2f36;border-left:5px solid #5b7089;padding-left:10px;margin:0 0 4px}
+.chlog .csub{color:#6b7280;font-size:9.5pt;margin:0 0 16px}
+.chlog .item{break-inside:avoid;margin:0 0 12px;padding:10px 14px;background:#f4f6f8;border:1px solid #d9dce1;border-radius:8px}
+.chlog .item b{display:block;font-size:10.5pt;color:#2b2f36;margin:0 0 3px}
+.chlog .item span{font-size:9.5pt;color:#454b54;line-height:1.5}
 """
 
 def build():
@@ -72,6 +78,13 @@ def build():
              '<b>Alcance:</b> operación monopaís (Chile). '
              '<b>Mapa gerencial:</b> reconciliado a 3 niveles (País → Centro comercial → Tienda/Local). '
              '<b>Versión del documento:</b> 31 de julio de 2026 · Confidencial.</div>')
+    H.append('</section>')
+    # cambios de esta iteración (explicación)
+    H.append('<section class="chlog"><h2>Cambios de esta iteración (mid-fi)</h2>')
+    H.append('<p class="csub">Resumen de las mejoras aplicadas al diseño respecto de la versión inicial de wireframes. '
+             'Estas decisiones están reflejadas tanto en los wireframes de este documento como en el prototipo interactivo.</p>')
+    for tit,txt in render.CHANGELOG:
+        H.append(f'<div class="item"><b>{tit}</b><span>{txt}</span></div>')
     H.append('</section>')
     # índice
     H.append('<section class="toc"><h2>Índice de pantallas</h2>')

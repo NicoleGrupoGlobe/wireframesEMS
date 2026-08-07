@@ -325,6 +325,11 @@
    ],
    "ux": [
     {
+     "componente": "Distribución densa: métricas en fila y mapa junto al feed",
+     "texto": "Las cuatro tarjetas de KPI se alinean en una sola fila superior y el mapa por niveles comparte fila con el feed de eventos críticos, de modo que cifras, geografía y eventos se leen en un solo golpe de vista, sin desplazarse. Reduce el scroll y refuerza la lectura de la pantalla de aterrizaje en < 3 s (ARQ-07).",
+     "principio": "Máxima información por pantalla; jerarquía visual; economía de scroll."
+    },
+    {
      "componente": "Mapa como único punto de entrada (superior-izquierda)",
      "texto": "El gerente abre esta pantalla para responder una sola pregunta: «¿dónde hay un problema en mi portafolio?». Por eso el mapa ocupa el cuadrante de mayor peso visual —arranque del recorrido de lectura en F— y no una columna lateral: la ubicación geográfica del riesgo es el primer dato que busca, y los marcadores de color le permiten localizar el mall crítico sin leer una sola cifra.",
      "principio": "Patrón de lectura en F y jerarquía visual: lo urgente ocupa el punto de entrada."
@@ -925,7 +930,7 @@
     "col": 0,
     "colspan": 7,
     "y": 184,
-    "h": 300,
+    "h": 380,
     "label": "Configurador de reporte",
     "meta": "configura y selecciona las secciones del informe",
     "reqs": [
@@ -976,7 +981,7 @@
     "col": 7,
     "colspan": 5,
     "y": 184,
-    "h": 150,
+    "h": 200,
     "label": "Vista previa del reporte",
     "meta": "miniatura de portada e índice",
     "reqs": [
@@ -1002,10 +1007,10 @@
    },
    {
     "type": "table",
-    "col": 7,
-    "colspan": 5,
-    "y": 400,
-    "h": 246,
+    "col": 0,
+    "colspan": 12,
+    "y": 584,
+    "h": 272,
     "label": "Historial de reportes",
     "meta": "retención de archivos ≥ 12 meses",
     "reqs": [
@@ -1110,6 +1115,11 @@
      "componente": "Historial con estado y link de descarga",
      "texto": "El historial expone el estado (generando/listo/error) y el link en la misma fila para que el gerente sepa si un reporte ya está disponible sin reintentar; el estado visible reduce la incertidumbre en generaciones que tardan.",
      "principio": "Feedback de estado de procesos asíncronos."
+    },
+    {
+     "componente": "Configuración y secciones en un solo formulario · vista previa a la derecha",
+     "texto": "Todo lo que define el informe —alcance, período, comparación, métrica, formato y las secciones a incluir (checkboxes)— vive en un único contenedor de formulario, en vez de repartirse en tarjetas separadas. La vista previa se ubica a la derecha para dar feedback inmediato de lo que se generará y las acciones (Generar / Programar) se consolidan en el header. Así el gerente arma el reporte de arriba abajo en una sola columna, sin saltar entre contenedores.",
+     "principio": "Agrupar lo que se decide junto; feedback inmediato; una sola tarea, un solo lugar."
     }
    ]
   }
