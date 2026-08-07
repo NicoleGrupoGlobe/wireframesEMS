@@ -1,0 +1,2261 @@
+[
+ {
+  "id": "7.1",
+  "slug": "tenants-malls",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Tenants y malls",
+  "activeMenu": "Tenants y malls",
+  "subtitle": "Multitenancy con aislamiento lógico por mall · alta de nuevos centros comerciales sin consultoría · crear/activar/desactivar requiere aprobación de PASA",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 184,
+    "h": 340,
+    "label": "Lista de tenants",
+    "meta": "Filtros: estado / con alertas activas · fila expandible con resumen del mall",
+    "reqs": [
+     "ARQ-05",
+     "FIN-02",
+     "FIN-03"
+    ],
+    "cols": [
+     "Tenant ID",
+     "Mall",
+     "Estado",
+     "N° medidores",
+     "N° usuarios",
+     "Fecha alta",
+     "Versión contrato"
+    ],
+    "nrows": 8,
+    "statuscol": true,
+    "expand": true
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 540,
+    "h": 300,
+    "label": "Historial de cambios de configuración del tenant",
+    "meta": "Inmutable · quién, qué campo, valor anterior/nuevo, timestamp (DAT-14)",
+    "reqs": [
+     "DAT-19",
+     "DAT-14"
+    ],
+    "cols": [
+     "Fecha",
+     "Usuario",
+     "Campo",
+     "Valor anterior",
+     "Valor nuevo",
+     "Aprobación"
+    ],
+    "nrows": 6
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 220,
+    "label": "Detalle de tenant — configuración base",
+    "meta": "tenant seleccionado en la lista",
+    "reqs": [
+     "ARQ-05",
+     "DAT-19",
+     "FIN-04"
+    ],
+    "subs": [
+     "Nombre · país · moneda · zona horaria",
+     "Umbrales de alerta configurados",
+     "Integración de facturación activa (FIN-04)",
+     "Aislamiento lógico por mall (ARQ-05)"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 420,
+    "h": 150,
+    "label": "Estadísticas de uso",
+    "meta": "consumo del tenant, últimos 30 días",
+    "reqs": [
+     "FIN-01",
+     "DAT-09"
+    ],
+    "subs": [
+     "Usuarios activos 30d: 42",
+     "N° consultas API (mes): 1,2 M",
+     "Volumen de datos almacenados: 318 GB"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 8,
+    "colspan": 4,
+    "y": 588,
+    "h": 40,
+    "btns": [
+     "Crear tenant",
+     "Activar",
+     "Desactivar"
+    ],
+    "pspan": 12
+   }
+  ],
+  "detail": {
+   "descripcion": "Administración de los tenants (centros comerciales) sobre el modelo multitenant con aislamiento lógico por mall y consolidación por país y región (ARQ-05). Permite dar de alta nuevos malls sin consultoría específica (FIN-02/FIN-03) y editar la configuración base. Las acciones de creación, activación y desactivación no se ejecutan de forma directa: abren un flujo de aprobación documentado con PASA (CYB-15) y quedan auditadas (DAT-14).",
+   "componentes": [
+    {
+     "nombre": "Lista de tenants",
+     "descripcion": "Tenant ID, nombre del mall, estado, nº de medidores activos, nº de usuarios activos, fecha de alta y versión de contrato. Filtros por estado y con alertas activas.",
+     "reqs": [
+      "ARQ-05",
+      "FIN-02",
+      "FIN-03"
+     ]
+    },
+    {
+     "nombre": "Detalle de tenant",
+     "descripcion": "Configuración base: nombre, país, moneda, zona horaria, umbrales de alerta e integración de facturación activa. Estadísticas de uso: usuarios activos en 30 días, nº de consultas API y volumen de datos almacenados. Historial de cambios de configuración.",
+     "reqs": [
+      "ARQ-05",
+      "DAT-19",
+      "FIN-04"
+     ]
+    },
+    {
+     "nombre": "Acciones de tenant",
+     "descripcion": "Crear / Activar / Desactivar — requiere aprobación de PASA mediante flujo documentado. Editar la configuración base con auditoría de cada cambio.",
+     "reqs": [
+      "ARQ-05",
+      "CYB-15",
+      "DAT-14"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Lista como columna dominante y detalle a la derecha",
+     "texto": "El súper-administrador entra a esta pantalla para localizar un tenant entre decenas, no para leer uno solo; por eso la tabla ocupa dos tercios del ancho y actúa como único punto de entrada, mientras el detalle se despliega al seleccionar una fila. Así el operador confirma sobre qué mall va a actuar antes de tener a la vista cualquier botón que lo modifique.",
+     "principio": "Jerarquía visual por tarea dominante; seleccionar el objeto antes que ofrecer la acción."
+    },
+    {
+     "componente": "Botones Crear/Activar/Desactivar separados del detalle",
+     "texto": "Las acciones que cambian el estado de un tenant se agrupan en una barra propia, visualmente aparte de los datos de solo lectura, para que el máximo privilegio de este perfil no se traduzca en un clic accidental sobre un control mezclado con la información. Separar 'mirar' de 'actuar' reduce el error en operaciones de alto impacto.",
+     "principio": "Prevención de errores; separación entre visualización y acción destructiva."
+    },
+    {
+     "componente": "Nota de gate PASA siempre visible",
+     "texto": "Aunque el perfil tiene permiso técnico para crear o desactivar, la nota fija explica que la acción abre un flujo de aprobación y no se ejecuta de inmediato. Hacer explícito el gate en la propia pantalla evita que el administrador espere un efecto instantáneo y sepa que falta la confirmación de un rol PASA.",
+     "principio": "Visibilidad del estado del sistema; ajustar el modelo mental al flujo real."
+    },
+    {
+     "componente": "Historial de configuración como bloque permanente",
+     "texto": "El historial de cambios no se esconde en un modal: se muestra siempre bajo la lista para que cualquier edición sea trazable de un vistazo. Dado que todo lo que hace este perfil es auditado por PASA, exponer el registro en pantalla refuerza la responsabilidad de cada cambio.",
+     "principio": "Trazabilidad visible; el registro acompaña a la acción."
+    },
+    {
+     "componente": "Estadísticas de uso junto al detalle del tenant",
+     "texto": "Usuarios activos, consultas API y volumen almacenado se colocan pegados al detalle porque el administrador los consulta al decidir un cambio de contrato o una desactivación; tenerlos contiguos evita saltar entre pantallas para reunir el contexto de la decisión.",
+     "principio": "Proximidad de la información que soporta una misma decisión."
+    }
+   ]
+  },
+  "primaryAction": "Nuevo tenant"
+ },
+ {
+  "id": "7.2",
+  "slug": "config-releases",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Config y releases",
+  "activeMenu": "Config y releases",
+  "subtitle": "Pipeline de despliegue con IaC versionada · ningún cambio pasa a producción sin pruebas y aprobación previa (CYB-15) · ambientes QA y Producción independientes (ARQ-06)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 330,
+    "label": "Pipeline de releases",
+    "meta": "estado: En desarrollo → QA → Aprobación → Producción · fila expandible con diff y resultados de tests",
+    "reqs": [
+     "CYB-15",
+     "ARQ-16",
+     "ARQ-06"
+    ],
+    "cols": [
+     "Versión",
+     "Descripción de cambios",
+     "Estado",
+     "Tests QA",
+     "Aprobaciones (obt/req)"
+    ],
+    "nrows": 7,
+    "statuscol": true,
+    "expand": true,
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 7,
+    "y": 530,
+    "h": 310,
+    "label": "Configuración como código — diff viewer (IaC)",
+    "meta": "cambios versionados en git · link al commit correspondiente (ARQ-16)",
+    "reqs": [
+     "ARQ-16",
+     "CYB-15"
+    ],
+    "subs": [
+     "+  resource \"aws_rds_replica\" { multi_az = true }",
+     "-  instance_class = \"db.r5.large\"",
+     "+  instance_class = \"db.r5.xlarge\"",
+     "commit a3f9c21 · autor: sre@globepower · rama: release/2.4.0"
+    ],
+    "pspan": 7,
+    "porder": 2
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 200,
+    "label": "Control de despliegue",
+    "meta": "GATE: requiere aprobación de al menos un rol PASA configurado (CYB-15)",
+    "reqs": [
+     "CYB-15",
+     "ARQ-06",
+     "ARQ-16"
+    ],
+    "subs": [
+     "Etapas: build → deploy QA → aprobación → prod",
+     "Logs de despliegue en tiempo real",
+     "Rollback disponible a la versión anterior",
+     "Ambientes QA/sandbox y Producción independientes"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 400,
+    "h": 40,
+    "btns": [
+     "Solicitar despliegue a producción",
+     "Rollback"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 7,
+    "colspan": 5,
+    "y": 456,
+    "h": 384,
+    "label": "Historial de despliegues",
+    "meta": "éxito / rollback · link a logs",
+    "reqs": [
+     "ARQ-16",
+     "DAT-14",
+     "CYB-10"
+    ],
+    "cols": [
+     "Versión",
+     "Fecha",
+     "Responsable",
+     "Resultado"
+    ],
+    "nrows": 9,
+    "statuscol": true,
+    "pspan": 5,
+    "porder": 3
+   }
+  ],
+  "detail": {
+   "descripcion": "Pipeline de gestión de cambios y despliegue basado en infraestructura como código (IaC) versionada y documentada (ARQ-16). El proceso es formal: ninguna modificación pasa a producción sin pruebas de seguridad en QA y aprobación previa (CYB-15), sobre ambientes QA/sandbox y Producción independientes (ARQ-06). El botón de solicitud de despliegue abre un flujo de aprobación que exige la confirmación de al menos un rol PASA configurado.",
+   "componentes": [
+    {
+     "nombre": "Pipeline de releases",
+     "descripcion": "Lista de releases con versión, descripción de cambios y estado (en desarrollo / QA / aprobación / producción). Para cada release: diff de cambios, resultados de tests en QA y aprobaciones requeridas vs. obtenidas.",
+     "reqs": [
+      "CYB-15",
+      "ARQ-16",
+      "ARQ-06"
+     ]
+    },
+    {
+     "nombre": "Control de despliegue",
+     "descripcion": "Botón 'Solicitar despliegue a producción' que abre el flujo de aprobación (requiere aprobación de al menos un rol PASA). Estado del despliegue con etapas, logs en tiempo real y rollback disponible.",
+     "reqs": [
+      "CYB-15",
+      "ARQ-06",
+      "ARQ-16"
+     ]
+    },
+    {
+     "nombre": "Configuración como código",
+     "descripcion": "Diff viewer de los cambios en IaC entre versiones. Todos los cambios versionados en git, con link al commit correspondiente.",
+     "reqs": [
+      "ARQ-16",
+      "CYB-15"
+     ]
+    },
+    {
+     "nombre": "Historial de despliegues",
+     "descripcion": "Versión, fecha, responsable, resultado (éxito / rollback) y link a logs.",
+     "reqs": [
+      "ARQ-16",
+      "DAT-14",
+      "CYB-10"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Pipeline con estado codificado y etapas ordenadas",
+     "texto": "Cada release muestra su fase (desarrollo/QA/aprobación/producción) con un punto de estado en la primera columna, de modo que el administrador reconstruye en un barrido en qué punto del proceso está cada cambio. Ver la etapa evita que alguien intente promover algo que aún no pasó QA.",
+     "principio": "Visibilidad del estado del sistema; feedback de progreso por etapas."
+    },
+    {
+     "componente": "'Solicitar despliegue a producción' como CTA de acento con gate explícito",
+     "texto": "El botón primario no dice 'Desplegar' sino 'Solicitar despliegue', y su meta advierte que exige aprobación de un rol PASA. El lenguaje del propio control comunica que la acción no es inmediata sino sometida a un gate, alineando la expectativa con el proceso formal de gestión de cambios.",
+     "principio": "Correspondencia entre etiqueta y consecuencia real; prevención de error en acción crítica."
+    },
+    {
+     "componente": "Diff de IaC visible antes de aprobar",
+     "texto": "El visor de diferencias con las líneas añadidas y eliminadas y el link al commit está en pantalla para que quien aprueba lea exactamente qué cambia en la infraestructura, sin salir a la herramienta de git. Mostrar el cambio concreto convierte la aprobación en una decisión informada, no en un clic ciego.",
+     "principio": "Reconocer antes que recordar; revelar el contenido de la decisión."
+    },
+    {
+     "componente": "Rollback como acción siempre presente",
+     "texto": "El control de rollback acompaña permanentemente al de despliegue, no aparece solo cuando algo falla, para que ante un incidente en producción la vía de reversión sea inmediata y no haya que buscarla bajo presión. Una salida de emergencia visible reduce el tiempo de recuperación.",
+     "principio": "Salidas claramente marcadas; control y libertad del usuario."
+    },
+    {
+     "componente": "Historial de despliegues como registro auditado a la derecha",
+     "texto": "El historial con resultado (éxito/rollback) y responsable queda fijo junto al control, porque en este perfil todo despliegue es auditado por PASA y el operador necesita ver el precedente de la versión antes de repetir una operación. El registro contiguo sostiene la rendición de cuentas.",
+     "principio": "Trazabilidad en contexto; el pasado informa la próxima acción."
+    }
+   ]
+  },
+  "primaryAction": "Solicitar despliegue"
+ },
+ {
+  "id": "7.3",
+  "slug": "usuarios-roles",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Usuarios y roles",
+  "activeMenu": "Usuarios y roles",
+  "subtitle": "RBAC con mínimo privilegio y auditoría trimestral (CYB-03) · off-boarding automático (ARQ-10) · revisión de permisos sin uso en más de 90 días con revocación masiva",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 184,
+    "h": 330,
+    "label": "Lista de usuarios",
+    "meta": "filtros: tenant / perfil / estado / sin acceso en > 90 días · fila expandible",
+    "reqs": [
+     "CYB-03",
+     "ARQ-10",
+     "CYB-02"
+    ],
+    "cols": [
+     "Nombre",
+     "Email",
+     "Tenant / mall",
+     "Perfil",
+     "Estado",
+     "Último acceso",
+     "MFA"
+    ],
+    "nrows": 8,
+    "statuscol": true,
+    "expand": true
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 530,
+    "h": 310,
+    "label": "Permisos sin uso en > 90 días",
+    "meta": "ACCIÓN DESTRUCTIVA: revocación masiva · auditada usuario/timestamp (DAT-14)",
+    "reqs": [
+     "CYB-03",
+     "ARQ-10",
+     "DAT-14"
+    ],
+    "cols": [
+     "Usuario",
+     "Permiso / recurso",
+     "Últ. uso",
+     "Perfil",
+     "Sugerencia"
+    ],
+    "nrows": 6,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 210,
+    "label": "Detalle de usuario — permisos efectivos",
+    "meta": "recursos y acciones permitidas",
+    "reqs": [
+     "CYB-03",
+     "DAT-14",
+     "CYB-21"
+    ],
+    "subs": [
+     "Perfil: Operacional · tenant: Costanera",
+     "Recursos: alarmas (R/W), tickets (R/W)",
+     "MFA activo (CYB-02) · SSO Azure AD",
+     "Auditoría trimestral de permisos (CYB-03)"
+    ]
+   },
+   {
+    "type": "timeline",
+    "col": 8,
+    "colspan": 4,
+    "y": 410,
+    "h": 250,
+    "label": "Historial de accesos y cambios de rol",
+    "meta": "últimas 30 sesiones · IP, timestamp, resultado",
+    "reqs": [
+     "DAT-14",
+     "CYB-21"
+    ],
+    "items": [
+     "Login OK · 10-07 08:14 · IP 190.x",
+     "Cambio de rol: Auditor → Operacional",
+     "Login OK · 09-07 17:52",
+     "Revocación de permiso backfill",
+     "Login fallido · MFA rechazado"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 8,
+    "colspan": 4,
+    "y": 676,
+    "h": 40,
+    "btns": [
+     "Asignar / cambiar perfil",
+     "Revocar acceso"
+    ],
+    "pspan": 12
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión de identidades y roles bajo RBAC con mínimo privilegio y auditoría trimestral de permisos (CYB-03), integrada con el off-boarding automático desde Azure AD (ARQ-10). Además de la lista y el detalle por usuario, incorpora un panel de revisión de permisos sin uso en más de 90 días que habilita la revocación masiva, y expone los permisos efectivos y el historial de accesos y cambios de rol de cada cuenta.",
+   "componentes": [
+    {
+     "nombre": "Lista de usuarios",
+     "descripcion": "Nombre, email, tenant/mall asignado, perfil, estado (activo/inactivo/bloqueado), último acceso y MFA activo. Filtros por tenant, perfil, estado y sin acceso en más de 90 días.",
+     "reqs": [
+      "CYB-03",
+      "ARQ-10",
+      "CYB-02"
+     ]
+    },
+    {
+     "nombre": "Detalle de usuario",
+     "descripcion": "Permisos efectivos (recursos y acciones permitidas). Historial de accesos: últimas 30 sesiones. Historial de cambios de rol.",
+     "reqs": [
+      "CYB-03",
+      "DAT-14",
+      "CYB-21"
+     ]
+    },
+    {
+     "nombre": "Gestión de usuarios",
+     "descripcion": "Asignar/cambiar perfil con justificación. Revocar acceso (off-boarding). Revisión periódica de permisos: panel de 'permisos sin uso en más de 90 días' con revocación masiva.",
+     "reqs": [
+      "CYB-03",
+      "ARQ-10",
+      "DAT-14"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Columna de MFA y estado en la lista principal",
+     "texto": "El estado de la cuenta y si tiene MFA activo se muestran como columnas fijas, no ocultas en el detalle, porque la primera pregunta de seguridad al revisar el padrón es qué cuentas están activas sin doble factor. Exponerlo en la fila permite auditar el cumplimiento de CYB-02 sin abrir cada usuario.",
+     "principio": "Información crítica al primer nivel; escaneabilidad de la condición de riesgo."
+    },
+    {
+     "componente": "Panel dedicado de permisos sin uso > 90 días",
+     "texto": "El mínimo privilegio se opera desde un bloque propio que aísla los permisos ociosos y ofrece revocarlos en bloque, convirtiendo la auditoría trimestral en una tarea guiada en vez de una búsqueda manual usuario por usuario. Reunir lo revocable en un solo lugar reduce el esfuerzo de mantener el principio de mínimo privilegio.",
+     "principio": "Agrupar por intención de tarea; reducir la carga de la revisión periódica."
+    },
+    {
+     "componente": "Etiqueta explícita de acción destructiva en la revocación masiva",
+     "texto": "El bloque de revocación advierte en su meta que es una acción destructiva y auditada; antes de aplicar sobre múltiples cuentas debe mediar confirmación. Nombrar el riesgo junto al control frena la ejecución impulsiva de una operación que puede dejar sin acceso a varios usuarios a la vez.",
+     "principio": "Prevención de errores; confirmación proporcional al alcance del daño."
+    },
+    {
+     "componente": "Cambio de perfil que exige justificación",
+     "texto": "Asignar o cambiar un rol no es un desplegable suelto: el flujo pide una justificación que quedará en la auditoría. Obligar a explicar el porqué disuade cambios arbitrarios de privilegio y deja una razón trazable para la revisión de PASA.",
+     "principio": "Fricción deliberada en acciones sensibles; responsabilidad rastreable."
+    },
+    {
+     "componente": "Historial de accesos y cambios de rol como línea de tiempo",
+     "texto": "Las últimas sesiones y los cambios de rol se presentan en orden cronológico junto al detalle, de modo que al investigar una cuenta el administrador ve la secuencia de eventos (logins, fallos de MFA, cambios de permiso) sin reconstruirla. La narrativa temporal facilita detectar comportamientos anómalos.",
+     "principio": "Reconocimiento sobre memoria; la secuencia temporal cuenta la historia de la cuenta."
+    }
+   ]
+  },
+  "primaryAction": "Nuevo usuario"
+ },
+ {
+  "id": "7.4",
+  "slug": "observabilidad",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Observabilidad",
+  "activeMenu": "Observabilidad",
+  "subtitle": "Health-check compatible con monitoreo externo (Splunk/CloudWatch/Datadog) · logs a sistema centralizado de PASA · dashboard de uso de APIs y tasas de error",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 3,
+    "y": 184,
+    "h": 108,
+    "label": "Uptime (30 días)",
+    "value": "99,82%",
+    "delta": "▲ sobre SLA 99,5% (FIN-06)",
+    "spark": true,
+    "reqs": [
+     "ARQ-08",
+     "FIN-06"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 3,
+    "colspan": 3,
+    "y": 184,
+    "h": 108,
+    "label": "Latencia media de API",
+    "value": "142 ms",
+    "delta": "p50 · últimas 24h",
+    "reqs": [
+     "ARQ-08",
+     "DAT-09"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 6,
+    "colspan": 3,
+    "y": 184,
+    "h": 108,
+    "label": "Error rate",
+    "value": "0,4%",
+    "delta": "(4xx + 5xx) / total requests",
+    "reqs": [
+     "ARQ-21",
+     "DAT-09"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 9,
+    "colspan": 3,
+    "y": 184,
+    "h": 108,
+    "label": "Tiempo de respuesta p95",
+    "value": "468 ms",
+    "delta": "umbral INT-08 < 500 ms",
+    "reqs": [
+     "ARQ-08",
+     "INT-08"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 6,
+    "y": 308,
+    "h": 232,
+    "label": "Health dashboard — semáforo por componente",
+    "meta": "API / BD / cola de mensajes / ingestión / backfill",
+    "reqs": [
+     "ARQ-08",
+     "ARQ-21",
+     "FIN-06"
+    ],
+    "cols": [
+     "Componente",
+     "Estado",
+     "Latencia",
+     "Última verificación"
+    ],
+    "nrows": 5,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "col": 6,
+    "colspan": 6,
+    "y": 308,
+    "h": 232,
+    "label": "Métricas de ingestión de datos",
+    "meta": "salud del flujo de datos hacia la plataforma",
+    "reqs": [
+     "DAT-09",
+     "DAT-27",
+     "ARQ-08"
+    ],
+    "subs": [
+     "Medidores reportando en el último ciclo: 96,4%",
+     "Mensajes procesados / hora: 1,84 M",
+     "Mensajes en cola: 2.310",
+     "Errores de parsing (24h): 41 · tendencia ▼",
+     "Anomalías detectadas automáticamente (DAT-27)"
+    ]
+   },
+   {
+    "type": "line",
+    "col": 0,
+    "colspan": 4,
+    "y": 556,
+    "h": 274,
+    "label": "Latencia de API por endpoint",
+    "meta": "últimas 24h / 7 días · líneas por endpoint",
+    "reqs": [
+     "DAT-09",
+     "ARQ-08"
+    ],
+    "threshold": 0.8
+   },
+   {
+    "type": "bars",
+    "col": 4,
+    "colspan": 4,
+    "y": 556,
+    "h": 274,
+    "label": "Tasa de errores por tipo",
+    "meta": "4xx / 5xx · barras",
+    "reqs": [
+     "ARQ-21",
+     "DAT-09"
+    ]
+   },
+   {
+    "type": "area",
+    "col": 8,
+    "colspan": 4,
+    "y": 556,
+    "h": 274,
+    "label": "Throughput de mensajes",
+    "meta": "mensajes procesados · área",
+    "reqs": [
+     "DAT-09",
+     "ARQ-08"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Panel de observabilidad de la plataforma con health-check compatible con herramientas de monitoreo externas (Splunk, CloudWatch, Datadog) según ARQ-08, envío de logs de errores al sistema centralizado de PASA (ARQ-21) y dashboard de uso de APIs y tasas de error (DAT-09). Combina un semáforo de salud por componente, métricas de ingestión de datos y gráficos de tendencia de latencia, errores y throughput.",
+   "componentes": [
+    {
+     "nombre": "Health dashboard",
+     "descripcion": "Uptime (30 días), latencia media de API [ms], error rate [%] y tiempo de respuesta p95. Semáforo por componente: API / BD / cola de mensajes / ingestión / backfill.",
+     "reqs": [
+      "ARQ-08",
+      "ARQ-21",
+      "FIN-06"
+     ]
+    },
+    {
+     "nombre": "Métricas de ingestión de datos",
+     "descripcion": "% de medidores reportando en el último ciclo, mensajes procesados/hora, mensajes en cola y errores de parsing.",
+     "reqs": [
+      "DAT-09",
+      "DAT-27",
+      "ARQ-08"
+     ]
+    },
+    {
+     "nombre": "Gráficos de tendencia",
+     "descripcion": "Latencia de API por endpoint (líneas), tasa de errores por tipo 4xx/5xx (barras) y throughput de mensajes (área). Ventanas de últimas 24h / 7 días.",
+     "reqs": [
+      "DAT-09",
+      "ARQ-08",
+      "ARQ-21"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Fila de KPIs de salud como cabecera de lectura",
+     "texto": "Uptime, latencia, error rate y p95 se alinean en una sola fila superior porque son la respuesta inmediata a '¿está sana la plataforma ahora?'. El administrador los lee como un tablero de instrumentos antes de descender al detalle, y cada uno referencia su umbral contractual para saber si el número es aceptable.",
+     "principio": "Jerarquía en F; la conclusión de salud antes que la evidencia gráfica."
+    },
+    {
+     "componente": "Semáforo por componente en tabla de estado",
+     "texto": "API, base de datos, cola, ingestión y backfill se listan con su punto de estado y última verificación, de modo que ante una degradación el operador localiza el componente culpable de un vistazo en lugar de correlacionar gráficos. Descomponer la salud por pieza acelera el diagnóstico de causa.",
+     "principio": "Codificación pre-atenta del color; localización rápida del punto de falla."
+    },
+    {
+     "componente": "Métricas de ingestión separadas de la salud de aplicación",
+     "texto": "El flujo de datos (medidores reportando, mensajes en cola, errores de parsing) tiene su propio panel junto al health, porque en un EMS un problema de datos no siempre coincide con uno de infraestructura. Distinguir 'la app responde' de 'los datos llegan' evita que el administrador dé por sana la plataforma cuando la ingestión está detenida.",
+     "principio": "Separación de dominios de problema; evitar conclusiones falsas por agregación."
+    },
+    {
+     "componente": "Tres gráficos de tendencia contiguos y comparables",
+     "texto": "Latencia, errores y throughput se colocan lado a lado con el mismo eje temporal para que el administrador correlacione visualmente un pico de errores con una caída de throughput sin cambiar de vista. La alineación temporal convierte tres series en una sola lectura de causa-efecto.",
+     "principio": "Vistas coordinadas en un eje común; comparación por adyacencia."
+    },
+    {
+     "componente": "Compatibilidad con monitoreo externo declarada en subtítulo",
+     "texto": "El encabezado recuerda que estas métricas se exponen a Splunk/Datadog y se envían a los logs centralizados de PASA, para que el administrador entienda que la pantalla es un espejo del monitoreo formal y no una fuente aislada. Situar la herramienta en su ecosistema evita duplicar la vigilancia.",
+     "principio": "Consistencia con el sistema externo; transparencia del origen del dato."
+    }
+   ]
+  },
+  "live": "En vivo · act. hace 30 s"
+ },
+ {
+  "id": "7.5",
+  "slug": "integraciones",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Integraciones",
+  "activeMenu": "Integraciones",
+  "subtitle": "Consola de salud y latencia de cada conexión (INT-13) · APIs con backward compatibility por 6 meses (INT-06) · ver contrato de interfaz sin exponer el modelo interno",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 330,
+    "label": "Lista de integraciones activas",
+    "meta": "tipo: API REST / Modbus / DLMS / webhook / SFTP · fila expandible",
+    "reqs": [
+     "INT-13",
+     "DAT-09",
+     "INT-06"
+    ],
+    "cols": [
+     "Nombre",
+     "Tipo",
+     "Tenant",
+     "Estado",
+     "Último heartbeat",
+     "Éxito 7d"
+    ],
+    "nrows": 8,
+    "statuscol": true,
+    "expand": true,
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "feed",
+    "col": 0,
+    "colspan": 7,
+    "y": 530,
+    "h": 300,
+    "label": "Log de los últimos 100 eventos de la integración",
+    "meta": "integración seleccionada · solo lectura",
+    "reqs": [
+     "INT-13",
+     "DAT-09"
+    ],
+    "items": [
+     [
+      "OK",
+      "Heartbeat recibido · 10-07 09:12",
+      "ok"
+     ],
+     [
+      "WARNING",
+      "Latencia elevada 820 ms",
+      "warn"
+     ],
+     [
+      "ERROR",
+      "Timeout — reintento 3/5",
+      "crit"
+     ],
+     [
+      "OK",
+      "Re-sincronización manual completada",
+      "ok"
+     ],
+     [
+      "INFO",
+      "Rotación de credencial OAuth2",
+      "null"
+     ]
+    ],
+    "pspan": 7,
+    "porder": 2
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 200,
+    "label": "Detalle de integración — configuración técnica",
+    "meta": "endpoint · protocolo · credenciales enmascaradas",
+    "reqs": [
+     "INT-13",
+     "DAT-09",
+     "INT-06"
+    ],
+    "subs": [
+     "Endpoint: https://api.***/v2/ingress",
+     "Protocolo: API REST · OAuth2 (INT-02)",
+     "Credenciales: ****** (enmascaradas)",
+     "Timeout configurable por canal (INT-11)",
+     "Contrato: API v2 · compatibilidad hacia atrás 6m (INT-06)"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "line",
+    "col": 7,
+    "colspan": 5,
+    "y": 400,
+    "h": 320,
+    "label": "Métricas de la integración (24h)",
+    "meta": "tasa de éxito / errores / latencia / volumen",
+    "reqs": [
+     "INT-13",
+     "DAT-09"
+    ],
+    "threshold": 0.75,
+    "pspan": 5,
+    "porder": 3
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 736,
+    "h": 40,
+    "btns": [
+     "Activar / Desactivar",
+     "Forzar re-sincronización",
+     "Ver contrato"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Consola de monitoreo y administración de las integraciones de la plataforma, con estado de salud y latencia de cada conexión (INT-13) y observabilidad de API (DAT-09). Permite ver el detalle técnico de cada integración con credenciales enmascaradas, gestionar su activación y forzar re-sincronización, y consultar el contrato de interfaz (versión de API y esquema) con backward compatibility por 6 meses (INT-06) sin exponer el modelo interno.",
+   "componentes": [
+    {
+     "nombre": "Lista de integraciones activas",
+     "descripcion": "Nombre, tipo (API REST / Modbus / DLMS / webhook / SFTP), tenant, estado (activo/degradado/error), último heartbeat y tasa de éxito de 7 días.",
+     "reqs": [
+      "INT-13",
+      "DAT-09",
+      "INT-06"
+     ]
+    },
+    {
+     "nombre": "Detalle de integración",
+     "descripcion": "Configuración técnica (endpoint, protocolo, credenciales enmascaradas). Métricas: tasa de éxito, errores, latencia y volumen de 24h. Log de los últimos 100 eventos.",
+     "reqs": [
+      "INT-13",
+      "DAT-09",
+      "INT-06"
+     ]
+    },
+    {
+     "nombre": "Gestión de integraciones",
+     "descripcion": "Activar/Desactivar con registro de motivo. Forzar re-sincronización. Ver el contrato de interfaz (versión de API, esquema) sin exponer el modelo interno.",
+     "reqs": [
+      "INT-06",
+      "INT-07",
+      "DAT-25"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Estado y tasa de éxito 7d en la lista",
+     "texto": "Cada integración muestra su estado y su tasa de éxito de la última semana como columnas, de modo que el administrador prioriza las conexiones degradadas o con error sin abrirlas una a una. Ordenar la atención hacia lo que falla es el propósito de una consola de salud de interfaces.",
+     "principio": "Priorización por severidad; lo problemático se hace evidente primero."
+    },
+    {
+     "componente": "Credenciales enmascaradas en el detalle",
+     "texto": "Aunque este perfil tiene máximo privilegio, el detalle técnico muestra las credenciales ofuscadas por defecto; verlas en claro sería una acción aparte y auditada. Ocultar el secreto salvo solicitud explícita reduce la exposición accidental en pantalla compartida o captura.",
+     "principio": "Minimización de exposición de secretos; privilegio no implica revelación por defecto."
+    },
+    {
+     "componente": "'Forzar re-sincronización' junto al log de eventos",
+     "texto": "La acción de re-sincronizar se ubica cerca del log de los últimos 100 eventos porque el administrador la ejecuta justo después de leer un error y quiere ver el efecto inmediato en el mismo lugar. Emparejar la acción con su evidencia cierra el ciclo diagnóstico-acción-verificación.",
+     "principio": "Proximidad acción-feedback; cerrar el bucle de control."
+    },
+    {
+     "componente": "'Ver contrato' sin exponer el modelo interno",
+     "texto": "El botón de contrato de interfaz muestra la versión de API y el esquema público, pero no la implementación interna; la etiqueta lo deja claro para que el administrador comparta el contrato con PASA sin filtrar detalles propietarios. Delimitar qué se expone protege la frontera técnica del proveedor.",
+     "principio": "Correspondencia entre affordance y alcance permitido; protección de la frontera de datos."
+    },
+    {
+     "componente": "Métricas como gráfico con umbral de servicio",
+     "texto": "La tasa de éxito y latencia de 24h se grafican con una línea de umbral para que el administrador vea de un vistazo si la integración opera dentro de lo comprometido, en lugar de interpretar cifras sueltas. El umbral dibujado transforma el dato en juicio inmediato de cumplimiento.",
+     "principio": "Referencia visible para la interpretación; el umbral da significado al valor."
+    }
+   ]
+  },
+  "primaryAction": "Nueva integración"
+ },
+ {
+  "id": "7.6",
+  "slug": "seguridad-pam",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Seguridad y PAM",
+  "activeMenu": "Seguridad y PAM",
+  "subtitle": "Panel único de postura de seguridad · agrupado en tres bandas: Estado de seguridad · PAM (cuentas privilegiadas y bóveda JIT) · Incidentes y continuidad · acciones críticas resaltadas y auditadas",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 128,
+    "label": "Resumen de vulnerabilidades",
+    "meta": "parche crítico ≤ 30 días (CYB-18)",
+    "reqs": [
+     "CYB-13",
+     "CYB-18"
+    ],
+    "subs": [
+     "Críticas 2 · Altas 5 · Medias 11 · Bajas 23",
+     "Parches pendientes: 3 (vence en 12 días)",
+     "Último scan: 09-07 · componentes con parche 94%"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 4,
+    "colspan": 4,
+    "y": 184,
+    "h": 128,
+    "label": "Certificados TLS",
+    "meta": "alerta a 30 y 7 días (CYB-04)",
+    "reqs": [
+     "CYB-04",
+     "INT-04"
+    ],
+    "cols": [
+     "Servicio",
+     "Días",
+     "Estado"
+    ],
+    "nrows": 3,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 128,
+    "label": "Cifrado en reposo (AES-256)",
+    "meta": "alerta si un componente pierde cifrado",
+    "reqs": [
+     "CYB-05"
+    ],
+    "subs": [
+     "Base de datos: AES-256 activo ✓",
+     "Backups: AES-256 activo ✓",
+     "Almacenamiento de archivos: activo ✓"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 4,
+    "y": 326,
+    "h": 128,
+    "label": "WAF / DDoS / IDS-IPS",
+    "meta": "IDS/IPS monitoreado 24x7 (CYB-22)",
+    "reqs": [
+     "CYB-09",
+     "CYB-22"
+    ],
+    "subs": [
+     "WAF activo · última alerta hace 3h",
+     "Protección DDoS activa",
+     "IDS/IPS activo y monitoreado 24x7"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 4,
+    "colspan": 4,
+    "y": 326,
+    "h": 128,
+    "label": "Hardening — CIS Benchmarks",
+    "meta": "% cumplimiento por componente",
+    "reqs": [
+     "CYB-17"
+    ],
+    "subs": [
+     "Servidores: 96% · BD: 92%",
+     "Última auditoría de hardening: 30-06",
+     "Hallazgos abiertos: 4 (con ETA de remediación)"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 326,
+    "h": 128,
+    "label": "EDR y antivirus",
+    "meta": "alerta si > 24h sin actualizar firmas",
+    "reqs": [
+     "CYB-14"
+    ],
+    "subs": [
+     "Cobertura EDR: 100% de componentes",
+     "Última actualización de firmas: hace 2h",
+     "Última detección: ninguna (7 días)"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 4,
+    "y": 468,
+    "h": 128,
+    "label": "Inventario HW/SW (SBOM)",
+    "meta": "alerta EOL en próximos 90 días · exportable a PASA",
+    "reqs": [
+     "CYB-19",
+     "ARQ-20"
+    ],
+    "cols": [
+     "Componente",
+     "EOL",
+     "Soporte"
+    ],
+    "nrows": 3,
+    "statuscol": true
+   },
+   {
+    "type": "table",
+    "col": 4,
+    "colspan": 4,
+    "y": 468,
+    "h": 128,
+    "label": "PAM — cuentas privilegiadas",
+    "meta": "revisión mensual obligatoria con justificación (CYB-20)",
+    "reqs": [
+     "CYB-20",
+     "CYB-03",
+     "DAT-14"
+    ],
+    "cols": [
+     "Usuario / rol",
+     "Próxima rev.",
+     "Estado"
+    ],
+    "nrows": 3,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 468,
+    "h": 128,
+    "label": "Bóveda de credenciales JIT",
+    "meta": "acceso just-in-time · sesión grabada",
+    "reqs": [
+     "CYB-20",
+     "DAT-14"
+    ],
+    "subs": [
+     "Solicitud → aprobación por tiempo limitado",
+     "Sesión completa grabada (DAT-14)",
+     "Historial: usuario · recurso · duración · acciones"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 4,
+    "y": 610,
+    "h": 128,
+    "label": "Incidentes de seguridad",
+    "meta": "CTA: 'Notificar a PASA' — informe de brecha en < 24h (CYB-16)",
+    "reqs": [
+     "CYB-16",
+     "PRI-02"
+    ],
+    "cols": [
+     "Fecha",
+     "Tipo",
+     "Estado"
+    ],
+    "nrows": 3,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "col": 4,
+    "colspan": 4,
+    "y": 610,
+    "h": 128,
+    "label": "Estado del BCP / DRP",
+    "meta": "alerta si prueba > 6 meses",
+    "reqs": [
+     "CYB-11",
+     "DAT-13"
+    ],
+    "subs": [
+     "Última prueba: 15-05 · resultado: exitoso",
+     "Próxima prueba programada: 15-11",
+     "Link al documento de DRP vigente"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 610,
+    "h": 128,
+    "label": "Integridad de backups",
+    "meta": "prueba semestral · alerta si > 6 meses",
+    "reqs": [
+     "CYB-23",
+     "ARQ-11"
+    ],
+    "subs": [
+     "Última prueba de integridad: 20-04 ✓",
+     "Tamaño validado · hash de verificación OK",
+     "RTO < 4h · RPO < 1h (ARQ-11)"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 4,
+    "y": 752,
+    "h": 128,
+    "label": "Escaneo DAST",
+    "meta": "último ciclo de escaneo dinámico",
+    "reqs": [
+     "CYB-07"
+    ],
+    "subs": [
+     "Interfaces: Portal / API / Webhooks",
+     "Hallazgos: 0 críticos · 2 medios (en remediación)",
+     "Historial de los últimos 12 ciclos"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 4,
+    "colspan": 4,
+    "y": 752,
+    "h": 128,
+    "label": "Informe Pentest anual",
+    "meta": "alerta si último Pentest > 12 meses",
+    "reqs": [
+     "CYB-08"
+    ],
+    "subs": [
+     "Último informe: 02-2026 · tercero independiente",
+     "Hallazgos críticos: 0 · altos: 1 (remediado)",
+     "Empresa auditora registrada"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 752,
+    "h": 128,
+    "label": "Borrado criptográfico",
+    "meta": "CTA DESTRUCTIVA: 'Ejecutar borrado' — al término del contrato · genera acta",
+    "reqs": [
+     "CYB-12",
+     "DAT-07"
+    ],
+    "subs": [
+     "Lista de activos a borrar · estado por activo",
+     "Hash de verificación post-borrado",
+     "Acta generada para PASA (irreversible)"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Panel único de postura de seguridad y gestión de accesos privilegiados del proveedor, agrupado en tres bandas de afinidad para reducir la carga cognitiva de una pantalla muy densa: (1) Estado de seguridad — vulnerabilidades, certificados TLS, cifrado en reposo, WAF/DDoS/IDS-IPS, hardening CIS, inventario SBOM y EDR; (2) PAM — cuentas privilegiadas y bóveda de credenciales JIT; (3) Incidentes y continuidad — incidentes de seguridad con notificación de brechas en menos de 24h, BCP/DRP, integridad de backups, DAST, Pentest anual y borrado criptográfico. Las acciones críticas y destructivas se resaltan y quedan auditadas.",
+   "componentes": [
+    {
+     "nombre": "Resumen de vulnerabilidades",
+     "descripcion": "Vulnerabilidades abiertas por severidad (crítica/alta/media/baja), parches pendientes con fecha límite (críticas ≤ 30 días), fecha del último scan y % de componentes con parche vigente.",
+     "reqs": [
+      "CYB-13",
+      "CYB-18"
+     ]
+    },
+    {
+     "nombre": "Certificados TLS",
+     "descripcion": "Tabla de certificados por servicio: dominio, fecha de expiración, días restantes y estado (válido/por vencer/vencido). Alerta automática a 30 y 7 días del vencimiento.",
+     "reqs": [
+      "CYB-04",
+      "INT-04"
+     ]
+    },
+    {
+     "nombre": "Estado de cifrado en reposo",
+     "descripcion": "Indicador por componente (base de datos, backups, almacenamiento de archivos): cifrado AES-256 activo (sí/no), última verificación y responsable. Alerta si algún componente pierde el cifrado.",
+     "reqs": [
+      "CYB-05"
+     ]
+    },
+    {
+     "nombre": "Estado de WAF / DDoS / IDS-IPS",
+     "descripcion": "Semáforo por servicio de protección perimetral: WAF activo, protección DDoS activa, IDS/IPS activo y monitoreado 24x7. Última alerta detectada por cada sistema.",
+     "reqs": [
+      "CYB-09",
+      "CYB-22"
+     ]
+    },
+    {
+     "nombre": "Hardening — cumplimiento CIS Benchmarks",
+     "descripcion": "% de cumplimiento del benchmark CIS por componente (servidor, BD). Última auditoría de hardening. Hallazgos abiertos con criticidad y ETA de remediación.",
+     "reqs": [
+      "CYB-17"
+     ]
+    },
+    {
+     "nombre": "Inventario de componentes HW/SW (SBOM)",
+     "descripcion": "Tabla de todos los componentes tecnológicos: nombre, versión, fabricante, fecha de EOL y estado de soporte. Exportable a PASA. Alerta si algún componente entra en EOL en los próximos 90 días.",
+     "reqs": [
+      "CYB-19",
+      "ARQ-20"
+     ]
+    },
+    {
+     "nombre": "EDR y antivirus",
+     "descripcion": "Estado de cobertura de EDR por componente: activo/inactivo, fecha de última actualización de firmas y última detección. Alerta si algún componente lleva más de 24h sin actualización.",
+     "reqs": [
+      "CYB-14"
+     ]
+    },
+    {
+     "nombre": "Lista de cuentas privilegiadas (PAM)",
+     "descripcion": "Usuario, rol, fecha de última revisión, próxima revisión programada y estado (activo/suspendido/en revisión). Revisión mensual obligatoria con registro de justificación de uso.",
+     "reqs": [
+      "CYB-20",
+      "CYB-03",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Bóveda de credenciales JIT",
+     "descripcion": "Acceso just-in-time: el técnico solicita acceso, se aprueba por tiempo limitado y se graba la sesión completa. Historial de uso: usuario, recurso accedido, duración y acciones realizadas.",
+     "reqs": [
+      "CYB-20",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Lista de incidentes de seguridad",
+     "descripcion": "Incidentes abiertos: fecha de detección, tipo, severidad, estado y responsable. Botón 'Notificar a PASA' que genera y envía el informe de brecha en formato estándar en menos de 24h desde la detección.",
+     "reqs": [
+      "CYB-16",
+      "PRI-02"
+     ]
+    },
+    {
+     "nombre": "Estado del BCP / DRP",
+     "descripcion": "Última prueba realizada, resultado (exitoso/con observaciones), próxima prueba programada y link al documento de DRP vigente. Alerta si la prueba lleva más de 6 meses sin realizarse.",
+     "reqs": [
+      "CYB-11",
+      "DAT-13"
+     ]
+    },
+    {
+     "nombre": "Integridad de backups",
+     "descripcion": "Registro de pruebas de integridad de backups (semestral mínimo): fecha, resultado, tamaño validado y hash de verificación. Alerta si el último backup validado tiene más de 6 meses.",
+     "reqs": [
+      "CYB-23",
+      "ARQ-11"
+     ]
+    },
+    {
+     "nombre": "Escaneo DAST",
+     "descripcion": "Resultado del último ciclo de escaneo dinámico: fecha, interfaces escaneadas (Portal/API/Webhooks), hallazgos por severidad y estado de remediación. Historial de los últimos 12 ciclos.",
+     "reqs": [
+      "CYB-07"
+     ]
+    },
+    {
+     "nombre": "Informe Pentest anual",
+     "descripcion": "Registro del último informe de Pentest/Ethical Hacking por tercero: fecha, empresa auditora, hallazgos críticos y estado de remediación. Alerta si el último Pentest tiene más de 12 meses.",
+     "reqs": [
+      "CYB-08"
+     ]
+    },
+    {
+     "nombre": "Borrado criptográfico",
+     "descripcion": "Herramienta de borrado criptográfico al término del contrato: lista de activos a borrar, estado, hash de verificación post-borrado y acta generada.",
+     "reqs": [
+      "CYB-12",
+      "DAT-07"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Tres bandas de afinidad en una grilla densa uniforme",
+     "texto": "Los quince sub-paneles se organizan en bandas horizontales — estado de seguridad, PAM y continuidad — con bloques de igual altura y ancho, de modo que el administrador escanea cada dominio como una unidad en vez de enfrentar una nube de indicadores. Agrupar por afinidad y estandarizar el tamaño convierte una pantalla saturada en algo recorrible.",
+     "principio": "Agrupación por afinidad y ley de proximidad (Gestalt); reducción de carga cognitiva en alta densidad."
+    },
+    {
+     "componente": "Semáforo homogéneo como lenguaje común de toda la pantalla",
+     "texto": "Cada panel expone su condición con el mismo código de estado, para que el ojo detecte el único bloque en rojo entre catorce en verde sin leer texto. En un tablero de seguridad con tantos frentes, un lenguaje visual único es lo que permite encontrar el problema en segundos.",
+     "principio": "Consistencia de codificación; detección pre-atenta de la excepción."
+    },
+    {
+     "componente": "'Notificar a PASA' resaltado en el bloque de incidentes",
+     "texto": "La acción que dispara el informe de brecha en menos de 24h se destaca en el panel de incidentes con su plazo explícito, porque es la obligación contractual más sensible al tiempo de todo el perfil. Anclar la acción a su ventana de 24h evita que el operador subestime la urgencia regulatoria.",
+     "principio": "Visibilidad de la acción crítica; el plazo forma parte del control."
+    },
+    {
+     "componente": "'Ejecutar borrado' marcado como destructivo e irreversible",
+     "texto": "El borrado criptográfico advierte en su meta que es una acción destructiva que genera un acta y no tiene retorno; su ejecución exige aprobación y confirmación. Rotular la irreversibilidad junto al botón es la última barrera contra un borrado accidental de datos al cierre de contrato.",
+     "principio": "Prevención de errores catastróficos; confirmación explícita ante acción irreversible."
+    },
+    {
+     "componente": "Alertas de caducidad temporal embebidas en cada panel",
+     "texto": "Certificados TLS, Pentest, BCP/DRP e integridad de backups muestran su cuenta regresiva o su umbral de antigüedad dentro del propio bloque, para que el administrador vea qué control está por vencer sin abrir cada módulo. Situar el vencimiento junto al estado transforma la vigilancia en una lectura pasiva.",
+     "principio": "Visibilidad del estado del sistema; anticipación en vez de reacción."
+    },
+    {
+     "componente": "Bóveda JIT y PAM contiguos como flujo de acceso privilegiado",
+     "texto": "La lista de cuentas privilegiadas y la bóveda de acceso just-in-time se colocan juntas porque describen el mismo ciclo: quién tiene privilegio permanente y cómo se concede el temporal con sesión grabada. Reunir ambos evita que el administrador razone el control de accesos privilegiados en dos lugares distintos.",
+     "principio": "Continuidad del modelo mental; agrupar los pasos de un mismo proceso."
+    }
+   ]
+  }
+ },
+ {
+  "id": "7.7",
+  "slug": "replica-datos",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Réplica y datos",
+  "activeMenu": "Réplica y datos",
+  "subtitle": "BD de réplica read-only NRT en AWS · notificación de cambios de esquema a PASA con 30 días de anticipación (DAT-13) · contratos de datos versionados (DAT-25)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 180,
+    "label": "Estado de la réplica (NRT)",
+    "meta": "alerta si el lag supera el umbral (> 5 min)",
+    "reqs": [
+     "DAT-01",
+     "DAT-26"
+    ],
+    "subs": [
+     "Sincronización: activa ✓",
+     "Lag actual: 42 s (umbral 300 s)",
+     "Última réplica exitosa: 10-07 09:15:22",
+     "Volumen replicado 24h: 214 GB"
+    ]
+   },
+   {
+    "type": "histogram",
+    "col": 4,
+    "colspan": 8,
+    "y": 184,
+    "h": 180,
+    "label": "Histograma de lag de réplica",
+    "meta": "lag en segundos · últimas 24h / 7 días",
+    "reqs": [
+     "DAT-01",
+     "DAT-26"
+    ],
+    "threshold": 0.7
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 6,
+    "y": 380,
+    "h": 230,
+    "label": "Acceso a réplica por tenant / proceso ETL de PASA",
+    "meta": "gestión de acceso con revocación individual (auditada)",
+    "reqs": [
+     "DAT-01",
+     "CYB-03",
+     "DAT-14"
+    ],
+    "cols": [
+     "Usuario",
+     "Tenant / proceso",
+     "Permisos",
+     "Última conexión",
+     "Vol. consultado"
+    ],
+    "nrows": 5,
+    "statuscol": true
+   },
+   {
+    "type": "table",
+    "col": 6,
+    "colspan": 6,
+    "y": 380,
+    "h": 230,
+    "label": "Monitor de cambios de esquema",
+    "meta": "badge rojo si el plazo de aviso de 30 días no se cumple (DAT-13)",
+    "reqs": [
+     "DAT-13",
+     "DAT-25"
+    ],
+    "cols": [
+     "Tabla / endpoint",
+     "Tipo de cambio",
+     "Detección",
+     "Despliegue",
+     "Notif. PASA"
+    ],
+    "nrows": 5,
+    "statuscol": true,
+    "expand": true
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 626,
+    "h": 210,
+    "label": "Contratos de datos versionados",
+    "meta": "backward compatibility · deprecación de versiones antiguas (INT-06)",
+    "reqs": [
+     "DAT-25",
+     "INT-06"
+    ],
+    "cols": [
+     "Integración",
+     "Versión actual",
+     "Versiones soportadas",
+     "Esquema",
+     "Deprecación"
+    ],
+    "nrows": 5
+   },
+   {
+    "type": "panel",
+    "col": 8,
+    "colspan": 4,
+    "y": 626,
+    "h": 150,
+    "label": "Alerta de anticipación de 30 días",
+    "meta": "aviso formal a PASA por cambio de esquema (DAT-13)",
+    "reqs": [
+     "DAT-13"
+    ],
+    "subs": [
+     "2 cambios detectados sin notificar",
+     "1 incumple el plazo de 30 días (badge rojo)",
+     "Calcula si el despliegue respeta el aviso"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 8,
+    "colspan": 4,
+    "y": 790,
+    "h": 40,
+    "btns": [
+     "Notificar a PASA ahora"
+    ],
+    "pspan": 12
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión de la base de datos de réplica read-only en AWS con sincronización NRT (DAT-01) y de los contratos de datos versionados que PASA consume en sus procesos ETL (DAT-25). Incluye el estado y el lag de la réplica, el control de acceso por tenant/proceso, el monitor de cambios de esquema con el cálculo del aviso de 30 días de anticipación a PASA (DAT-13) y el catálogo de contratos con su política de compatibilidad hacia atrás (INT-06).",
+   "componentes": [
+    {
+     "nombre": "Panel de estado de réplica",
+     "descripcion": "Estado de sincronización NRT (activa/degradada/detenida), lag actual [segundos], timestamp de la última réplica exitosa y volumen replicado en 24h. Alerta si el lag supera el umbral configurado.",
+     "reqs": [
+      "DAT-01",
+      "DAT-26"
+     ]
+    },
+    {
+     "nombre": "Histograma de lag de réplica",
+     "descripcion": "Gráfico del lag en segundos durante las últimas 24h/7 días. Permite identificar degradaciones periódicas o picos de carga que afectan la sincronización.",
+     "reqs": [
+      "DAT-01",
+      "DAT-26"
+     ]
+    },
+    {
+     "nombre": "Acceso a réplica por tenant",
+     "descripcion": "Tabla de credenciales de acceso a la réplica read-only por tenant/proceso ETL de PASA: usuario, permisos, última conexión y volumen consultado. Gestión de acceso con revocación individual.",
+     "reqs": [
+      "DAT-01",
+      "CYB-03",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Monitor de cambios de esquema",
+     "descripcion": "Detecta automáticamente cambios en la estructura de tablas de la réplica o la API. Lista los cambios pendientes de notificar a PASA con tabla/endpoint afectado, tipo de cambio, fecha de detección, fecha planificada de despliegue y estado de notificación (pendiente/enviada/confirmada).",
+     "reqs": [
+      "DAT-13",
+      "DAT-25"
+     ]
+    },
+    {
+     "nombre": "Alerta de anticipación de 30 días",
+     "descripcion": "Para cada cambio de esquema detectado calcula si el despliegue planificado respeta el aviso de 30 días a PASA. Badge rojo si el plazo no se cumple. Botón 'Notificar a PASA ahora' que genera el aviso formal.",
+     "reqs": [
+      "DAT-13"
+     ]
+    },
+    {
+     "nombre": "Contratos de datos versionados",
+     "descripcion": "Catálogo de contratos activos: nombre de la integración (API/réplica/webhook/archivo), versión actual, versiones anteriores soportadas, esquema (campos, tipos, validaciones), política de compatibilidad hacia atrás y fecha de deprecación de versiones antiguas.",
+     "reqs": [
+      "DAT-25",
+      "INT-06"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Estado de réplica y lag emparejados con su histograma",
+     "texto": "El indicador de lag actual se coloca junto al histograma de su evolución para que el administrador distinga un pico puntual de una degradación sostenida en la misma mirada. Un número solo no dice si el problema es transitorio; la serie contigua le da esa lectura.",
+     "principio": "Dato puntual junto a su tendencia; contexto para interpretar el valor."
+    },
+    {
+     "componente": "Cálculo automático del plazo de 30 días con badge",
+     "texto": "El sistema no deja al administrador contar días: calcula si el despliegue de cada cambio de esquema respeta el aviso de 30 días a PASA y marca en rojo el que lo incumple. Automatizar el cómputo del plazo previene el error de notificar tarde una obligación contractual.",
+     "principio": "Prevención de errores por cálculo manual; el sistema vigila el compromiso."
+    },
+    {
+     "componente": "Botón 'Notificar a PASA ahora' contiguo a la alerta",
+     "texto": "La acción de emitir el aviso formal se ubica junto al panel que detecta el incumplimiento del plazo, para que la respuesta al riesgo sea inmediata y en el mismo lugar donde se descubre. Acercar la solución al problema reduce la latencia entre detectar y actuar.",
+     "principio": "Proximidad problema-acción; minimizar el costo de la respuesta correcta."
+    },
+    {
+     "componente": "Acceso a la réplica con revocación individual auditada",
+     "texto": "La tabla de accesos por tenant/proceso ETL permite revocar credenciales una a una en lugar de en bloque, porque cortar el acceso ETL de PASA de forma masiva interrumpiría procesos legítimos. La granularidad de la revocación protege la operación del cliente mientras se mantiene el control.",
+     "principio": "Control de grano fino en operaciones sensibles; evitar el daño colateral."
+    },
+    {
+     "componente": "Contratos versionados como catálogo con deprecación visible",
+     "texto": "El catálogo muestra versión actual, versiones aún soportadas y fecha de deprecación en columnas, de modo que el administrador comunica a PASA hasta cuándo funciona cada versión sin abrir documentación externa. Exponer el calendario de compatibilidad hace explícito el compromiso de backward compatibility.",
+     "principio": "Transparencia del ciclo de vida; el compromiso de compatibilidad a la vista."
+    }
+   ]
+  }
+ },
+ {
+  "id": "7.8",
+  "slug": "slos-datos",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "SLOs de datos",
+  "activeMenu": "SLOs de datos",
+  "subtitle": "Niveles de servicio para datos críticos — frescura, completitud, disponibilidad, unicidad y recuperación — diferenciados del SLA de infraestructura · latencia de API p95 < 500 ms (INT-08)",
+  "filters": [
+   {
+    "name": "Dimensión",
+    "default": "Todas"
+   },
+   {
+    "name": "Tenant / mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Período",
+    "default": "Últimas 24h"
+   },
+   {
+    "name": "Estado",
+    "default": "Todos"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 250,
+    "label": "SLOs por dimensión de dato",
+    "meta": "objetivo vs. actual · estado (cumple/incumple) · tendencia 7 días",
+    "reqs": [
+     "DAT-26"
+    ],
+    "cols": [
+     "Dimensión",
+     "Objetivo",
+     "Actual",
+     "Estado",
+     "Tend. 7d"
+    ],
+    "nrows": 5,
+    "statuscol": true
+   },
+   {
+    "type": "line",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 250,
+    "label": "SLO de latencia de API — p95",
+    "meta": "umbral contractual 500 ms · badge rojo si lo supera (INT-08)",
+    "reqs": [
+     "INT-08",
+     "DAT-26"
+    ],
+    "threshold": 0.8
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 450,
+    "h": 300,
+    "label": "Historial de incumplimientos de SLO",
+    "meta": "causa raíz registrada · exportable para revisión con PASA",
+    "reqs": [
+     "DAT-26",
+     "FIN-06",
+     "DAT-14"
+    ],
+    "cols": [
+     "Dimensión",
+     "Período",
+     "Objetivo",
+     "Valor real",
+     "Causa raíz",
+     "Acción"
+    ],
+    "nrows": 6,
+    "statuscol": true,
+    "expand": true
+   },
+   {
+    "type": "form",
+    "col": 7,
+    "colspan": 5,
+    "y": 450,
+    "h": 300,
+    "label": "Configurador de SLOs",
+    "meta": "los valores no pueden bajar de los mínimos contractuales · cada cambio auditado",
+    "reqs": [
+     "DAT-26"
+    ],
+    "fields": [
+     "Dimensión de dato a configurar",
+     "Tipo de dato (medidor crítico / contexto)",
+     "Valor objetivo",
+     "Ventana de evaluación",
+     "Umbral de alerta"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Panel diferenciado de niveles de servicio (SLOs) para datos críticos, separado del SLA de infraestructura y aplicación. La plataforma compromete SLOs específicos para frescura, completitud, disponibilidad, unicidad operativa y tiempo máximo de recuperación de datasets (DAT-26), más un indicador dedicado de latencia de API en el percentil 95 con umbral contractual de 500 ms (INT-08). Incluye historial de incumplimientos exportable y un configurador que no permite bajar de los mínimos contractuales.",
+   "componentes": [
+    {
+     "nombre": "Tabla de SLOs por dimensión de dato",
+     "descripcion": "Una fila por dimensión: Frescura [min desde última lectura], Completitud [% recibidas vs. esperadas], Disponibilidad de datos [%], Unicidad operativa [% sin duplicados] y Tiempo de recuperación de dataset [min]. Para cada una: valor objetivo, valor actual, estado (cumple/incumple) y tendencia 7 días.",
+     "reqs": [
+      "DAT-26"
+     ]
+    },
+    {
+     "nombre": "SLO de latencia de API (p95 < 500 ms)",
+     "descripcion": "Indicador del percentil 95 del tiempo de respuesta de la API de datos. Umbral contractual 500 ms. Valor actual en tiempo real y gráfico de evolución del p95 en los últimos 7 días. Badge rojo si supera el umbral.",
+     "reqs": [
+      "INT-08",
+      "DAT-26"
+     ]
+    },
+    {
+     "nombre": "Historial de incumplimientos de SLO",
+     "descripcion": "Tabla de períodos en que algún SLO fue incumplido: dimensión afectada, período, valor objetivo, valor real, causa raíz registrada y acción tomada. Exportable para revisión con PASA.",
+     "reqs": [
+      "DAT-26",
+      "FIN-06",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Configurador de SLOs",
+     "descripcion": "Permite ajustar los valores objetivo por SLO y por tipo de dato (datos de medidores críticos vs. datos de contexto). Cada cambio queda registrado con usuario y timestamp. Los valores no pueden bajar de los mínimos contractuales.",
+     "reqs": [
+      "DAT-26"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Dimensión",
+     "opciones": "Frescura / Completitud / Disponibilidad / Unicidad / Tiempo de recuperación / Latencia API / Todas",
+     "default": "Todas"
+    },
+    {
+     "nombre": "Tenant / mall",
+     "opciones": "Multi-selección con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Período",
+     "opciones": "Tiempo real / Últimas 24h / 7 días / 30 días",
+     "default": "Últimas 24h"
+    },
+    {
+     "nombre": "Estado",
+     "opciones": "Todos / Solo incumplidos / Solo en riesgo",
+     "default": "Todos"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Tabla de SLOs con objetivo y actual en columnas contiguas",
+     "texto": "Cada dimensión muestra su valor objetivo junto al valor actual y el estado, de modo que el administrador juzga el cumplimiento comparando dos cifras adyacentes en vez de recordar el umbral. Poner el compromiso al lado del dato real elimina el paso mental de buscar contra qué se mide.",
+     "principio": "Comparación en contexto; reducir la carga de memoria del umbral."
+    },
+    {
+     "componente": "SLO de latencia p95 con línea de umbral dibujada",
+     "texto": "El gráfico del p95 traza la línea de 500 ms para que cualquier punto por encima sea visible sin leer valores, y el badge rojo confirma el incumplimiento. Materializar el umbral contractual sobre la serie convierte el SLO en una lectura binaria de cumple/no cumple.",
+     "principio": "Umbral visible sobre la serie; juicio inmediato de cumplimiento."
+    },
+    {
+     "componente": "Configurador que bloquea bajar del mínimo contractual",
+     "texto": "El formulario de ajuste de objetivos impide fijar un valor por debajo del piso pactado con PASA; el propio control es la barrera. Restringir el rango editable previene que, con máximo privilegio, se relaje un compromiso contractual por error o descuido.",
+     "principio": "Prevención de errores por restricción del rango; el límite vive en el control."
+    },
+    {
+     "componente": "Historial de incumplimientos con causa raíz y exportable",
+     "texto": "Cada incumplimiento registra su causa raíz y acción tomada y es exportable, porque la conversación con PASA no es sobre el número aislado sino sobre por qué ocurrió y qué se hizo. Estructurar la evidencia para la revisión externa hace la rendición de cuentas verificable.",
+     "principio": "Trazabilidad orientada a la auditoría externa; el dato acompañado de su explicación."
+    },
+    {
+     "componente": "Filtros declarados por dimensión, tenant, período y estado",
+     "texto": "Esta pantalla sí expone filtros porque el administrador alterna entre revisar una dimensión concreta, un tenant o solo lo incumplido; ubicarlos en la barra superior estándar mantiene el patrón del resto del perfil y evita reconstruir la vista manualmente. La consistencia del lugar del filtro reduce el costo de aprenderlo.",
+     "principio": "Consistencia entre pantallas; filtrado como reducción del espacio de búsqueda."
+    },
+    {
+     "componente": "Datos críticos separados del SLA de infraestructura",
+     "texto": "El subtítulo insiste en que estos SLOs son distintos del uptime de infraestructura, para que el administrador no confunda 'la plataforma está arriba' con 'los datos son frescos y completos'. Diferenciar los dominios de servicio evita dar por cumplido un compromiso de datos mirando la salud del sistema.",
+     "principio": "Distinción explícita de dominios; evitar la confusión entre disponibilidad y calidad de dato."
+    }
+   ]
+  }
+ },
+ {
+  "id": "7.9",
+  "slug": "throttle-cargas",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Throttle y cargas",
+  "activeMenu": "Throttle y cargas",
+  "subtitle": "Quotas de API documentadas para no bloquear los ETL de PASA (DAT-15) · whitelist de IPs exentas · cargas incrementales por cursor (DAT-21)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 240,
+    "label": "Quotas de API por tenant",
+    "meta": "alerta si un tenant supera el 80% de su cuota",
+    "reqs": [
+     "DAT-15"
+    ],
+    "cols": [
+     "Tenant",
+     "Req/hora",
+     "Req/día",
+     "Consumo actual",
+     "% uso",
+     "Estado"
+    ],
+    "nrows": 6,
+    "statuscol": true
+   },
+   {
+    "type": "line",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 240,
+    "label": "Consumo de API por tenant",
+    "meta": "requests/hora 24h · línea horizontal en el límite configurado",
+    "reqs": [
+     "DAT-15",
+     "DAT-09"
+    ],
+    "threshold": 0.75
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 4,
+    "y": 440,
+    "h": 220,
+    "label": "Log de eventos de throttling",
+    "meta": "detecta falsos positivos que afecten ETL legítimos de PASA",
+    "reqs": [
+     "DAT-15",
+     "DAT-14"
+    ],
+    "cols": [
+     "Tenant",
+     "Endpoint",
+     "Bloqueadas",
+     "IP origen"
+    ],
+    "nrows": 5
+   },
+   {
+    "type": "form",
+    "col": 4,
+    "colspan": 4,
+    "y": 440,
+    "h": 220,
+    "label": "Configurador de quotas",
+    "meta": "whitelist de IPs exentas · cambios auditados (usuario/timestamp)",
+    "reqs": [
+     "DAT-15",
+     "CYB-03"
+    ],
+    "fields": [
+     "Tenant",
+     "Límite requests/hora",
+     "Límite requests/día",
+     "Whitelist de IPs exentas (ETL PASA)"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 8,
+    "colspan": 4,
+    "y": 440,
+    "h": 220,
+    "label": "Estado de extracciones incrementales",
+    "meta": "indicador si el cursor lleva > 4h sin avanzar (DAT-24)",
+    "reqs": [
+     "DAT-21",
+     "DAT-24"
+    ],
+    "cols": [
+     "Integración",
+     "Modo",
+     "Cursor",
+     "Últ. extracción"
+    ],
+    "nrows": 5,
+    "statuscol": true
+   },
+   {
+    "type": "form",
+    "col": 0,
+    "colspan": 6,
+    "y": 676,
+    "h": 180,
+    "label": "Configurador de modo de extracción",
+    "meta": "incremental / full-load · ventana de overlap para registros tardíos",
+    "reqs": [
+     "DAT-21"
+    ],
+    "fields": [
+     "Integración",
+     "Modo (incremental / full-load)",
+     "Columna de cursor (timestamp o ID)",
+     "Ventana de overlap (ej. últimos 5 min)"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 6,
+    "colspan": 6,
+    "y": 676,
+    "h": 180,
+    "label": "Historial de extracciones",
+    "meta": "últimas 100 por integración · audita eficiencia incremental vs. full-load",
+    "reqs": [
+     "DAT-21",
+     "DAT-19"
+    ],
+    "cols": [
+     "Inicio",
+     "Fin",
+     "Modo",
+     "Registros",
+     "MB",
+     "Resultado"
+    ],
+    "nrows": 4,
+    "statuscol": true
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión de los límites de consumo de la API (throttle y quotas) y de la configuración de las extracciones incrementales por tenant. Los quotas están definidos y documentados para que los procesos ETL de PASA no sean bloqueados por rate limiting ni incurran en sobrecostos (DAT-15), con whitelist de IPs exentas y log de eventos para detectar falsos positivos. La sección de cargas soporta el modo incremental por cursor (DAT-21) con ventana de overlap para registros tardíos.",
+   "componentes": [
+    {
+     "nombre": "Tabla de quotas por tenant",
+     "descripcion": "Tenant, límite de requests/hora y /día, consumo actual (requests en la última hora y en el día), % de uso sobre la cuota y estado (normal/en riesgo/bloqueado). Alerta si algún tenant supera el 80% de su cuota.",
+     "reqs": [
+      "DAT-15"
+     ]
+    },
+    {
+     "nombre": "Gráfico de consumo de API por tenant",
+     "descripcion": "Línea de requests/hora en las últimas 24h por tenant seleccionado, con línea horizontal en el límite configurado. Permite identificar picos que podrían activar el rate limiting.",
+     "reqs": [
+      "DAT-15",
+      "DAT-09"
+     ]
+    },
+    {
+     "nombre": "Configurador de quotas",
+     "descripcion": "Editar el límite de requests/hora y /día por tenant. Campo de whitelist de IPs exentas de rate limiting (para procesos ETL de PASA). Registro de cambios con usuario y timestamp.",
+     "reqs": [
+      "DAT-15",
+      "CYB-03"
+     ]
+    },
+    {
+     "nombre": "Log de eventos de throttling",
+     "descripcion": "Registro de cada activación del rate limiting: tenant, endpoint, timestamp, nº de requests bloqueadas e IP de origen. Exportable. Permite detectar falsos positivos que afecten procesos ETL legítimos de PASA.",
+     "reqs": [
+      "DAT-15",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Estado de extracciones incrementales por integración",
+     "descripcion": "Integración, tipo (API/réplica/webhook), modo (incremental/full-load), cursor actual (última marca de tiempo o ID extraído), última extracción exitosa y nº de registros. Indicador si el cursor lleva más de 4h sin avanzar.",
+     "reqs": [
+      "DAT-21",
+      "DAT-24"
+     ]
+    },
+    {
+     "nombre": "Configurador de modo de extracción",
+     "descripcion": "Por integración: selector de modo (incremental / full-load). Para modo incremental: campo de cursor (columna de timestamp o ID incremental) y configuración de ventana de overlap (ej. últimos 5 min para cubrir registros tardíos).",
+     "reqs": [
+      "DAT-21"
+     ]
+    },
+    {
+     "nombre": "Historial de extracciones",
+     "descripcion": "Log de las últimas 100 extracciones por integración: timestamp de inicio y fin, modo, nº de registros, tamaño [MB] y resultado (éxito/error/parcial). Permite auditar la eficiencia del modo incremental vs. full-load.",
+     "reqs": [
+      "DAT-21",
+      "DAT-19"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "% de uso y estado por tenant como semáforo de riesgo",
+     "texto": "La tabla de quotas resalta el porcentaje de uso y marca 'en riesgo' al superar el 80%, para que el administrador intervenga antes de que un tenant crítico de PASA choque contra el rate limiting. Anticipar el bloqueo con un umbral de advertencia protege la continuidad de los ETL del cliente.",
+     "principio": "Alerta temprana; actuar antes del fallo, no después."
+    },
+    {
+     "componente": "Gráfico de consumo con la línea del límite superpuesta",
+     "texto": "El consumo por hora se dibuja contra la línea del límite configurado, de modo que un pico que se acerca al techo se ve venir. Mostrar el margen restante convierte una serie de tráfico en una herramienta de decisión sobre si ampliar la cuota.",
+     "principio": "Umbral visible como referencia de decisión; margen a la vista."
+    },
+    {
+     "componente": "Whitelist de IPs de PASA en el configurador de quotas",
+     "texto": "El configurador incluye un campo explícito de IPs exentas para los ETL de PASA, porque el objetivo del throttle no es frenar al cliente sino a los abusos externos. Hacer de la exención un control de primera clase evita que un límite genérico bloquee por error los procesos legítimos.",
+     "principio": "El diseño refleja la intención real de la política; excepción legítima como control explícito."
+    },
+    {
+     "componente": "Log de throttling orientado a detectar falsos positivos",
+     "texto": "El registro de bloqueos incluye endpoint e IP de origen para que el administrador distinga un ataque de un ETL legítimo mal calibrado. Estructurar el log en torno a esa pregunta hace que la evidencia sirva para corregir la quota, no solo para constatar el bloqueo.",
+     "principio": "Datos orientados a la acción de corrección; el log responde una pregunta concreta."
+    },
+    {
+     "componente": "Cargas incrementales con indicador de cursor detenido",
+     "texto": "El estado de extracciones marca cuándo un cursor lleva más de 4h sin avanzar, señal de que la carga incremental se estancó y PASA podría estar recibiendo datos incompletos. Vigilar el avance del cursor detecta un silencio de datos que un simple 'sin errores' ocultaría.",
+     "principio": "Detección de fallo silencioso; ausencia de progreso como señal de alarma."
+    }
+   ]
+  }
+ },
+ {
+  "id": "7.10",
+  "slug": "retencion-privacidad",
+  "profile": "super-admin",
+  "device": "desktop",
+  "title": "Retención y privacidad",
+  "activeMenu": "Retención y privacidad",
+  "subtitle": "Políticas de retención, anonimización y eliminación diferenciadas por tipo de dato, país y finalidad (PRI-08) · minimización de campos por proceso (PRI-05) · la eliminación masiva requiere aprobación de PASA",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 210,
+    "label": "Catálogo de políticas de retención",
+    "meta": "acción al vencimiento: anonimizar / eliminar / archivar · fila expandible",
+    "reqs": [
+     "PRI-08",
+     "PRI-05"
+    ],
+    "cols": [
+     "Política",
+     "Tipo de dato",
+     "Retención",
+     "Acción",
+     "Estado"
+    ],
+    "nrows": 5,
+    "statuscol": true,
+    "expand": true,
+    "pspan": 6
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 410,
+    "h": 170,
+    "label": "Cola de ejecución de políticas",
+    "meta": "GATE: la eliminación masiva requiere aprobación del rol PASA antes de ejecutar",
+    "reqs": [
+     "PRI-08",
+     "CYB-12",
+     "DAT-14"
+    ],
+    "cols": [
+     "Tipo de dato",
+     "Registros",
+     "Acción pendiente",
+     "Fecha límite",
+     "Responsable"
+    ],
+    "nrows": 4,
+    "statuscol": true,
+    "pspan": 6
+   },
+   {
+    "type": "actions",
+    "col": 0,
+    "colspan": 7,
+    "y": 590,
+    "h": 40,
+    "btns": [
+     "Ejecutar borrado",
+     "Enviar a aprobación PASA"
+    ],
+    "pspan": 12
+   },
+   {
+    "type": "heatmap",
+    "col": 0,
+    "colspan": 7,
+    "y": 644,
+    "h": 185,
+    "label": "Configurador de campos por proceso y país",
+    "meta": "obligatorio / opcional / no requerido / no permitido · cambios auditados (DAT-14)",
+    "reqs": [
+     "PRI-05",
+     "DAT-14"
+    ],
+    "cols": 8,
+    "rowsn": 5,
+    "pspan": 12
+   },
+   {
+    "type": "form",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 390,
+    "label": "Formulario de nueva política",
+    "meta": "minimización de datos por proceso, país y finalidad",
+    "reqs": [
+     "PRI-08",
+     "PRI-05"
+    ],
+    "fields": [
+     "Tipo de dato",
+     "País de aplicación (CL / PE / CO / Todos)",
+     "Período de retención activa [años]",
+     "Período de retención en archivo (si aplica)",
+     "Acción al vencimiento (anonimizar / eliminar / archivar)",
+     "Base legal (obligación / interés legítimo / consentimiento)",
+     "Finalidad de uso (operativo / analítico / legal)",
+     "Justificación de la política (texto libre)"
+    ],
+    "pspan": 7
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 588,
+    "h": 40,
+    "btns": [
+     "Guardar política",
+     "Cancelar"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 7,
+    "colspan": 5,
+    "y": 644,
+    "h": 185,
+    "label": "Historial de ejecuciones de políticas",
+    "meta": "inmutable · hash de verificación · usuario que aprobó",
+    "reqs": [
+     "PRI-08",
+     "CYB-10",
+     "DAT-14"
+    ],
+    "cols": [
+     "Política",
+     "Fecha",
+     "Registros",
+     "Acción",
+     "Aprobó"
+    ],
+    "nrows": 4,
+    "pspan": 12
+   }
+  ],
+  "detail": {
+   "descripcion": "Configuración y ejecución de políticas de retención, anonimización y eliminación diferenciadas por tipo de dato, obligación legal, país, criticidad y finalidad de uso (PRI-08), junto con la minimización de datos que define qué campos son obligatorios, opcionales, no requeridos o no permitidos según proceso y país (PRI-05). La cola de ejecución exige aprobación del rol PASA antes de una eliminación masiva, y toda ejecución queda registrada de forma inmutable con hash de verificación.",
+   "componentes": [
+    {
+     "nombre": "Catálogo de políticas de retención",
+     "descripcion": "Tabla de políticas activas: nombre, tipo de dato (consumo eléctrico / dato de locatario / log de auditoría / dato personal / dato de configuración), país de aplicación, período de retención activa [años], acción al vencimiento (anonimizar/eliminar/archivar), base legal y estado (activa/pendiente/vencida).",
+     "reqs": [
+      "PRI-08",
+      "PRI-05"
+     ]
+    },
+    {
+     "nombre": "Formulario de nueva política",
+     "descripcion": "Tipo de dato, país de aplicación (Chile), período de retención activa, período de retención en archivo, acción al vencimiento, base legal (obligación legal / interés legítimo / consentimiento), finalidad de uso (operativo / analítico / legal) y justificación de la política.",
+     "reqs": [
+      "PRI-08",
+      "PRI-05"
+     ]
+    },
+    {
+     "nombre": "Cola de ejecución de políticas",
+     "descripcion": "Lista de políticas cuya fecha de vencimiento se acerca o ya se cumplió: tipo de dato, nº de registros afectados, acción pendiente (anonimizar/eliminar/archivar), fecha límite y responsable. Requiere aprobación del rol PASA antes de ejecutar una eliminación masiva.",
+     "reqs": [
+      "PRI-08",
+      "CYB-12",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Configurador de campos por proceso y país",
+     "descripcion": "Matriz de campos por proceso (ingesta de medidor / integración con locatario / exportación a Data Lake / etc.) y por país. Para cada celda: campo obligatorio / opcional / no requerido / no permitido. Los cambios requieren justificación y quedan en la pista de auditoría.",
+     "reqs": [
+      "PRI-05",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Historial de ejecuciones de políticas",
+     "descripcion": "Log de cada ejecución: política, fecha, nº de registros procesados, acción ejecutada (anonimización/eliminación/archivo), hash de verificación y usuario que aprobó. Inmutable.",
+     "reqs": [
+      "PRI-08",
+      "CYB-10",
+      "DAT-14"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Catálogo a la izquierda y alta de política a la derecha",
+     "texto": "El flujo natural es revisar qué políticas existen antes de crear una nueva, así que el catálogo ocupa el punto de entrada y el formulario de alta se sitúa a su derecha como paso siguiente. Ordenar 'consultar' antes de 'crear' evita duplicar políticas y refuerza el recorrido de lectura de izquierda a derecha.",
+     "principio": "Flujo alineado al recorrido de lectura; consultar antes de crear."
+    },
+    {
+     "componente": "Cola de ejecución con gate de aprobación PASA visible",
+     "texto": "Las políticas por vencer se listan con el número de registros afectados, y su meta advierte que una eliminación masiva exige aprobación del rol PASA antes de ejecutarse. Mostrar el alcance del borrado junto al gate frena la ejecución de una acción irreversible sin la autorización debida.",
+     "principio": "Prevención de errores irreversibles; el alcance del daño y el gate a la vista."
+    },
+    {
+     "componente": "'Ejecutar borrado' y 'Enviar a aprobación' diferenciados",
+     "texto": "Los dos botones de la cola separan la acción destructiva de la de solicitar autorización, de modo que el administrador no confunda ejecutar con tramitar. Distinguir la acción final de su antesala reduce el riesgo de disparar una eliminación creyendo que solo se pedía permiso.",
+     "principio": "Jerarquía y separación de acciones; distinguir el trámite de la ejecución."
+    },
+    {
+     "componente": "Configurador de campos como matriz proceso × país",
+     "texto": "La minimización de datos se opera en una matriz donde cada celda cruza un proceso con un país y marca si el campo es obligatorio, opcional, no requerido o no permitido; ver la rejilla completa permite detectar un dato exigido donde debería estar prohibido. La representación matricial hace visibles las inconsistencias de política entre países.",
+     "principio": "Visualización matricial para detectar excepciones; la estructura revela el error."
+    },
+    {
+     "componente": "Historial de ejecuciones inmutable con quién aprobó",
+     "texto": "Cada ejecución guarda el hash de verificación y el usuario que la aprobó, sin posibilidad de edición, porque la eliminación o anonimización de datos personales debe poder demostrarse ante PASA y ante la autoridad. Registrar la aprobación junto al resultado convierte la acción en evidencia de cumplimiento.",
+     "principio": "Inmutabilidad y trazabilidad de aprobación; la ejecución como prueba legal."
+    },
+    {
+     "componente": "País y base legal como campos obligatorios de la política",
+     "texto": "El formulario de alta exige país, base legal y finalidad antes de guardar, porque una misma clase de dato retiene distinto según jurisdicción y motivo. Forzar estos campos impide crear una política ambigua que luego se aplique mal según la jurisdicción o la finalidad.",
+     "principio": "Restricciones que garantizan una política completa; prevención de configuración incompleta."
+    }
+   ]
+  },
+  "primaryAction": "Nueva política"
+ }
+]

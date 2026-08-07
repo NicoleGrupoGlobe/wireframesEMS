@@ -1,0 +1,1201 @@
+[
+ {
+  "id": "4.1",
+  "slug": "monitoreo-en-vivo",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "Monitoreo en vivo",
+  "activeMenu": "Monitoreo en vivo",
+  "subtitle": "Pantalla principal del turno · estado en tiempo real del parque de medidores · refresco cada 15 min · carga < 3 s (ARQ-07)",
+  "filters": [
+   {
+    "name": "Mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Estado del medidor",
+    "default": "Todos"
+   },
+   {
+    "name": "Granularidad del histograma",
+    "default": "Horaria"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "Total medidores",
+    "value": "2.480",
+    "delta": "parque completo del portafolio",
+    "reqs": [
+     "ARQ-08"
+    ],
+    "pspan": 3,
+    "porder": 0
+   },
+   {
+    "type": "kpi",
+    "col": 3,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "En línea [%]",
+    "value": "94,2%",
+    "delta": "▲ vs. inicio de turno · sparkline 24h",
+    "spark": true,
+    "reqs": [
+     "ARQ-08",
+     "DAT-27"
+    ],
+    "pspan": 3,
+    "porder": 1
+   },
+   {
+    "type": "kpi",
+    "col": 6,
+    "colspan": 2,
+    "y": 184,
+    "h": 100,
+    "label": "Offline",
+    "value": "38",
+    "delta": "medidores sin conexión",
+    "reqs": [
+     "ARQ-08",
+     "DAT-24"
+    ],
+    "pspan": 2,
+    "porder": 2
+   },
+   {
+    "type": "kpi",
+    "col": 8,
+    "colspan": 2,
+    "y": 184,
+    "h": 100,
+    "label": "Dato estancado > 4h",
+    "value": "12",
+    "delta": "badge rojo · alerta DAT-24",
+    "reqs": [
+     "DAT-24",
+     "DAT-27"
+    ],
+    "pspan": 2,
+    "porder": 3
+   },
+   {
+    "type": "kpi",
+    "col": 10,
+    "colspan": 2,
+    "y": 184,
+    "h": 100,
+    "label": "CNR pendientes",
+    "value": "7",
+    "delta": "a la espera de ingreso",
+    "reqs": [
+     "DAT-24"
+    ],
+    "pspan": 2,
+    "porder": 4
+   },
+   {
+    "type": "map",
+    "col": 0,
+    "colspan": 8,
+    "y": 300,
+    "h": 300,
+    "label": "Mapa / grilla de centros comerciales",
+    "meta": "Tarjeta por mall: nombre, % medidores online, última lectura, semáforo general · click → grilla de medidores",
+    "reqs": [
+     "ARQ-08",
+     "DAT-11",
+     "DAT-19"
+    ],
+    "markers": [
+     [
+      0.22,
+      0.32,
+      "ok"
+     ],
+     [
+      0.45,
+      0.5,
+      "warn"
+     ],
+     [
+      0.6,
+      0.28,
+      "ok"
+     ],
+     [
+      0.72,
+      0.55,
+      "crit"
+     ],
+     [
+      0.38,
+      0.7,
+      "ok"
+     ],
+     [
+      0.85,
+      0.4,
+      "null"
+     ]
+    ],
+    "pspan": 8,
+    "porder": 5
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 8,
+    "y": 616,
+    "h": 244,
+    "label": "Grilla de medidores del mall seleccionado",
+    "meta": "se despliega al hacer click en una tarjeta del mapa",
+    "reqs": [
+     "DAT-11",
+     "DAT-19",
+     "ARQ-08"
+    ],
+    "cols": [
+     "Serial",
+     "Zona",
+     "Estado",
+     "Último valor",
+     "Timestamp",
+     "Var. vs. día ant."
+    ],
+    "nrows": 6,
+    "statuscol": true,
+    "pspan": 8,
+    "porder": 7
+   },
+   {
+    "type": "histogram",
+    "col": 8,
+    "colspan": 4,
+    "y": 300,
+    "h": 250,
+    "label": "Comportamiento del parque — 24h",
+    "meta": "% medidores online por hora · detecta caídas masivas o parciales",
+    "reqs": [
+     "DAT-27",
+     "DAT-24"
+    ],
+    "pspan": 4,
+    "porder": 8
+   },
+   {
+    "type": "feed",
+    "col": 8,
+    "colspan": 4,
+    "y": 566,
+    "h": 294,
+    "label": "Feed de eventos recientes",
+    "meta": "cronológico · con timestamp y mall",
+    "reqs": [
+     "DAT-03",
+     "DAT-10",
+     "DAT-19"
+    ],
+    "items": [
+     [
+      "OFFLINE",
+      "Medidor 4471 pasó a offline — Costanera P2",
+      "crit"
+     ],
+     [
+      "ALARMA",
+      "Alarma abierta — sobreconsumo Egaña L14",
+      "warn"
+     ],
+     [
+      "BACKFILL",
+      "Backfill completado — Vespucio (gap 2h)",
+      "null"
+     ],
+     [
+      "CNR",
+      "CNR ingresada — Alto Las Condes medidor 3120",
+      "null"
+     ],
+     [
+      "OFFLINE",
+      "Dato estancado > 4h — Arauco Maipú tablero B",
+      "crit"
+     ]
+    ],
+    "pspan": 4,
+    "porder": 6
+   }
+  ],
+  "detail": {
+   "descripcion": "Pantalla principal del turno del perfil Operacional. Muestra el estado en tiempo real del parque completo de medidores, actualizado cada 15 minutos, con carga en menos de 3 segundos (ARQ-07). Combina indicadores de cabecera, un mapa/grilla de centros comerciales que abre la grilla de medidores al hacer click, un histograma de comportamiento del parque en las últimas 24 h y un feed cronológico de eventos recientes.",
+   "componentes": [
+    {
+     "nombre": "Indicadores de cabecera (refresco 15 min)",
+     "descripcion": "Total medidores / En línea [%] / Offline / Con dato estancado > 4h (badge rojo, alerta automática DAT-24) / CNR pendientes.",
+     "reqs": [
+      "DAT-24",
+      "DAT-27",
+      "ARQ-08"
+     ]
+    },
+    {
+     "nombre": "Mapa / grilla de centros comerciales",
+     "descripcion": "Tarjeta por mall: nombre, % medidores online, última lectura y semáforo general. Click en la tarjeta despliega la grilla de medidores del mall: serial, zona, estado, último valor, timestamp y variación vs. día anterior.",
+     "reqs": [
+      "ARQ-08",
+      "DAT-11",
+      "DAT-19"
+     ]
+    },
+    {
+     "nombre": "Histograma de comportamiento del parque",
+     "descripcion": "% de medidores online por hora en las últimas 24 h. Permite detectar caídas masivas o parciales y correlacionarlas con eventos externos.",
+     "reqs": [
+      "DAT-27",
+      "DAT-24"
+     ]
+    },
+    {
+     "nombre": "Feed de eventos recientes",
+     "descripcion": "Lista cronológica: medidor pasó a offline, alarma abierta, backfill completado, CNR ingresada. Con timestamp y mall.",
+     "reqs": [
+      "DAT-03",
+      "DAT-10",
+      "DAT-19"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Mall",
+     "opciones": "Selector con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Estado del medidor",
+     "opciones": "Todos / Online / Offline / Dato estancado > 4h / CNR pendiente",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Granularidad del histograma",
+     "opciones": "Horaria / Por turno (8h)",
+     "default": "Horaria"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Cinco indicadores de cabecera en una sola línea",
+     "texto": "Al recibir el turno, el operador escanea la primera línea para saber en segundos cuánto del parque está en riesgo: online, offline, estancado y CNR forman su check de entrada. Se codifica «dato estancado > 4h» con un badge rojo porque es el disparador de la alerta DAT-24 y no debe perderse entre cifras neutras.",
+     "principio": "Visibilidad del estado del sistema; realce del dato accionable por color."
+    },
+    {
+     "componente": "Mapa/grilla como bloque de mayor peso, arriba-izquierda",
+     "texto": "El mapa de malls ocupa el cuadrante de arranque de lectura porque la primera pregunta del turno es «¿qué mall está caído?». El click abre la grilla de medidores en el mismo lugar, sin cambiar de pantalla, para que el operador profundice al detalle sin perder la vista global del parque.",
+     "principio": "Jerarquía visual y revelación progresiva; conservar el contexto del monitoreo."
+    },
+    {
+     "componente": "Histograma 24h junto al mapa",
+     "texto": "Poner el histograma de % online por hora al lado del mapa permite distinguir de un vistazo una caída puntual de una masiva: si la curva se hunde a una hora concreta, el operador correlaciona con un evento externo en vez de abrir medidor por medidor.",
+     "principio": "Reconocimiento de patrones sobre inspección manual; datos afines agrupados."
+    },
+    {
+     "componente": "Feed cronológico en columna lateral",
+     "texto": "El feed corre en tiempo real a la derecha como bitácora viva del turno; cada línea lleva timestamp y mall para que el operador reconstruya la secuencia de fallas sin cruzar reportes. Los eventos críticos (offline, estancado) usan color rojo para saltar por delante de los informativos.",
+     "principio": "Feedback continuo del sistema; escaneabilidad por severidad."
+    },
+    {
+     "componente": "Filtros de estado en la barra superior",
+     "texto": "Filtrar por «Offline» o «Dato estancado > 4h» desde la barra reduce el parque a solo lo que exige acción, evitando que el operador rastree manualmente entre 2.480 medidores. La granularidad horaria/turno del histograma vive en la misma barra para no fragmentar los controles.",
+     "principio": "Reducción del espacio de búsqueda; consistencia de ubicación de controles."
+    }
+   ]
+  },
+  "live": "En vivo · act. hace 2 min · refresco 15 min",
+  "breadcrumb": [
+   "Chile",
+   "Parque completo"
+  ]
+ },
+ {
+  "id": "4.2",
+  "slug": "alarmas-eventos",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "Alarmas y eventos",
+  "activeMenu": "Alarmas y eventos",
+  "subtitle": "Gestión operativa de alarmas · lista accionable priorizada por severidad y antigüedad",
+  "filters": [
+   {
+    "name": "Severidad",
+    "default": "Todas"
+   },
+   {
+    "name": "Mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Estado",
+    "default": "Abierta"
+   },
+   {
+    "name": "Rango de fecha",
+    "default": "Hoy"
+   },
+   {
+    "name": "Responsable asignado",
+    "default": "Todas"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 676,
+    "label": "Tabla de alarmas",
+    "meta": "orden por defecto: severidad + antigüedad · fila expandible: valor que disparó, baseline esperado, historial de acciones",
+    "reqs": [
+     "DAT-03",
+     "DAT-27",
+     "FIN-05"
+    ],
+    "cols": [
+     "ID",
+     "Sev.",
+     "Descripción",
+     "Mall",
+     "Zona/medidor",
+     "Apertura",
+     "Transcurrido",
+     "Responsable",
+     "Estado"
+    ],
+    "nrows": 10,
+    "statuscol": true,
+    "expand": true,
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "stackedbars",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 150,
+    "label": "Resumen de SLA de alarmas",
+    "meta": "% resueltas dentro / fuera del SLA, por severidad y período",
+    "reqs": [
+     "FIN-06",
+     "FIN-05"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "line",
+    "col": 7,
+    "colspan": 5,
+    "y": 350,
+    "h": 270,
+    "label": "Panel de detalle — serie del medidor 48h",
+    "meta": "línea de threshold del valor que disparó la alarma",
+    "reqs": [
+     "DAT-03",
+     "DAT-10",
+     "DAT-23"
+    ],
+    "threshold": 0.68,
+    "pspan": 7,
+    "porder": 2
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 636,
+    "h": 44,
+    "btns": [
+     "Asignar",
+     "Escalar",
+     "Cerrar",
+     "Iniciar backfill"
+    ]
+   },
+   {
+    "type": "form",
+    "col": 7,
+    "colspan": 5,
+    "y": 696,
+    "h": 164,
+    "label": "Comentario de la alarma",
+    "meta": "queda registrado en la pista de auditoría",
+    "reqs": [
+     "DAT-14",
+     "DAT-23"
+    ],
+    "fields": [
+     "Comentario del operador (texto libre)"
+    ],
+    "pspan": 5,
+    "porder": 3
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión operativa de alarmas. Presenta una lista accionable ordenada por severidad y antigüedad, un panel de detalle con la serie temporal del medidor y sus acciones (asignar, escalar, cerrar, iniciar backfill), y un resumen del cumplimiento de SLA. Todo comentario queda en la pista de auditoría (DAT-14).",
+   "componentes": [
+    {
+     "nombre": "Tabla de alarmas",
+     "descripcion": "Columnas: ID, severidad (badge), descripción, mall, zona/medidor, fecha de apertura, tiempo transcurrido, responsable asignado y estado. Ordenada por severidad + antigüedad por defecto. Fila expandible: valor que disparó la alarma, baseline esperado e historial de acciones.",
+     "reqs": [
+      "DAT-03",
+      "DAT-27",
+      "FIN-05"
+     ]
+    },
+    {
+     "nombre": "Panel de detalle de alarma",
+     "descripcion": "Gráfico de serie temporal del medidor en las últimas 48 h con línea de threshold. Botones: Asignar / Escalar / Cerrar / Iniciar backfill automático. Campo de comentario que queda en la pista de auditoría.",
+     "reqs": [
+      "DAT-03",
+      "DAT-10",
+      "DAT-14",
+      "DAT-23"
+     ]
+    },
+    {
+     "nombre": "Resumen de SLA de alarmas",
+     "descripcion": "% resueltas dentro del SLA / fuera del SLA, desglosado por severidad y período.",
+     "reqs": [
+      "FIN-06",
+      "FIN-05"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Severidad",
+     "opciones": "Crítica / Alta / Media / Baja (multi-selección)",
+     "default": "Todas"
+    },
+    {
+     "nombre": "Mall",
+     "opciones": "Multi-selección con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Estado",
+     "opciones": "Abierta / Asignada / Escalada / Resuelta / Todas",
+     "default": "Abierta"
+    },
+    {
+     "nombre": "Rango de fecha",
+     "opciones": "Date picker inicio–fin",
+     "default": "Hoy"
+    },
+    {
+     "nombre": "Responsable asignado",
+     "opciones": "Mías / Todas / Por técnico (selector)",
+     "default": "Todas"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Tabla ordenada por severidad + antigüedad por defecto",
+     "texto": "La lista llega ya priorizada: crítico y más antiguo arriba, para que el operador ataque en el orden correcto sin ordenar manualmente cada vez que entra. El punto de estado en la primera columna transmite la severidad de forma pre-atenta antes de leer la descripción.",
+     "principio": "Orden por prioridad como valor por defecto; codificación pre-atenta del riesgo."
+    },
+    {
+     "componente": "Fila expandible en lugar de abrir otra pantalla",
+     "texto": "El valor que disparó la alarma, su baseline y el historial de acciones se despliegan dentro de la misma fila para que el operador confirme el diagnóstico sin abandonar la lista ni perder su posición entre decenas de alarmas del turno.",
+     "principio": "Revelación progresiva; preservar el contexto de la lista de trabajo."
+    },
+    {
+     "componente": "Panel de detalle con serie 48h y línea de threshold",
+     "texto": "La serie temporal muestra explícitamente la línea de umbral que gatilló la alarma, de modo que el operador vea de un golpe si fue un pico aislado o una tendencia sostenida antes de decidir escalar o cerrar. La evidencia gráfica precede a la acción.",
+     "principio": "Evidencia visible antes de la decisión; correspondencia entre dato y acción."
+    },
+    {
+     "componente": "Botonera de acción fija (Asignar / Escalar / Cerrar / Iniciar backfill)",
+     "texto": "Las cuatro acciones operativas viven juntas y siempre visibles bajo el gráfico, para que gestionar la alarma sea un solo movimiento sin buscar menús; agruparlas reduce el tiempo de respuesta en un turno de uso intensivo. «Iniciar backfill» queda en la misma fila porque suele seguir al cierre.",
+     "principio": "Agrupación por afinidad de acción; economía de gestos (ley de Fitts)."
+    },
+    {
+     "componente": "Campo de comentario ligado a la pista de auditoría",
+     "texto": "El comentario se muestra pegado a las acciones y advierte que queda en la auditoría (DAT-14): así el operador sabe que lo que escribe es trazable e inmutable, lo que fomenta notas precisas y desalienta texto informal.",
+     "principio": "Transparencia de las consecuencias; el diseño comunica la trazabilidad."
+    },
+    {
+     "componente": "Resumen de SLA como cabecera del panel derecho",
+     "texto": "El bloque de % dentro/fuera de SLA por severidad se coloca arriba a la derecha como marco de contexto: recuerda al operador cuánto margen le queda antes de incumplir FIN-06 mientras trabaja cada alarma individual.",
+     "principio": "Mantener la meta visible durante la tarea; contexto de rendimiento persistente."
+    }
+   ]
+  },
+  "primaryAction": "Asignar alarma"
+ },
+ {
+  "id": "4.3",
+  "slug": "tickets-sla",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "Tickets y SLA",
+  "activeMenu": "Tickets y SLA",
+  "subtitle": "Seguimiento de tickets de soporte y cumplimiento de SLA · uptime contratado ≥ 99,5% (FIN-06)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 120,
+    "label": "Uptime del servicio (30 días)",
+    "value": "99,6%",
+    "delta": "umbral de alerta si < 99,5% · sparkline 30d",
+    "spark": true,
+    "reqs": [
+     "FIN-06",
+     "ARQ-08"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 4,
+    "colspan": 4,
+    "y": 184,
+    "h": 120,
+    "label": "Disponibilidad de datos [%]",
+    "value": "97,1%",
+    "delta": "lecturas recibidas / esperadas",
+    "reqs": [
+     "FIN-06",
+     "ARQ-08"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 120,
+    "label": "T. medio resolución críticas [h]",
+    "value": "3,4 h",
+    "delta": "indicador visual si supera el SLA",
+    "reqs": [
+     "FIN-06"
+    ]
+   },
+   {
+    "type": "line",
+    "col": 0,
+    "colspan": 12,
+    "y": 320,
+    "h": 220,
+    "label": "Evolución de SLA — últimos 3 meses",
+    "meta": "uptime real vs. umbral contratado (99,5%) · puntos de incidente marcados",
+    "reqs": [
+     "FIN-06",
+     "FIN-07"
+    ],
+    "threshold": 0.82
+   },
+   {
+    "type": "tabs",
+    "col": 0,
+    "colspan": 12,
+    "y": 556,
+    "h": 30,
+    "tabs": [
+     "Mis tickets",
+     "Todos",
+     "Por vencer",
+     "Vencidos"
+    ],
+    "active": 1
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 602,
+    "h": 258,
+    "label": "Tablero de tickets",
+    "meta": "días restantes en verde · vencidos en rojo",
+    "reqs": [
+     "FIN-05",
+     "FIN-06"
+    ],
+    "cols": [
+     "ID",
+     "Descripción",
+     "Tipo",
+     "Prioridad",
+     "Apertura",
+     "Compromiso SLA",
+     "Estado",
+     "Días rest./venc."
+    ],
+    "nrows": 6,
+    "statuscol": true
+   }
+  ],
+  "detail": {
+   "descripcion": "Seguimiento de tickets de soporte y cumplimiento de SLA para el perfil Operacional. Combina un semáforo permanente de SLA en la cabecera, un gráfico de evolución de uptime contra el umbral contratado del 99,5% y un tablero de tickets con estado y días restantes o vencidos. Cubre los niveles de soporte N1-N2-N3 (FIN-05).",
+   "componentes": [
+    {
+     "nombre": "Semáforo de SLA (cabecera permanente)",
+     "descripcion": "Uptime del servicio (30 días) / Disponibilidad de datos [%] / Tiempo medio de resolución de alarmas críticas [h], cada uno con umbral de alerta visual.",
+     "reqs": [
+      "FIN-06",
+      "ARQ-08"
+     ]
+    },
+    {
+     "nombre": "Tablero de tickets",
+     "descripcion": "ID, descripción, tipo (alarma / CNR / solicitud), prioridad, fecha de apertura, fecha de compromiso SLA, estado y días restantes o vencidos. Filtro rápido: mis tickets / todos / por vencer / vencidos.",
+     "reqs": [
+      "FIN-05",
+      "FIN-06"
+     ]
+    },
+    {
+     "nombre": "Gráfico de evolución de SLA",
+     "descripcion": "Últimos 3 meses: línea de uptime real vs. umbral contratado (99,5%). Puntos de incidente marcados sobre la línea.",
+     "reqs": [
+      "FIN-06",
+      "FIN-07"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Semáforo de SLA como cabecera permanente",
+     "texto": "Las tres métricas de SLA encabezan la pantalla y no se ocultan al hacer scroll porque son el marcador contra el que se mide todo el turno: el operador debe saber en todo momento si el uptime sigue por encima del 99,5% comprometido antes de priorizar un ticket. El umbral se marca en el propio indicador para que la lectura sea de aprobado/reprobado, no un número aislado.",
+     "principio": "Persistencia del indicador clave; comparación contra referencia en el propio dato."
+    },
+    {
+     "componente": "Gráfico de evolución sobre la tabla",
+     "texto": "La línea de uptime vs. umbral se ubica entre el semáforo y el tablero para que el operador entienda la tendencia antes de bajar al detalle: los puntos de incidente marcados enlazan visualmente una caída del gráfico con los tickets que la explican debajo.",
+     "principio": "De lo general a lo particular; relación causa-efecto en el recorrido de lectura."
+    },
+    {
+     "componente": "Filtro rápido como pestañas, no como dropdown",
+     "texto": "«Mis tickets / Todos / Por vencer / Vencidos» se ofrece como pestañas siempre visibles porque son las vistas que el operador alterna decenas de veces por turno; un solo clic cambia el foco sin abrir un menú, y «Por vencer» queda a la vista como recordatorio de urgencia.",
+     "principio": "Acceso de un clic a estados frecuentes; visibilidad de las opciones de filtrado."
+    },
+    {
+     "componente": "Columna de días restantes/vencidos con color",
+     "texto": "La última columna traduce la fecha de compromiso a días restantes o vencidos y los pinta verde/rojo, evitando que el operador calcule mentalmente el margen de SLA fecha por fecha; el rojo empuja los vencidos al primer plano de atención.",
+     "principio": "Reducir la carga cognitiva de cálculo; realce del incumplimiento."
+    },
+    {
+     "componente": "Ausencia de barra de filtros global",
+     "texto": "Esta pantalla no lleva barra de filtros superior porque el filtrado relevante (por estado del ticket) ya vive en las pestañas y el alcance temporal está fijado por el SLA de 30/90 días; añadir filtros globales duplicaría controles y confundiría el modelo mental respecto a las otras pantallas del perfil.",
+     "principio": "Evitar controles redundantes; simplicidad sobre completitud innecesaria."
+    }
+   ]
+  },
+  "primaryAction": "Nuevo ticket"
+ },
+ {
+  "id": "4.4",
+  "slug": "calidad-backfill",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "Calidad y backfill",
+  "activeMenu": "Calidad y backfill",
+  "subtitle": "Control de calidad del dato por mall y gestión de backfill · flag de validación real/estimado/erróneo (DAT-06)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 300,
+    "label": "Scorecard de calidad por mall",
+    "meta": "semáforo por fila · tendencia ↑↓ vs. período anterior",
+    "reqs": [
+     "DAT-06",
+     "DAT-17"
+    ],
+    "cols": [
+     "Mall",
+     "% Reales",
+     "% Estimadas",
+     "% CNR",
+     "% Backfill compl.",
+     "Tendencia"
+    ],
+    "nrows": 8,
+    "statuscol": true,
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "stackedbars",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 300,
+    "label": "Histograma de calidad — 30 días",
+    "meta": "área apilada por día: real / estimado / CNR / faltante",
+    "reqs": [
+     "DAT-06",
+     "DAT-17",
+     "DAT-27"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 500,
+    "h": 300,
+    "label": "Panel de backfill activo",
+    "meta": "procesos en curso · % completado y ETA",
+    "reqs": [
+     "DAT-10"
+    ],
+    "cols": [
+     "Medidor",
+     "Tipo de gap",
+     "Período a reponer",
+     "% completado",
+     "ETA"
+    ],
+    "nrows": 6,
+    "statuscol": true,
+    "pspan": 7,
+    "porder": 2
+   },
+   {
+    "type": "actions",
+    "col": 0,
+    "colspan": 7,
+    "y": 816,
+    "h": 40,
+    "btns": [
+     "Lanzar backfill manual"
+    ]
+   },
+   {
+    "type": "feed",
+    "col": 7,
+    "colspan": 5,
+    "y": 500,
+    "h": 356,
+    "label": "Alertas de degradación de calidad",
+    "meta": "medidores que bajaron su % lecturas reales en los últimos 7 días",
+    "reqs": [
+     "DAT-27",
+     "DAT-17"
+    ],
+    "items": [
+     [
+      "-14%",
+      "Medidor 3120 Egaña — cae a 78% reales · causa: dato tardío",
+      "crit"
+     ],
+     [
+      "-9%",
+      "Medidor 4471 Costanera — 83% reales · gateway intermitente",
+      "warn"
+     ],
+     [
+      "-6%",
+      "Medidor 2088 Vespucio — 88% reales · causa n/d",
+      "warn"
+     ],
+     [
+      "-5%",
+      "Medidor 5510 Maipú — 90% reales · reintentos altos",
+      "warn"
+     ]
+    ],
+    "pspan": 5,
+    "porder": 3
+   }
+  ],
+  "detail": {
+   "descripcion": "Control de calidad del dato por mall y gestión de backfill. Reúne un scorecard de calidad por mall con semáforo por fila, un histograma de composición de la calidad en 30 días, el panel de procesos de backfill en curso con opción de lanzarlos manualmente y las alertas de degradación de medidores que empeoraron en la última semana.",
+   "componentes": [
+    {
+     "nombre": "Scorecard de calidad por mall",
+     "descripcion": "Tabla: mall, % lecturas reales, % estimadas, % CNR, % backfill completado y tendencia (↑↓) vs. período anterior. Semáforo por fila.",
+     "reqs": [
+      "DAT-06",
+      "DAT-17"
+     ]
+    },
+    {
+     "nombre": "Panel de backfill activo",
+     "descripcion": "Lista de procesos en curso: medidor, tipo de gap, período a reponer, % completado y ETA. Botón para lanzar backfill manual.",
+     "reqs": [
+      "DAT-10"
+     ]
+    },
+    {
+     "nombre": "Histograma de calidad — 30 días",
+     "descripcion": "Área apilada por día: real / estimado / CNR / faltante. Los días problemáticos quedan visibles de un vistazo.",
+     "reqs": [
+      "DAT-06",
+      "DAT-17",
+      "DAT-27"
+     ]
+    },
+    {
+     "nombre": "Alertas de degradación de calidad",
+     "descripcion": "Medidores que bajaron su % de lecturas reales en los últimos 7 días. Lista con delta y causa si está disponible.",
+     "reqs": [
+      "DAT-27",
+      "DAT-17"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Scorecard por mall como bloque principal a la izquierda",
+     "texto": "La tabla de calidad por mall ocupa el punto de entrada porque responde la pregunta de rutina del turno —«¿qué mall tiene peor calidad de dato hoy?»—. El semáforo por fila permite barrer verticalmente y detener el ojo solo en las filas ámbar/rojas, sin leer cada porcentaje.",
+     "principio": "Escaneo vertical guiado por color; jerarquía por frecuencia de consulta."
+    },
+    {
+     "componente": "Histograma de 30 días con composición apilada",
+     "texto": "Apilar real/estimado/CNR/faltante por día deja ver de inmediato los días problemáticos y si la degradación es puntual o sostenida; el operador distingue un incidente de un día contra un deterioro estructural sin abrir series individuales.",
+     "principio": "Comparación de composición a lo largo del tiempo; densidad informativa legible."
+    },
+    {
+     "componente": "Panel de backfill con acción de lanzamiento adjunta",
+     "texto": "Los procesos de backfill en curso muestran % completado y ETA en tabla, y el botón «Lanzar backfill manual» queda justo debajo para que el operador dispare la reposición del gap que acaba de identificar sin cambiar de módulo. Ver el ETA evita relanzar procesos ya en marcha.",
+     "principio": "Proximidad entre información y acción; prevención de acciones duplicadas."
+    },
+    {
+     "componente": "Alertas de degradación como lista con delta y causa",
+     "texto": "Los medidores que empeoraron en 7 días se listan con su caída porcentual y la causa cuando existe, ordenados por magnitud del deterioro; así el operador prioriza la intervención por impacto real y no por orden alfabético o de mall.",
+     "principio": "Priorización por magnitud del cambio; información diagnóstica en contexto."
+    },
+    {
+     "componente": "Coherencia de la codificación real/estimado/CNR",
+     "texto": "El mismo vocabulario de calidad (real / estimado / CNR / faltante) se usa en el scorecard, el histograma y las alertas, de modo que el operador no reinterpreta categorías al pasar de un bloque a otro dentro de la misma pantalla.",
+     "principio": "Consistencia terminológica y de codificación entre componentes."
+    }
+   ]
+  }
+ },
+ {
+  "id": "4.5",
+  "slug": "cnr-pendientes",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "CNR pendientes",
+  "activeMenu": "CNR pendientes",
+  "subtitle": "Gestión de Consumos No Registrados · certificación de dato manual según norma CNR (DAT-20) · trazabilidad de cargas (DAT-19)",
+  "filters": [],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 110,
+    "label": "Total CNR abiertas",
+    "value": "41",
+    "delta": "a la espera de resolución",
+    "reqs": [
+     "DAT-20"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 4,
+    "colspan": 4,
+    "y": 184,
+    "h": 110,
+    "label": "Con > 7 días sin resolución",
+    "value": "9",
+    "delta": "badge de alerta de antigüedad",
+    "reqs": [
+     "DAT-20"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 110,
+    "label": "Ingresadas hoy",
+    "value": "6",
+    "delta": "nuevas en el turno",
+    "reqs": [
+     "DAT-20"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 0,
+    "colspan": 12,
+    "y": 310,
+    "h": 40,
+    "btns": [
+     "Asignar responsable",
+     "Cambiar estado",
+     "Agregar comentario",
+     "Exportar CNR a CSV"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 366,
+    "h": 494,
+    "label": "Tabla de CNR",
+    "meta": "fila expandible: detalle, justificación e historial",
+    "reqs": [
+     "DAT-20",
+     "DAT-19",
+     "DAT-14"
+    ],
+    "cols": [
+     "ID",
+     "Medidor",
+     "Mall",
+     "Período afectado",
+     "Tipo",
+     "Responsable",
+     "Fecha ingreso",
+     "Estado",
+     "Valor estim. [kWh]"
+    ],
+    "nrows": 10,
+    "statuscol": true,
+    "expand": true
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión de los Consumos No Registrados (CNR) pendientes. Muestra indicadores de cabecera sobre el volumen y antigüedad de las CNR abiertas, una tabla accionable con fila expandible por CNR y una barra de acciones para asignar, cambiar estado, comentar o exportar las CNR seleccionadas. Toda operación es trazable (DAT-19, DAT-14).",
+   "componentes": [
+    {
+     "nombre": "Indicadores de cabecera",
+     "descripcion": "Total CNR abiertas / Con > 7 días sin resolución / Ingresadas hoy.",
+     "reqs": [
+      "DAT-20"
+     ]
+    },
+    {
+     "nombre": "Tabla de CNR",
+     "descripcion": "ID, medidor, mall, período afectado, tipo (manual / automático), responsable, fecha de ingreso, estado (pendiente / en revisión / aprobada / rechazada) y valor estimado [kWh]. Fila expandible con detalle, justificación e historial.",
+     "reqs": [
+      "DAT-20",
+      "DAT-19",
+      "DAT-14"
+     ]
+    },
+    {
+     "nombre": "Acciones disponibles",
+     "descripcion": "Asignar responsable / Cambiar estado / Agregar comentario / Exportar CNR seleccionadas a CSV.",
+     "reqs": [
+      "DAT-20",
+      "DAT-12"
+     ]
+    }
+   ],
+   "filtros": [],
+   "ux": [
+    {
+     "componente": "Tres indicadores de cabecera centrados en la antigüedad",
+     "texto": "Las tarjetas priorizan el conteo de CNR con más de 7 días sin resolución porque la antigüedad es el criterio operativo de riesgo; destacarla junto al total y las del día le dice al operador de inmediato si el backlog está envejeciendo antes de entrar a la tabla.",
+     "principio": "Visibilidad del indicador crítico; jerarquía por urgencia operativa."
+    },
+    {
+     "componente": "Barra de acciones sobre la tabla, operando sobre la selección",
+     "texto": "Las cuatro acciones se colocan encima de la tabla para que el flujo natural sea seleccionar filas y actuar sobre ellas en lote; agrupar «Asignar / Cambiar estado / Comentar / Exportar» evita que el operador repita la misma operación CNR por CNR en un backlog grande.",
+     "principio": "Acción por lotes sobre selección; economía de interacción."
+    },
+    {
+     "componente": "Fila expandible con justificación e historial",
+     "texto": "El detalle, la justificación y el historial de cada CNR se abren dentro de la fila porque el operador necesita verificar la evidencia antes de aprobar o rechazar, sin perder de vista el resto del backlog ni abrir una ventana nueva por cada caso.",
+     "principio": "Revelación progresiva; verificación en contexto antes de decidir."
+    },
+    {
+     "componente": "Estado como columna con punto de color",
+     "texto": "El estado (pendiente / en revisión / aprobada / rechazada) se codifica con el punto de estado de la primera columna, permitiendo separar visualmente lo que espera acción de lo ya resuelto durante el barrido de la tabla.",
+     "principio": "Codificación de estado pre-atenta; separar lo accionable de lo cerrado."
+    },
+    {
+     "componente": "Exportación a CSV integrada en la misma barra",
+     "texto": "«Exportar CNR a CSV» convive con las acciones de gestión porque forma parte del mismo flujo (traspasar CNR a certificación o respaldo); tenerlo a mano evita que el operador salga a otra pantalla para documentar lo que acaba de revisar.",
+     "principio": "Continuidad del flujo de trabajo; herramientas donde ocurre la tarea."
+    }
+   ]
+  },
+  "primaryAction": "Exportar CNR"
+ },
+ {
+  "id": "4.6",
+  "slug": "mapa-cobertura",
+  "profile": "operacional",
+  "device": "desktop",
+  "title": "Mapa de cobertura",
+  "activeMenu": "Mapa de cobertura",
+  "subtitle": "Cobertura de medición del portafolio · marcadores por % medidores online · salud de interfaces (ARQ-08)",
+  "filters": [
+   {
+    "name": "Métrica del marcador",
+    "default": "Online %"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "map",
+    "col": 0,
+    "colspan": 8,
+    "y": 184,
+    "h": 676,
+    "label": "Mapa interactivo de cobertura",
+    "meta": "marcadores por mall coloreados según % medidores online · hover: nombre, % online, alarmas activas, último dato · click: grilla de medidores",
+    "reqs": [
+     "ARQ-08",
+     "DAT-17",
+     "DAT-11"
+    ],
+    "markers": [
+     [
+      0.2,
+      0.28,
+      "ok"
+     ],
+     [
+      0.35,
+      0.5,
+      "warn"
+     ],
+     [
+      0.5,
+      0.35,
+      "crit"
+     ],
+     [
+      0.62,
+      0.6,
+      "ok"
+     ],
+     [
+      0.75,
+      0.3,
+      "null"
+     ],
+     [
+      0.82,
+      0.62,
+      "warn"
+     ],
+     [
+      0.45,
+      0.75,
+      "ok"
+     ]
+    ]
+   },
+   {
+    "type": "table",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 676,
+    "label": "Panel lateral de lista",
+    "meta": "malls ordenados por % online ascendente (los más problemáticos primero) · buscador por nombre",
+    "reqs": [
+     "DAT-17",
+     "DAT-27"
+    ],
+    "cols": [
+     "Mall",
+     "% online",
+     "Alarmas",
+     "Último dato"
+    ],
+    "nrows": 12,
+    "statuscol": true
+   }
+  ],
+  "detail": {
+   "descripcion": "Vista de cobertura de medición del portafolio para el perfil Operacional. Un mapa interactivo colorea cada mall según su % de medidores online y, al hacer click, abre la grilla de medidores del mall; un panel lateral lista los malls ordenados de peor a mejor cobertura con buscador. El selector de métrica del marcador permite recolorear el mapa por alarmas, última lectura o calidad.",
+   "componentes": [
+    {
+     "nombre": "Mapa interactivo",
+     "descripcion": "Marcadores por mall coloreados según % de medidores online. Hover: popup con nombre, % online, alarmas activas y último dato. Click: grilla de medidores del mall.",
+     "reqs": [
+      "ARQ-08",
+      "DAT-17",
+      "DAT-11"
+     ]
+    },
+    {
+     "nombre": "Panel lateral de lista",
+     "descripcion": "Malls ordenados por % online ascendente (los más problemáticos primero). Buscador por nombre.",
+     "reqs": [
+      "DAT-17",
+      "DAT-27"
+     ]
+    },
+    {
+     "nombre": "Selector de métrica del marcador",
+     "descripcion": "Online % / Alarmas activas / Última lectura / Calidad del dato. Recolorea los marcadores del mapa según la métrica elegida.",
+     "reqs": [
+      "DAT-17",
+      "DAT-06"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Métrica del marcador",
+     "opciones": "Online % / Alarmas activas / Última lectura / Calidad del dato",
+     "default": "Online %"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Mapa como bloque dominante con lista pareada",
+     "texto": "El mapa ocupa dos tercios del ancho porque la cobertura es intrínsecamente geográfica: el operador localiza visualmente los focos rojos de un vistazo. La lista lateral acompaña como índice navegable para quienes prefieren buscar por nombre en vez de rastrear en el mapa.",
+     "principio": "Vistas coordinadas mapa-lista; dos rutas al mismo dato."
+    },
+    {
+     "componente": "Lista ordenada por % online ascendente",
+     "texto": "El panel lateral pone arriba los malls con peor cobertura porque son los que exigen acción; el operador lee de arriba hacia abajo su cola de trabajo sin ordenar la tabla, y el buscador le permite saltar a un mall concreto cuando llega un reporte específico.",
+     "principio": "Los peores primero; el orden por defecto refleja la prioridad de acción."
+    },
+    {
+     "componente": "Selector de métrica del marcador en la barra superior",
+     "texto": "Recolorear el mapa por online %, alarmas, última lectura o calidad desde un único selector permite responder distintas preguntas sobre el mismo mapa sin cambiar de pantalla; mantenerlo en la barra deja claro qué significa el color en cada momento.",
+     "principio": "Reutilización de la misma vista con codificación conmutable; claridad del significado del color."
+    },
+    {
+     "componente": "Hover con popup de resumen antes del click",
+     "texto": "El popup de hover (nombre, % online, alarmas, último dato) entrega el resumen del mall sin comprometer el click, de modo que el operador descarta o confirma un mall antes de abrir su grilla de medidores completa.",
+     "principio": "Previsualización de bajo costo antes de la navegación; feedback anticipado."
+    },
+    {
+     "componente": "Continuidad con la grilla de medidores de Monitoreo en vivo",
+     "texto": "El click en un marcador abre la misma grilla de medidores que en Monitoreo en vivo, reutilizando un patrón que el operador ya conoce; no aprende una interacción nueva para llegar al detalle desde el mapa de cobertura.",
+     "principio": "Consistencia de interacción entre pantallas del perfil; transferencia de aprendizaje."
+    }
+   ]
+  }
+ }
+]

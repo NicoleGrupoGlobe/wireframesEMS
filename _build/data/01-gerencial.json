@@ -1,0 +1,1612 @@
+[
+ {
+  "id": "3.1",
+  "slug": "panel-consolidado",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Panel consolidado",
+  "activeMenu": "Panel consolidado",
+  "breadcrumb": [
+   "Chile",
+   "Portafolio nacional"
+  ],
+  "subtitle": "Pantalla de aterrizaje · estado del portafolio en < 3 s (ARQ-07) · drill-down de 3 niveles",
+  "filters": [
+   {
+    "name": "Colorear marcadores por",
+    "default": "Estado de alarma"
+   },
+   {
+    "name": "Mostrar solo malls con",
+    "default": "Todos"
+   },
+   {
+    "name": "Período de KPIs",
+    "default": "Mes actual"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "map",
+    "col": 0,
+    "colspan": 6,
+    "y": 222,
+    "h": 300,
+    "label": "Nivel 2 — Centro comercial (mapa interactivo)",
+    "meta": "Marcadores por mall · color = estado · tamaño ∝ consumo",
+    "reqs": [
+     "ARQ-05",
+     "DAT-11",
+     "ARQ-07"
+    ],
+    "markers": [
+     [
+      0.25,
+      0.35,
+      "ok"
+     ],
+     [
+      0.55,
+      0.5,
+      "crit"
+     ],
+     [
+      0.72,
+      0.3,
+      "warn"
+     ],
+     [
+      0.4,
+      0.68,
+      "ok"
+     ],
+     [
+      0.82,
+      0.66,
+      "null"
+     ]
+    ],
+    "pspan": 8,
+    "porder": 4
+   },
+   {
+    "type": "legend",
+    "x": 276,
+    "y": 536,
+    "w": 580,
+    "h": 20,
+    "pspan": 4,
+    "porder": 7
+   },
+   {
+    "type": "planta",
+    "col": 0,
+    "colspan": 6,
+    "y": 560,
+    "h": 314,
+    "label": "Nivel 3 — Tienda / Local / Isla",
+    "meta": "Plano de planta vectorial (provisto por PASA) · hover: consumo [kW] y última alarma",
+    "reqs": [
+     "ARQ-05",
+     "DAT-03",
+     "DAT-11",
+     "ARQ-09"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 6,
+    "colspan": 3,
+    "y": 184,
+    "h": 112,
+    "label": "Tarjeta Consumo [MWh]",
+    "value": "1.284",
+    "delta": "▲ 3,2% vs. mes ant. · sparkline 24h",
+    "spark": true,
+    "reqs": [
+     "DAT-22",
+     "DAT-08",
+     "ARQ-07"
+    ],
+    "pspan": 3,
+    "porder": 0
+   },
+   {
+    "type": "kpi",
+    "col": 9,
+    "colspan": 3,
+    "y": 184,
+    "h": 112,
+    "label": "Tarjeta Costo [UF]",
+    "value": "42.910",
+    "delta": "▲ 1,8% · moneda UF/CLP/USD",
+    "reqs": [
+     "DAT-22",
+     "FIN-07"
+    ],
+    "pspan": 3,
+    "porder": 1
+   },
+   {
+    "type": "kpi",
+    "col": 6,
+    "colspan": 3,
+    "y": 308,
+    "h": 112,
+    "label": "Intensidad energética",
+    "value": "38",
+    "delta": "kWh/m² · ▼ 0,6% (desde Nivel 2)",
+    "reqs": [
+     "DAT-11",
+     "DAT-22"
+    ],
+    "pspan": 3,
+    "porder": 2
+   },
+   {
+    "type": "kpi",
+    "col": 9,
+    "colspan": 3,
+    "y": 308,
+    "h": 112,
+    "label": "Cobertura de medición",
+    "value": "96%",
+    "delta": "medidores activos · semáforo ≥95%",
+    "reqs": [
+     "DAT-17",
+     "DAT-06"
+    ],
+    "pspan": 3,
+    "porder": 3
+   },
+   {
+    "type": "feed",
+    "col": 6,
+    "colspan": 6,
+    "y": 432,
+    "h": 196,
+    "label": "Feed de eventos críticos",
+    "meta": "Solo lectura · últimos 4–5 del nivel activo",
+    "reqs": [
+     "DAT-03",
+     "DAT-27"
+    ],
+    "items": [
+     [
+      "URGENT",
+      "Sobrecarga transformador — Costanera P2",
+      "crit"
+     ],
+     [
+      "WARNING",
+      "Fase desbalanceada — Egaña",
+      "warn"
+     ],
+     [
+      "INFO",
+      "Backfill completado — Vespucio",
+      "null"
+     ],
+     [
+      "WARNING",
+      "Dato tardío medidor 4471",
+      "warn"
+     ]
+    ],
+    "pspan": 4,
+    "porder": 5
+   },
+   {
+    "type": "panel",
+    "col": 6,
+    "colspan": 6,
+    "y": 642,
+    "h": 98,
+    "label": "Semáforo calidad del dato",
+    "meta": "% reales / estimadas / CNR del período (pills de color)",
+    "reqs": [
+     "DAT-06",
+     "DAT-17"
+    ],
+    "subs": [
+     "Reales 88%   ·   Estimadas 9%   ·   CNR 3%",
+     "Aplica desde Nivel 2 (centro comercial) en adelante"
+    ],
+    "pspan": 8,
+    "porder": 6
+   }
+  ],
+  "detail": {
+   "descripcion": "Pantalla de aterrizaje al iniciar sesión. Muestra el estado del portafolio completo en menos de 3 segundos (ARQ-07). La información se filtra progresivamente a través de 3 niveles geográficos interactivos accionados desde el mapa: País → Centro comercial → Tienda/Local. Cada clic refina el nivel de detalle y actualiza los KPIs del panel derecho sin saltar niveles.",
+   "componentes": [
+    {
+     "nombre": "Nivel 1 — País",
+     "descripcion": "País fijo en Chile (operación monopaís por ahora); no hay selector de país. Marcadores circulares por cada mall activo.",
+     "reqs": [
+      "ARQ-05",
+      "DAT-11",
+      "ARQ-07"
+     ]
+    },
+    {
+     "nombre": "Nivel 2 — Centro comercial",
+     "descripcion": "Mapa con marcador por mall; color = estado (verde normal / amarillo alerta / rojo crítico / gris sin dato), tamaño proporcional al consumo relativo. Click actualiza KPIs.",
+     "reqs": [
+      "ARQ-05",
+      "DAT-11",
+      "DAT-03"
+     ]
+    },
+    {
+     "nombre": "Nivel 3 — Tienda / Local / Isla",
+     "descripcion": "Al seleccionar un mall y piso se despliega el plano de planta vectorial provisto por PASA; cada tienda/local/isla es un bloque coloreado por estado; hover con nombre, consumo actual [kW] y última alarma.",
+     "reqs": [
+      "ARQ-05",
+      "DAT-03",
+      "DAT-11",
+      "ARQ-09"
+     ]
+    },
+    {
+     "nombre": "Tarjeta Consumo [MWh]",
+     "descripcion": "Consumo total del período en el nivel seleccionado. Variación % vs. mismo período anterior. Mini sparkline de tendencia de las últimas 24 h.",
+     "reqs": [
+      "DAT-22",
+      "DAT-08",
+      "ARQ-07"
+     ]
+    },
+    {
+     "nombre": "Tarjeta Costo [UF]",
+     "descripcion": "Costo acumulado del período. Variación % vs. período anterior. Moneda seleccionable (UF/CLP/USD) según país del nivel activo.",
+     "reqs": [
+      "DAT-22",
+      "FIN-07"
+     ]
+    },
+    {
+     "nombre": "Tarjeta Intensidad energética",
+     "descripcion": "Consumo / superficie arrendada [kWh/m²]. Variación % vs. período anterior. Aplica desde Nivel 2 (mall) en adelante.",
+     "reqs": [
+      "DAT-11",
+      "DAT-22"
+     ]
+    },
+    {
+     "nombre": "Tarjeta Cobertura de medición",
+     "descripcion": "% de medidores activos / total esperado. Semáforo: verde ≥95%, amarillo 85–95%, rojo <85%.",
+     "reqs": [
+      "DAT-17",
+      "DAT-06"
+     ]
+    },
+    {
+     "nombre": "Feed de eventos críticos",
+     "descripcion": "Lista de los últimos 4–5 eventos del nivel activo: severidad (URGENT/WARNING/INFO), hora, descripción breve, zona afectada. Solo lectura en este perfil.",
+     "reqs": [
+      "DAT-03",
+      "DAT-27"
+     ]
+    },
+    {
+     "nombre": "Semáforo calidad del dato",
+     "descripcion": "% lecturas reales / estimadas / CNR del período activo, en pills de color. Aplica desde Nivel 2.",
+     "reqs": [
+      "DAT-06",
+      "DAT-17"
+     ]
+    },
+    {
+     "nombre": "Sistema de colores de estado",
+     "descripcion": "Consistente en todos los niveles y perfiles: verde = operación normal; amarillo = WARNING (sobreconsumo leve, calidad degradada, fase desbalanceada); rojo = alarma crítica (sobrecarga, medidor offline >4 h); gris = sin dato.",
+     "reqs": [
+      "DAT-06",
+      "DAT-03",
+      "DAT-27"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Colorear marcadores por",
+     "opciones": "Estado de alarma / Consumo actual [kW] / Variación consumo % / Cobertura de medición %",
+     "default": "Estado de alarma"
+    },
+    {
+     "nombre": "Mostrar solo malls con",
+     "opciones": "Todos / Alarma crítica activa / Alerta warning activa / Sin datos",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Período de KPIs",
+     "opciones": "Hoy / Mes actual / Trimestre / Últimos 12 meses / Rango personalizado",
+     "default": "Mes actual"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Mapa como único punto de entrada (superior-izquierda)",
+     "texto": "El gerente abre esta pantalla para responder una sola pregunta: «¿dónde hay un problema en mi portafolio?». Por eso el mapa ocupa el cuadrante de mayor peso visual —arranque del recorrido de lectura en F— y no una columna lateral: la ubicación geográfica del riesgo es el primer dato que busca, y los marcadores de color le permiten localizar el mall crítico sin leer una sola cifra.",
+     "principio": "Patrón de lectura en F y jerarquía visual: lo urgente ocupa el punto de entrada."
+    },
+    {
+     "componente": "Retícula 2×2 de tarjetas KPI a la derecha",
+     "texto": "Consumo, costo, intensidad y cobertura se agrupan pegadas entre sí a la derecha del mapa porque el gerente las lee como un solo bloque de «salud del portafolio», no una por una. Alinearlas a la grilla permite comparar sus variaciones % con un barrido vertical del ojo; dispersarlas obligaría a rastrearlas y rompería la lectura en 3 segundos exigida por ARQ-07.",
+     "principio": "Proximidad (Gestalt) y ley de proximidad para agrupar métricas afines."
+    },
+    {
+     "componente": "Semáforo de color en lugar de texto de estado",
+     "texto": "El estado se codifica primero con color y forma y solo después con texto, porque este perfil escanea decenas de malls en segundos y el color se procesa de forma pre-atenta —más rápido que leer la palabra «crítico»—. Se añade letra y una leyenda fija para no depender únicamente del color y cumplir accesibilidad.",
+     "principio": "Codificación pre-atenta del color; regla de no-solo-color (accesibilidad)."
+    },
+    {
+     "componente": "Feed de eventos sin botones de acción",
+     "texto": "El feed se ubica debajo de las tarjetas, como información de contexto de segundo nivel, y se muestra en solo lectura: el gerente no gestiona alarmas —eso pertenece al perfil Operacional—, así que se omiten los botones para no ofrecer una acción que el rol no posee y evitar errores de expectativa.",
+     "principio": "Correspondencia entre rol y affordance; el diseño no promete lo que el permiso no permite."
+    },
+    {
+     "componente": "Drill-down progresivo de 3 niveles",
+     "texto": "La navegación nunca salta niveles (País→Mall→Local): cada clic refina en el mismo lugar y conserva el panel de KPIs a la vista, de modo que el gerente no tiene que recordar dónde estaba. Reducir de 6 a 3 niveles acorta la ruta a la información que este perfil realmente consulta (portafolio y mall), sin obligarlo a atravesar región/ciudad/comuna.",
+     "principio": "Reconocer antes que recordar; minimizar la carga en memoria de trabajo."
+    },
+    {
+     "componente": "Barra de filtros única y persistente",
+     "texto": "Los cuatro filtros globales viven en una sola barra sobre el contenido, mostrando su valor por defecto entre paréntesis, para que el gerente sepa exactamente qué está viendo sin abrir menús y para que el patrón sea idéntico en todas las pantallas del perfil.",
+     "principio": "Consistencia entre pantallas y visibilidad del estado del sistema."
+    }
+   ]
+  }
+ },
+ {
+  "id": "3.2",
+  "slug": "consumo-jerarquico",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Consumo jerárquico",
+  "activeMenu": "Consumo jerárquico",
+  "breadcrumb": [
+   "Chile",
+   "Costanera Center",
+   "Piso 2"
+  ],
+  "subtitle": "Análisis drill-down: mapa + árbol expandible + panel de detalle sincronizados",
+  "filters": [
+   {
+    "name": "Período",
+    "default": "Mes actual"
+   },
+   {
+    "name": "Métrica principal",
+    "default": "Consumo [MWh]"
+   },
+   {
+    "name": "Granularidad",
+    "default": "Mensual"
+   },
+   {
+    "name": "Ordenar malls por",
+    "default": "Mayor consumo"
+   },
+   {
+    "name": "Comparar con",
+    "default": "Período anterior"
+   },
+   {
+    "name": "Moneda",
+    "default": "UF"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "map",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 300,
+    "label": "Mapa geográfico (sincronizado)",
+    "meta": "Un solo mapa · País → Centro comercial → Tienda/Local · sincronizado con el árbol",
+    "reqs": [
+     "ARQ-05",
+     "DAT-11",
+     "DAT-03"
+    ],
+    "pspan": 8,
+    "porder": 3
+   },
+   {
+    "type": "kpi",
+    "col": 7,
+    "colspan": 4,
+    "y": 184,
+    "h": 92,
+    "label": "Consumo del período [MWh]",
+    "value": "1.284",
+    "delta": "▲ 2,1% vs. período anterior",
+    "reqs": [
+     "DAT-22",
+     "DAT-11"
+    ],
+    "pspan": 4,
+    "porder": 0
+   },
+   {
+    "type": "kpi",
+    "col": 7,
+    "colspan": 4,
+    "y": 288,
+    "h": 92,
+    "label": "Intensidad [kWh/m²]",
+    "value": "38",
+    "delta": "▼ 0,4% vs. período anterior",
+    "reqs": [
+     "DAT-11",
+     "DAT-22"
+    ],
+    "pspan": 4,
+    "porder": 1
+   },
+   {
+    "type": "kpi",
+    "col": 7,
+    "colspan": 4,
+    "y": 392,
+    "h": 92,
+    "label": "Costo estimado [UF]",
+    "value": "42.910",
+    "delta": "▲ 1,2% vs. período anterior",
+    "reqs": [
+     "FIN-07",
+     "DAT-22"
+    ],
+    "pspan": 4,
+    "porder": 2
+   },
+   {
+    "type": "tree",
+    "col": 4,
+    "colspan": 3,
+    "y": 184,
+    "h": 300,
+    "label": "Árbol jerárquico expandible",
+    "meta": "3 niveles de sangría",
+    "reqs": [
+     "DAT-11",
+     "DAT-22"
+    ],
+    "rows": [
+     [
+      0,
+      "Total país — Chile",
+      null
+     ],
+     [
+      1,
+      "Costanera Center",
+      false
+     ],
+     [
+      2,
+      "Piso 1",
+      false
+     ],
+     [
+      2,
+      "Piso 2",
+      false
+     ],
+     [
+      1,
+      "Mallplaza Egaña",
+      false
+     ],
+     [
+      1,
+      "Alto Las Condes",
+      false
+     ],
+     [
+      1,
+      "Arauco Maipú",
+      false
+     ]
+    ],
+    "caret": "▾",
+    "pspan": 4,
+    "porder": 4
+   },
+   {
+    "type": "bars",
+    "col": 0,
+    "colspan": 9,
+    "y": 502,
+    "h": 150,
+    "label": "Tendencia mensual: mall vs. promedio portafolio",
+    "meta": "Últimos 8–12 meses · detecta anomalías estacionales",
+    "reqs": [
+     "DAT-08",
+     "DAT-22"
+    ],
+    "hl": 6,
+    "pspan": 12,
+    "porder": 5
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 668,
+    "h": 212,
+    "label": "Tabla de remarcadores del mall",
+    "meta": "al seleccionar mall sin piso",
+    "reqs": [
+     "DAT-06",
+     "DAT-19",
+     "DAT-17"
+    ],
+    "cols": [
+     "ID medidor",
+     "Zona",
+     "Consumo [MWh]",
+     "% del total",
+     "Último valor",
+     "Timestamp",
+     "Estado"
+    ],
+    "nrows": 6,
+    "statuscol": true,
+    "pspan": 12,
+    "porder": 6
+   }
+  ],
+  "detail": {
+   "descripcion": "Pantalla de análisis drill-down del consumo. Combina el mapa geográfico (panel izquierdo) con un árbol jerárquico expandible (columna central) y un panel de detalle con KPIs y gráficos (columna derecha). La interacción en cualquiera de los tres paneles sincroniza los otros dos. El árbol tiene 3 niveles: Total país → Mall → Piso/zona.",
+   "componentes": [
+    {
+     "nombre": "Nivel 0 — Total país",
+     "descripcion": "Fila raíz sin sangría. Muestra el total [MWh o métrica seleccionada] del país activo y variación % vs. período anterior.",
+     "reqs": [
+      "DAT-22",
+      "ARQ-05"
+     ]
+    },
+    {
+     "nombre": "Nivel 1 — Mall (▸/▾)",
+     "descripcion": "Una fila por mall con punto de color de estado. Consumo [MWh], % del total, variación % (rojo si sube, verde si baja). Click expande y activa el detalle.",
+     "reqs": [
+      "DAT-11",
+      "DAT-22"
+     ]
+    },
+    {
+     "nombre": "Nivel 2 — Piso / zona",
+     "descripcion": "Solo visible al expandir un mall (sangría doble). Nombre, consumo [MWh], variación %, punto de color según alarma. Click profundiza el mapa por niveles hasta la tienda/local y sincroniza el detalle.",
+     "reqs": [
+      "DAT-11",
+      "ARQ-05"
+     ]
+    },
+    {
+     "nombre": "KPIs del mall (3 tarjetas independientes)",
+     "descripcion": "Tres tarjetas separadas —Consumo del período [MWh], Intensidad [kWh/m²] y Costo estimado [UF]—, cada una con su valor y variación % vs. período anterior.",
+     "reqs": [
+      "DAT-22",
+      "DAT-11",
+      "FIN-07"
+     ]
+    },
+    {
+     "nombre": "Gráfico de tendencia mensual",
+     "descripcion": "Barras del mall vs. barras del promedio del portafolio, últimos 8–12 meses. Permite identificar anomalías estacionales.",
+     "reqs": [
+      "DAT-08",
+      "DAT-22"
+     ]
+    },
+    {
+     "nombre": "Tabla de remarcadores",
+     "descripcion": "Al seleccionar el mall (sin piso): ID medidor, zona, consumo [MWh], % del total, último valor, timestamp y estado (activo/offline/CNR/estimado).",
+     "reqs": [
+      "DAT-06",
+      "DAT-19",
+      "DAT-17"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Período",
+     "opciones": "Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado (hasta 5 años)",
+     "default": "Mes actual"
+    },
+    {
+     "nombre": "Métrica principal",
+     "opciones": "Consumo [MWh] / Costo [UF o moneda] / Intensidad [kWh/m²] / Demanda máxima [kW]",
+     "default": "Consumo [MWh]"
+    },
+    {
+     "nombre": "Granularidad temporal",
+     "opciones": "Mensual / Semanal",
+     "default": "Mensual"
+    },
+    {
+     "nombre": "Ordenar malls por",
+     "opciones": "Mayor consumo / Mayor costo / Mayor variación % / Nombre A-Z",
+     "default": "Mayor consumo"
+    },
+    {
+     "nombre": "Mostrar solo malls con",
+     "opciones": "Todos / Alarma crítica / Variación > X% / Sin datos completos",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Comparar con",
+     "opciones": "Período anterior / Mismo período año anterior / Promedio del portafolio",
+     "default": "Período anterior"
+    },
+    {
+     "nombre": "Moneda de costos",
+     "opciones": "UF / CLP / USD",
+     "default": "UF"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Un solo mapa por niveles (sin contenedor de planta aparte)",
+     "texto": "La navegación País → Centro comercial → Tienda/Local ocurre dentro del mismo mapa con drill-down, igual que en el Panel consolidado, en vez de mostrar el nivel de piso en un contenedor separado. Así el gerente no ve el mismo objeto de análisis partido en dos tarjetas con niveles de selección distintos: hay una sola fuente de verdad espacial y un único modelo mental de navegación.",
+     "principio": "Consistencia entre pantallas; evitar niveles de selección duplicados en contenedores distintos."
+    },
+    {
+     "componente": "Tres paneles sincronizados en una vista",
+     "texto": "Mapa, árbol y detalle conviven sin pestañas ni modales porque el gerente compara «dónde» (mapa), «cuánto» (árbol) y «por qué» (detalle) en un mismo golpe de vista. Sincronizar los tres al hacer un solo clic elimina la coordinación manual y evita que pierda el hilo del análisis.",
+     "principio": "Múltiples vistas coordinadas; reducir el costo de interacción."
+    },
+    {
+     "componente": "Árbol expandible en vez de navegación página-a-página",
+     "texto": "El árbol se expande in situ (▸/▾) y solo el mall pulsado abre sus pisos; los demás no se mueven. Así el gerente mantiene visible el contexto del portafolio completo mientras profundiza, en lugar de abrir una pantalla nueva y perder la referencia de dónde estaba en la jerarquía.",
+     "principio": "Preservar el contexto; revelación progresiva (progressive disclosure)."
+    },
+    {
+     "componente": "Resaltado en azul-acento de la fila activa",
+     "texto": "El único color saturado de la pantalla es el acento sobre la fila seleccionada, que ata visualmente el árbol con lo que muestran el mapa y el detalle. Al reservar el acento para «lo que estás mirando ahora», el resto queda en gris y la atención no se dispersa.",
+     "principio": "Un único foco de atención; economía del color."
+    },
+    {
+     "componente": "Barra de comparación como filtro, no como gráfico aparte",
+     "texto": "«Comparar con» (período anterior / año anterior / promedio del portafolio) es un filtro y no una vista separada porque el gerente casi siempre lee una cifra contra su referencia; incorporarlo al mismo panel evita duplicar pantallas y mantiene la variación % siempre en contexto.",
+     "principio": "Comparación en contexto; consistencia con el resto del perfil."
+    },
+    {
+     "componente": "Tabla de remarcadores al pie",
+     "texto": "El detalle a nivel medidor se coloca al final, en ancho completo y solo cuando se selecciona un mall sin piso: es el dato más granular y el menos frecuente para un gerente, así que ocupa la zona de menor prioridad de lectura pero queda disponible sin cambiar de pantalla.",
+     "principio": "Jerarquía por frecuencia de consulta; lo granular al final del recorrido."
+    }
+   ]
+  }
+ },
+ {
+  "id": "3.3",
+  "slug": "costos-tendencias",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Costos y tendencias",
+  "activeMenu": "Costos y tendencias",
+  "subtitle": "Vista financiera del consumo para control de gestión y proyecciones",
+  "filters": [
+   {
+    "name": "Mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Período",
+    "default": "Año en curso"
+   },
+   {
+    "name": "Moneda",
+    "default": "UF"
+   },
+   {
+    "name": "Agrupación de gráficos",
+    "default": "Por mall"
+   },
+   {
+    "name": "Ordenar tabla por",
+    "default": "Costo total desc."
+   },
+   {
+    "name": "Mostrar variación",
+    "default": "Todos"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "stackedbars",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 300,
+    "label": "Barras apiladas mensual — costo [UF]",
+    "meta": "Línea eje secundario: precio medio [UF/MWh] · tooltip con desglose",
+    "reqs": [
+     "DAT-22",
+     "FIN-07"
+    ],
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "waterfall",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 300,
+    "label": "Waterfall de variación de costo",
+    "meta": "volumen · precio · mix de malls (verde baja, rojo sube)",
+    "reqs": [
+     "DAT-22",
+     "FIN-07"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 500,
+    "h": 232,
+    "label": "Tabla de costos por mall (ordenable · exportable CSV/Excel)",
+    "meta": "",
+    "reqs": [
+     "DAT-22",
+     "FIN-07",
+     "DAT-12"
+    ],
+    "cols": [
+     "Mall",
+     "Consumo [MWh]",
+     "Precio medio [UF/MWh]",
+     "Costo total",
+     "Variación %",
+     "Proyección cierre"
+    ],
+    "nrows": 6,
+    "pspan": 7,
+    "porder": 2
+   },
+   {
+    "type": "bars",
+    "col": 0,
+    "colspan": 12,
+    "y": 748,
+    "h": 108,
+    "label": "Proyecciones — 2 meses",
+    "meta": "barras con trama diferente · base tendencia últimos 3 meses",
+    "reqs": [
+     "DAT-22",
+     "FIN-07"
+    ],
+    "projline": 1,
+    "pspan": 5,
+    "porder": 3
+   }
+  ],
+  "detail": {
+   "descripcion": "Vista financiera del consumo para control de gestión y proyecciones. Orientada a directivos y al área de finanzas. Combina la evolución mensual de costos, la descomposición de la variación y una tabla exportable con proyección de cierre.",
+   "componentes": [
+    {
+     "nombre": "Gráfico de barras apiladas mensual",
+     "descripcion": "Eje Y: costo [UF o moneda seleccionada]. Barras apiladas por mall (configurable). Línea superpuesta en eje Y secundario: precio medio de la energía [UF/MWh]. Hover con desglose del costo por componente.",
+     "reqs": [
+      "DAT-22",
+      "FIN-07"
+     ]
+    },
+    {
+     "nombre": "Waterfall chart de variación",
+     "descripcion": "Descompone la variación de costo total entre el período anterior y el actual en: cambio en volumen, cambio en precio y cambio en mix de malls. Barras verdes para reducción, rojas para incremento.",
+     "reqs": [
+      "DAT-22",
+      "FIN-07"
+     ]
+    },
+    {
+     "nombre": "Tabla de costos por mall",
+     "descripcion": "Columnas: mall, consumo [MWh], precio medio [UF/MWh], costo total, variación %, proyección cierre de mes y año. Ordenable por columna. Exportable a CSV/Excel.",
+     "reqs": [
+      "DAT-22",
+      "FIN-07",
+      "DAT-12"
+     ]
+    },
+    {
+     "nombre": "Proyecciones",
+     "descripcion": "Últimos 2 meses con cifras proyectadas (barras con trama diferente), basadas en la tendencia de los últimos 3 meses.",
+     "reqs": [
+      "DAT-22",
+      "FIN-07"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Mall",
+     "opciones": "Multi-selección con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Período",
+     "opciones": "Mes actual / Trimestre / Año en curso / Últimos 12 meses / Rango personalizado",
+     "default": "Año en curso"
+    },
+    {
+     "nombre": "Moneda",
+     "opciones": "UF / CLP / USD (conversión al tipo de cambio del último día disponible)",
+     "default": "UF"
+    },
+    {
+     "nombre": "Agrupación de gráficos",
+     "opciones": "Por mall / Por tipología de mall",
+     "default": "Por mall"
+    },
+    {
+     "nombre": "Ordenar tabla por",
+     "opciones": "Cualquier columna (asc/desc)",
+     "default": "Costo total desc."
+    },
+    {
+     "nombre": "Mostrar solo malls con variación",
+     "opciones": "Todos / >5% / >10% / >20% (campo numérico)",
+     "default": "Todos"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Barras apiladas como pieza principal a la izquierda",
+     "texto": "La evolución mensual del costo es lo que el área de control de gestión revisa primero, así que ocupa el mayor bloque y el punto de entrada de lectura. Apilar por mall en una sola barra por mes permite ver a la vez el total y su composición sin cambiar de gráfico.",
+     "principio": "Jerarquía visual por frecuencia de uso; densidad informativa controlada."
+    },
+    {
+     "componente": "Waterfall junto a las barras, no en otra pestaña",
+     "texto": "El waterfall responde la pregunta que surge inmediatamente al ver subir el costo: «¿fue volumen, precio o mix?». Colocarlo al lado —no en otra pantalla— permite leer el «cuánto» y el «por qué» en el mismo movimiento ocular, respetando el sentido de lectura izquierda→derecha.",
+     "principio": "Proximidad causa-efecto; patrón de lectura en Z."
+    },
+    {
+     "componente": "Verde/rojo con dirección explícita en el waterfall",
+     "texto": "En finanzas el color por sí solo es ambiguo (¿rojo es malo o es gasto?), por eso cada barra lleva además el signo de la variación; el color acelera el escaneo pero el texto elimina la interpretación errónea de un ahorro como sobrecosto.",
+     "principio": "Redundancia de codificación; prevención de error de interpretación."
+    },
+    {
+     "componente": "Tabla exportable al pie, en ancho completo",
+     "texto": "La tabla es el artefacto que finanzas se lleva a su propio análisis, por eso está al final (cierre del recorrido), abarca todo el ancho para mostrar todas las columnas sin scroll horizontal, y expone el CSV/Excel donde se espera terminar la tarea.",
+     "principio": "Coincidencia con el flujo de trabajo real del usuario; visibilidad de la acción de salida."
+    },
+    {
+     "componente": "Proyección diferenciada por trama, no por color nuevo",
+     "texto": "Las columnas proyectadas usan una trama distinta en vez de un color adicional para no introducir una cuarta categoría cromática que compita con el semáforo; el gerente distingue «dato real» de «estimación» por textura, manteniendo la paleta sobria.",
+     "principio": "Distinción por forma antes que por color; economía de la paleta."
+    }
+   ]
+  }
+ },
+ {
+  "id": "3.4",
+  "slug": "reportes-ejecutivos",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Reportes ejecutivos",
+  "activeMenu": "Reportes ejecutivos",
+  "primaryAction": "Generar reporte",
+  "subtitle": "Generación y descarga de reportes para comités y directorio",
+  "filters": [
+   {
+    "name": "Alcance geográfico",
+    "default": "Portafolio completo"
+   },
+   {
+    "name": "Período",
+    "default": "Mes actual"
+   },
+   {
+    "name": "Comparación",
+    "default": "vs. período anterior"
+   },
+   {
+    "name": "Métrica principal",
+    "default": "Consumo"
+   },
+   {
+    "name": "Formato de salida",
+    "default": "PDF"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "form",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 300,
+    "label": "Configurador de reporte",
+    "meta": "configura y selecciona las secciones del informe",
+    "reqs": [
+     "FIN-07",
+     "DAT-28"
+    ],
+    "fields": [
+     "Alcance geográfico (Portafolio / Mall)",
+     "Período (Mes / Trimestre / Año / Rango)",
+     "Comparación (vs. anterior / año anterior / sin)",
+     "Métrica principal (Consumo / Costo / Intensidad)",
+     "Formato de salida (PDF / PPT / Excel)"
+    ],
+    "checks": [
+     "KPIs ejecutivos",
+     "Tendencia de consumo",
+     "Ranking de malls",
+     "Análisis de costos",
+     "Calidad del dato",
+     "Resumen de alarmas",
+     "Mapa de cobertura"
+    ],
+    "checksLabel": "Secciones a incluir (todas activas por defecto)",
+    "pspan": 7,
+    "porder": 0
+   },
+   {
+    "type": "panel",
+    "col": 0,
+    "colspan": 7,
+    "y": 496,
+    "h": 150,
+    "label": "Secciones a incluir (checkboxes)",
+    "meta": "todas activadas por defecto",
+    "reqs": [
+     "FIN-07",
+     "DAT-28"
+    ],
+    "subs": [
+     "☑ KPIs ejecutivos    ☑ Tendencia de consumo    ☑ Ranking de malls",
+     "☑ Análisis de costos    ☑ Calidad del dato    ☑ Resumen de alarmas",
+     "☑ Mapa de cobertura"
+    ],
+    "phide": true
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 150,
+    "label": "Vista previa del reporte",
+    "meta": "miniatura de portada e índice",
+    "reqs": [
+     "FIN-07"
+    ],
+    "subs": [
+     "Portada + logo",
+     "Índice de secciones seleccionadas"
+    ],
+    "pspan": 5,
+    "porder": 1
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 346,
+    "h": 40,
+    "btns": [
+     "Generar reporte",
+     "Programar envío"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 7,
+    "colspan": 5,
+    "y": 400,
+    "h": 246,
+    "label": "Historial de reportes",
+    "meta": "retención de archivos ≥ 12 meses",
+    "reqs": [
+     "DAT-12",
+     "DAT-08"
+    ],
+    "cols": [
+     "Fecha",
+     "Usuario",
+     "Alcance",
+     "Formato",
+     "Estado"
+    ],
+    "nrows": 6,
+    "pspan": 12,
+    "porder": 2
+   }
+  ],
+  "detail": {
+   "descripcion": "Generación y descarga de reportes para comités y directorio. Permite configurar el contenido (alcance, período, comparación, secciones y formato) antes de generar, y conserva un historial descargable con retención mínima de 12 meses.",
+   "componentes": [
+    {
+     "nombre": "Configurador de reporte",
+     "descripcion": "Filtros que determinan el contenido: alcance geográfico, período, comparación, métrica principal, secciones a incluir y formato de salida (PDF con gráficos / PPT editable / Excel plano).",
+     "reqs": [
+      "FIN-07",
+      "DAT-28",
+      "DAT-08"
+     ]
+    },
+    {
+     "nombre": "Secciones a incluir",
+     "descripcion": "Checkboxes individuales: KPIs ejecutivos, tendencia de consumo, ranking de malls, análisis de costos, calidad del dato, resumen de alarmas del período y mapa de cobertura. Todas activadas por defecto.",
+     "reqs": [
+      "FIN-07",
+      "DAT-28"
+     ]
+    },
+    {
+     "nombre": "Tabla de historial",
+     "descripcion": "Fecha de generación, usuario, alcance, período cubierto, formato, estado (generando/listo/error) y link de descarga. Retención de archivos: 12 meses mínimo.",
+     "reqs": [
+      "DAT-12",
+      "DAT-08"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Alcance geográfico",
+     "opciones": "Portafolio completo / Mall específico (multi-selección con buscador)",
+     "default": "Portafolio completo"
+    },
+    {
+     "nombre": "Período",
+     "opciones": "Mes / Trimestre / Año / Rango personalizado (hasta 5 años)",
+     "default": "Mes actual"
+    },
+    {
+     "nombre": "Comparación",
+     "opciones": "vs. período anterior / vs. mismo período año anterior / Sin comparación",
+     "default": "vs. período anterior"
+    },
+    {
+     "nombre": "Secciones a incluir",
+     "opciones": "KPIs / Tendencia / Ranking / Costos / Calidad / Alarmas / Mapa de cobertura",
+     "default": "Todas activadas"
+    },
+    {
+     "nombre": "Métrica principal del reporte",
+     "opciones": "Consumo / Costo / Intensidad",
+     "default": "Consumo"
+    },
+    {
+     "nombre": "Formato de salida",
+     "opciones": "PDF (con gráficos) / PPT (slides editables) / Excel (tablas planas)",
+     "default": "PDF"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Configurador a la izquierda, resultado a la derecha",
+     "texto": "El flujo es «configuro → previsualizo → genero», por eso el formulario ocupa la columna izquierda (primer paso, sentido de lectura) y la vista previa más el historial la derecha (resultado). El gerente avanza de izquierda a derecha sin retroceder.",
+     "principio": "Flujo secuencial alineado al recorrido de lectura; correspondencia con el modelo mental de la tarea."
+    },
+    {
+     "componente": "Secciones como checkboxes con todo activado",
+     "texto": "Las secciones vienen todas marcadas porque el caso más común es el reporte completo; el gerente resta lo que no quiere en vez de construir desde cero. Es una configuración por defecto inteligente que minimiza clics para el 80% de los casos.",
+     "principio": "Valores por defecto inteligentes; minimizar el esfuerzo del caso frecuente."
+    },
+    {
+     "componente": "Vista previa antes del botón Generar",
+     "texto": "La miniatura e índice se muestran antes de generar para que el gerente confirme que el reporte es el correcto sin gastar el tiempo de render ni descargar un PDF equivocado; es feedback anticipado sobre una acción costosa.",
+     "principio": "Visibilidad del estado del sistema; prevención de errores antes de una acción cara."
+    },
+    {
+     "componente": "Botón «Generar» con estilo de acento (CTA primaria)",
+     "texto": "«Generar reporte» es el único botón sólido en acento de la pantalla; «Programar envío» queda como acción secundaria en contorno. Diferenciar la acción principal por peso visual evita que el gerente dude cuál es el paso que cierra la tarea.",
+     "principio": "Jerarquía de acciones (primaria vs. secundaria); ley de Fitts en el objetivo principal."
+    },
+    {
+     "componente": "Historial con estado y link de descarga",
+     "texto": "El historial expone el estado (generando/listo/error) y el link en la misma fila para que el gerente sepa si un reporte ya está disponible sin reintentar; el estado visible reduce la incertidumbre en generaciones que tardan.",
+     "principio": "Feedback de estado de procesos asíncronos."
+    }
+   ]
+  }
+ },
+ {
+  "id": "3.5",
+  "slug": "alarmas-agregadas",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Alarmas agregadas",
+  "activeMenu": "Alarmas agregadas",
+  "subtitle": "Resumen ejecutivo del estado de alertas del portafolio · vista de gestión, no de operación",
+  "filters": [
+   {
+    "name": "Mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Período de análisis",
+    "default": "Últimos 7 días"
+   },
+   {
+    "name": "Severidad",
+    "default": "Todas"
+   },
+   {
+    "name": "Estado",
+    "default": "Activas"
+   },
+   {
+    "name": "Gráfico agrupar por",
+    "default": "Día"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "Total alarmas activas",
+    "value": "37",
+    "delta": "en el período filtrado",
+    "reqs": [
+     "DAT-27",
+     "FIN-06"
+    ],
+    "pspan": 3,
+    "porder": 0
+   },
+   {
+    "type": "kpi",
+    "col": 3,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "Críticas activas",
+    "value": "5",
+    "delta": "badge rojo si > 0",
+    "reqs": [
+     "DAT-27",
+     "FIN-06"
+    ],
+    "pspan": 3,
+    "porder": 1
+   },
+   {
+    "type": "kpi",
+    "col": 6,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "Resueltas 24h",
+    "value": "22",
+    "delta": "últimas 24 horas",
+    "reqs": [
+     "DAT-27"
+    ],
+    "pspan": 3,
+    "porder": 2
+   },
+   {
+    "type": "kpi",
+    "col": 9,
+    "colspan": 3,
+    "y": 184,
+    "h": 100,
+    "label": "T. medio de resolución",
+    "value": "3,4 h",
+    "delta": "indicador si supera SLA",
+    "reqs": [
+     "FIN-06"
+    ],
+    "pspan": 3,
+    "porder": 3
+   },
+   {
+    "type": "map",
+    "col": 0,
+    "colspan": 5,
+    "y": 300,
+    "h": 300,
+    "label": "Mapa geográfico de alarmas",
+    "meta": "marcadores SIEMPRE por estado de alarma",
+    "reqs": [
+     "DAT-03",
+     "DAT-27"
+    ],
+    "pspan": 5,
+    "porder": 4
+   },
+   {
+    "type": "stackedbars",
+    "col": 5,
+    "colspan": 7,
+    "y": 300,
+    "h": 150,
+    "label": "Evolución 30 días",
+    "meta": "abiertas / escaladas / resueltas por día",
+    "reqs": [
+     "DAT-27",
+     "DAT-03"
+    ],
+    "pspan": 7,
+    "porder": 5
+   },
+   {
+    "type": "panel",
+    "col": 5,
+    "colspan": 7,
+    "y": 466,
+    "h": 134,
+    "label": "Top 5 malls con más alarmas",
+    "meta": "con tendencia ↑/↓/→ vs. semana anterior",
+    "reqs": [
+     "DAT-27",
+     "DAT-11"
+    ],
+    "subs": [
+     "1. Costanera Center — 4 crít / 9 warn  ↑",
+     "2. Mallplaza Egaña — 2 crít / 6 warn  →",
+     "3. Vespucio — 1 crít / 5 warn  ↓",
+     "4. Alto Las Condes — 1 crít / 4 warn  ↑",
+     "5. Arauco Maipú — 0 crít / 3 warn  →"
+    ],
+    "pspan": 4,
+    "porder": 6
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 616,
+    "h": 244,
+    "label": "Tabla de alarmas por mall (sin datos de medidores individuales)",
+    "meta": "",
+    "reqs": [
+     "DAT-03",
+     "DAT-11",
+     "FIN-06"
+    ],
+    "cols": [
+     "Mall",
+     "Críticas",
+     "Warnings",
+     "Resueltas",
+     "T.medio [h]",
+     "Última alarma"
+    ],
+    "nrows": 6,
+    "statuscol": true,
+    "pspan": 8,
+    "porder": 7
+   }
+  ],
+  "detail": {
+   "descripcion": "Resumen ejecutivo del estado de alertas del portafolio, sin detalle técnico de medidores individuales. Es una vista de gestión (no de operación): el gerente ve magnitud, tendencia y concentración de alarmas, pero no las gestiona.",
+   "componentes": [
+    {
+     "nombre": "Tarjetas de cabecera",
+     "descripcion": "Total alarmas activas / Críticas activas (badge rojo si >0) / Resueltas en últimas 24 h / Tiempo medio de resolución del período [h] con indicador si supera el SLA.",
+     "reqs": [
+      "DAT-27",
+      "FIN-06"
+     ]
+    },
+    {
+     "nombre": "Mapa geográfico de alarmas",
+     "descripcion": "Misma lógica del Panel consolidado, pero los marcadores se colorean siempre por estado de alarma (ignora la métrica de otras pantallas). Click: panel lateral con resumen del mall.",
+     "reqs": [
+      "DAT-03",
+      "DAT-27"
+     ]
+    },
+    {
+     "nombre": "Gráfico de evolución — 30 días",
+     "descripcion": "Barras apiladas por día: abiertas (rojo) / escaladas (naranja) / resueltas (verde). Hover con conteo exacto por severidad.",
+     "reqs": [
+      "DAT-27",
+      "DAT-03"
+     ]
+    },
+    {
+     "nombre": "Top 5 malls con más alarmas",
+     "descripcion": "Nombre, país, nº críticas, nº warnings y tendencia (↑/↓/→) vs. semana anterior.",
+     "reqs": [
+      "DAT-27",
+      "DAT-11"
+     ]
+    },
+    {
+     "nombre": "Tabla de alarmas por mall",
+     "descripcion": "Mall, críticas activas, warnings activas, resueltas en período, tiempo medio de resolución [h], última alarma (hora y descripción breve). Sin datos de medidores individuales.",
+     "reqs": [
+      "DAT-03",
+      "DAT-11",
+      "FIN-06"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Mall",
+     "opciones": "Multi-selección con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Período de análisis",
+     "opciones": "Hoy / Últimas 24h / Últimos 7 días / Últimos 30 días / Rango personalizado",
+     "default": "Últimos 7 días"
+    },
+    {
+     "nombre": "Severidad",
+     "opciones": "Todas / Solo críticas / Críticas y altas",
+     "default": "Todas"
+    },
+    {
+     "nombre": "Estado de la alarma",
+     "opciones": "Activas / Resueltas / Todas",
+     "default": "Activas"
+    },
+    {
+     "nombre": "Gráfico — agrupar por",
+     "opciones": "Día / Semana / Mall",
+     "default": "Día"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Cuatro tarjetas-resumen en la cabecera",
+     "texto": "El gerente necesita una respuesta binaria al entrar: «¿está mi portafolio bajo control?». Las cuatro cifras clave —con la de críticas destacada por un badge— ocupan la primera línea de lectura para dar esa respuesta antes de que el ojo baje a los gráficos.",
+     "principio": "Jerarquía visual en F; la conclusión antes que la evidencia."
+    },
+    {
+     "componente": "Mapa siempre coloreado por estado de alarma",
+     "texto": "A diferencia de otras pantallas donde el color del marcador es configurable, aquí se fija en «estado de alarma» para eliminar ambigüedad: en la pantalla de alarmas, rojo siempre significa alarma. Quitar esa opción evita que el gerente malinterprete un mapa configurado para otra métrica.",
+     "principio": "Consistencia de significado del color; prevención de error por configuración."
+    },
+    {
+     "componente": "Evolución 30 días y Top 5 apilados a la derecha",
+     "texto": "Tendencia (¿mejora o empeora?) y concentración (¿qué malls?) responden preguntas de segundo nivel y se agrupan a la derecha, en bloque, para que el gerente pase de «cuántas» a «hacia dónde van» y «dónde se concentran» de arriba hacia abajo.",
+     "principio": "Agrupación por afinidad funcional; secuencia de preguntas del usuario."
+    },
+    {
+     "componente": "Tabla sin medidores individuales",
+     "texto": "La tabla se detiene deliberadamente a nivel mall: exponer medidores individuales sería ruido para un gerente y competencia del perfil Operacional. Limitar la granularidad protege el foco ejecutivo y respeta la separación de responsabilidades entre perfiles.",
+     "principio": "Minimización de información según el rol; separación de responsabilidades."
+    },
+    {
+     "componente": "Ausencia de botones de gestión de alarma",
+     "texto": "No hay «Asignar» ni «Cerrar»: esta vista informa, no opera. La ausencia de affordances de acción comunica al gerente que su rol aquí es de supervisión, evitando que intente gestionar algo que corresponde a otro perfil.",
+     "principio": "Affordance acorde al permiso; claridad del rol."
+    }
+   ]
+  }
+ },
+ {
+  "id": "3.6",
+  "slug": "exportar-reportes",
+  "profile": "gerencial",
+  "device": "desktop",
+  "title": "Exportar reportes",
+  "activeMenu": "Exportar reportes",
+  "primaryAction": "Exportar",
+  "subtitle": "Descarga ad-hoc de datos agregados para análisis externo, presentaciones o respaldo",
+  "filters": [
+   {
+    "name": "Tipo de contenido",
+    "default": "Consumos agregados"
+   },
+   {
+    "name": "Alcance geográfico",
+    "default": "Portafolio completo"
+   },
+   {
+    "name": "Período",
+    "default": "Mes actual"
+   },
+   {
+    "name": "Granularidad temporal",
+    "default": "Mensual"
+   },
+   {
+    "name": "Formato de salida",
+    "default": "Excel"
+   },
+   {
+    "name": "Moneda de costos",
+    "default": "UF"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "form",
+    "col": 0,
+    "colspan": 6,
+    "y": 184,
+    "h": 360,
+    "label": "Configurador de exportación",
+    "meta": "selección de contenido, alcance y formato",
+    "reqs": [
+     "DAT-07",
+     "DAT-12"
+    ],
+    "fields": [
+     "Tipo de contenido (multi-selección)",
+     "Alcance geográfico",
+     "Período (hasta 5 años)",
+     "Granularidad temporal (Mensual / Semanal)",
+     "Formato de salida (PDF / Excel / CSV)",
+     "Moneda de costos"
+    ],
+    "pspan": 6,
+    "porder": 0
+   },
+   {
+    "type": "panel",
+    "col": 6,
+    "colspan": 6,
+    "y": 184,
+    "h": 150,
+    "label": "Resumen de la exportación",
+    "meta": "",
+    "reqs": [
+     "DAT-12"
+    ],
+    "subs": [
+     "Contenido: Consumos agregados por mall",
+     "Alcance: Portafolio completo · Período: mes actual",
+     "Granularidad: Mensual · Formato: Excel"
+    ],
+    "pspan": 6,
+    "porder": 1
+   },
+   {
+    "type": "actions",
+    "col": 6,
+    "colspan": 6,
+    "y": 346,
+    "h": 40,
+    "btns": [
+     "Exportar",
+     "Programar exportación"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 6,
+    "colspan": 6,
+    "y": 400,
+    "h": 144,
+    "label": "Limitación del perfil gerencial",
+    "meta": "",
+    "reqs": [
+     "DAT-07"
+    ],
+    "subs": [
+     "Solo datos agregados por mall y período",
+     "Sin datos crudos de medidores individuales",
+     "Sin información identificable de locatarios",
+     "Para granularidad / trazabilidad / evidencia firmada → perfil Auditor"
+    ],
+    "pspan": 6,
+    "porder": 2
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 560,
+    "h": 300,
+    "label": "Historial de exportaciones",
+    "meta": "",
+    "reqs": [
+     "DAT-12",
+     "DAT-08"
+    ],
+    "cols": [
+     "Fecha",
+     "Usuario",
+     "Contenido",
+     "Período",
+     "Formato",
+     "Descarga"
+    ],
+    "nrows": 6,
+    "pspan": 6,
+    "porder": 3
+   }
+  ],
+  "detail": {
+   "descripcion": "Descarga ad-hoc de datos agregados para análisis externo, presentaciones o respaldo. Permite elegir tipo de contenido, alcance, período, granularidad y formato. Los exports del perfil gerencial contienen únicamente datos agregados por mall y período.",
+   "componentes": [
+    {
+     "nombre": "Configurador del exportador",
+     "descripcion": "Tipo de contenido (consumos agregados / costos y facturación / calidad del dato / cobertura de medición / resumen de alarmas), alcance geográfico, período, granularidad temporal, formato de salida y moneda.",
+     "reqs": [
+      "DAT-07",
+      "DAT-12"
+     ]
+    },
+    {
+     "nombre": "Historial de exportaciones",
+     "descripcion": "Registro de exportaciones realizadas con fecha, usuario, contenido, período, formato y link de descarga.",
+     "reqs": [
+      "DAT-12",
+      "DAT-08"
+     ]
+    },
+    {
+     "nombre": "Limitación del perfil gerencial",
+     "descripcion": "Los exports incluyen solo datos agregados por mall y período; no incluyen datos crudos de medidores ni información identificable de locatarios. Para mayor granularidad, trazabilidad o evidencia firmada se requiere el perfil Auditor.",
+     "reqs": [
+      "DAT-07"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Tipo de contenido",
+     "opciones": "Consumos agregados por mall / Costos y facturación / Calidad del dato / Cobertura de medición / Resumen de alarmas (multi-selección)",
+     "default": "Consumos agregados"
+    },
+    {
+     "nombre": "Alcance geográfico",
+     "opciones": "Portafolio completo / Mall específico (multi-selección con buscador)",
+     "default": "Portafolio completo"
+    },
+    {
+     "nombre": "Período",
+     "opciones": "Mes actual / Trimestre / Año en curso / Rango personalizado (hasta 5 años)",
+     "default": "Mes actual"
+    },
+    {
+     "nombre": "Granularidad temporal",
+     "opciones": "Mensual / Semanal (datos diarios no disponibles en perfil gerencial)",
+     "default": "Mensual"
+    },
+    {
+     "nombre": "Formato de salida",
+     "opciones": "PDF ejecutivo / Excel / CSV",
+     "default": "Excel"
+    },
+    {
+     "nombre": "Moneda de costos",
+     "opciones": "UF / CLP / USD",
+     "default": "UF"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Formulario a la izquierda con resumen espejo a la derecha",
+     "texto": "Mientras el gerente arma la exportación en el formulario, el panel «Resumen» refleja en lenguaje natural lo que va a descargar. Ese eco reduce el error de exportar un alcance o período equivocado sin tener que releer cada control.",
+     "principio": "Feedback inmediato del estado; reconocer antes que recordar."
+    },
+    {
+     "componente": "Aviso de limitación siempre visible",
+     "texto": "La restricción de granularidad no se esconde en un tooltip: se muestra como bloque fijo para que el gerente entienda por qué no ve datos crudos y sepa que la ruta correcta es el perfil Auditor. Explicar el límite en el sitio evita frustración y tickets de soporte.",
+     "principio": "Prevención de errores por expectativa; ayuda en contexto."
+    },
+    {
+     "componente": "Excel como formato por defecto",
+     "texto": "El valor por defecto es Excel porque es el destino más frecuente de un gerente que arma presentaciones o análisis; ofrecer el formato esperado sin obligar a elegir acelera la tarea del caso común.",
+     "principio": "Valor por defecto inteligente orientado al caso más frecuente."
+    },
+    {
+     "componente": "Historial de exportaciones al pie",
+     "texto": "El historial en ancho completo al final permite reutilizar o volver a descargar una extracción previa sin reconfigurarla; es memoria del sistema que ahorra repetir trabajo, ubicada al cierre del recorrido por ser de consulta ocasional.",
+     "principio": "El sistema recuerda por el usuario; jerarquía por frecuencia."
+    },
+    {
+     "componente": "Botón «Exportar» como CTA primaria",
+     "texto": "La acción de salida se distingue en acento sólido frente a «Programar», de contorno, para que el clic que completa la tarea sea el objetivo visual más grande y evidente de la columna derecha.",
+     "principio": "Ley de Fitts; jerarquía primaria/secundaria de acciones."
+    }
+   ]
+  }
+ }
+]

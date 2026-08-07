@@ -1,0 +1,1275 @@
+[
+ {
+  "id": "5.1",
+  "slug": "mis-ordenes",
+  "profile": "tecnico",
+  "device": "mobile",
+  "navActive": 0,
+  "title": "Mis órdenes",
+  "activeMenu": "Mis órdenes",
+  "subtitle": "Órdenes de trabajo del técnico en terreno · priorizadas por SLA",
+  "filters": [
+   {
+    "name": "Estado",
+    "default": "Pendientes + En curso"
+   },
+   {
+    "name": "Prioridad",
+    "default": "Todas"
+   },
+   {
+    "name": "Mall",
+    "default": "Todos"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "kpi",
+    "h": 92,
+    "label": "Vencidas (past SLA)",
+    "value": "1",
+    "delta": "badge rojo · atención inmediata",
+    "reqs": [
+     "FIN-05",
+     "DAT-19"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 84,
+    "label": "Contadores del turno",
+    "meta": "se actualiza al sincronizar",
+    "reqs": [
+     "FIN-05",
+     "DAT-19"
+    ],
+    "subs": [
+     "Pendientes 6    ·    En curso 2",
+     "Cerradas hoy 3    ·    Vencidas 1"
+    ]
+   },
+   {
+    "type": "table",
+    "h": 168,
+    "label": "Lista de órdenes",
+    "meta": "orden: prioridad + fecha compromiso · toca una fila",
+    "reqs": [
+     "FIN-05",
+     "DAT-19"
+    ],
+    "cols": [
+     "ID",
+     "Tipo",
+     "Prior.",
+     "Estado"
+    ],
+    "nrows": 5,
+    "statuscol": true
+   },
+   {
+    "type": "panel",
+    "h": 108,
+    "label": "Detalle de orden seleccionada",
+    "meta": "OT-2291 · Medidor SN-4471",
+    "reqs": [
+     "DAT-19",
+     "DAT-23",
+     "INT-13"
+    ],
+    "subs": [
+     "Problema: sin lectura > 4 h en remarcador",
+     "Ficha del medidor asociado y ubicación",
+     "Historial de intervenciones previas (DAT-23)"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Pantalla de aterrizaje del perfil Técnico en terreno (PWA móvil). Muestra las órdenes de trabajo asignadas con indicadores de cabecera, una lista priorizada por severidad y fecha de compromiso, y un panel de detalle con la ficha del medidor asociado y las acciones de gestión de la orden. Diseñada para uso con una mano y señal intermitente.",
+   "componentes": [
+    {
+     "nombre": "Indicadores de cabecera",
+     "descripcion": "Órdenes pendientes / En curso / Cerradas hoy / Vencidas (past SLA). La cifra de vencidas se destaca con badge para dirigir la atención.",
+     "reqs": [
+      "FIN-05",
+      "DAT-19"
+     ]
+    },
+    {
+     "nombre": "Lista de órdenes",
+     "descripcion": "ID, descripción, tipo (mantención / instalación / diagnóstico / CNR), mall, prioridad, fecha de asignación, fecha de compromiso y estado. Ordenada por prioridad + fecha de compromiso por defecto.",
+     "reqs": [
+      "FIN-05",
+      "DAT-19"
+     ]
+    },
+    {
+     "nombre": "Panel de detalle de orden",
+     "descripcion": "Descripción del problema, ficha del medidor asociado, historial de intervenciones previas (DAT-23) y botones: Iniciar / Pausar / Cerrar orden / Registrar intervención.",
+     "reqs": [
+      "DAT-19",
+      "DAT-23",
+      "INT-13"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Estado",
+     "opciones": "Pendientes / En curso / Cerradas / Vencidas / Todas",
+     "default": "Pendientes + En curso"
+    },
+    {
+     "nombre": "Prioridad",
+     "opciones": "Crítica / Alta / Media / Baja / Todas",
+     "default": "Todas"
+    },
+    {
+     "nombre": "Mall",
+     "opciones": "Selector con buscador",
+     "default": "Todos"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Tarjeta «Vencidas» aislada en la cabecera",
+     "texto": "El técnico abre la app para decidir qué atender primero, y el único número que altera su ruta del día es cuántas órdenes están vencidas; por eso ocupa la primera tarjeta con badge y no se diluye entre los demás contadores. La conclusión accionable va antes que el resumen.",
+     "principio": "Jerarquía por consecuencia: lo que cambia la decisión se muestra primero."
+    },
+    {
+     "componente": "Filas de la lista como objetivos táctiles grandes",
+     "texto": "Cada fila es un objetivo alto con el punto de estado a la izquierda porque la lista se toca de pie, con guantes o una sola mano; filas generosas y separadas reducen los toques errados frente al equipo.",
+     "principio": "Ley de Fitts en móvil: objetivos táctiles amplios (≈44 px) y bien espaciados."
+    },
+    {
+     "componente": "Barra de acciones fija al pie",
+     "texto": "Iniciar / Pausar / Cerrar / Registrar se colocan en la franja inferior, dentro del arco natural del pulgar, para que la acción que cambia el estado de la orden esté siempre al alcance sin reacomodar la mano.",
+     "principio": "Zona del pulgar (thumb zone): las acciones frecuentes viven abajo en móvil."
+    },
+    {
+     "componente": "Orden por prioridad + compromiso por defecto",
+     "texto": "El sistema ordena la lista para que el técnico no tenga que calcular cuál es más urgente bajo presión de tiempo; la secuencia correcta llega hecha, reduciendo la carga mental en terreno.",
+     "principio": "Valores por defecto que ejecutan el trabajo por el usuario."
+    },
+    {
+     "componente": "Apilado estricto en una columna",
+     "texto": "A diferencia del escritorio, aquí todo se apila en una sola columna para eliminar el scroll horizontal y la lectura en zigzag cuando la pantalla es pequeña y la conexión es intermitente.",
+     "principio": "Diseño móvil primero: un único eje de lectura vertical."
+    }
+   ]
+  },
+  "mobilePrimary": "Iniciar orden"
+ },
+ {
+  "id": "5.2",
+  "slug": "activos-medidores",
+  "profile": "tecnico",
+  "device": "mobile",
+  "navActive": 1,
+  "title": "Activos (medidores)",
+  "activeMenu": "Activos (medidores)",
+  "subtitle": "Inventario de medidores y ficha técnica para consulta en terreno",
+  "filters": [
+   {
+    "name": "Mall",
+    "default": "Costanera"
+   },
+   {
+    "name": "Estado comms",
+    "default": "Todos"
+   },
+   {
+    "name": "Tipo",
+    "default": "Todos"
+   },
+   {
+    "name": "Con alarma",
+    "default": "No"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "table",
+    "h": 116,
+    "label": "Medidores del mall",
+    "meta": "serial · estado · protocolo · último dato",
+    "reqs": [
+     "INT-14",
+     "DAT-06",
+     "DAT-24"
+    ],
+    "cols": [
+     "Serial",
+     "Estado",
+     "Prot.",
+     "Últ. dato"
+    ],
+    "nrows": 3,
+    "statuscol": true
+   },
+   {
+    "type": "form",
+    "h": 158,
+    "label": "Ficha — Identificación",
+    "reqs": [
+     "INT-14",
+     "DAT-23"
+    ],
+    "fields": [
+     "Serial / tag / fabricante",
+     "Modelo · firmware · protocolo",
+     "Dirección Modbus/IP · gateway"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 70,
+    "label": "Ubicación física",
+    "meta": "ref. Estándar Técnico Salas",
+    "reqs": [
+     "INT-14",
+     "ARQ-15"
+    ],
+    "subs": [
+     "Tipo de sala · rack / tablero",
+     "Posición en tablero"
+    ]
+   },
+   {
+    "type": "histogram",
+    "h": 104,
+    "label": "Disponibilidad 72 h (barras 15 min)",
+    "meta": "estado de comunicación · reintentos",
+    "reqs": [
+     "INT-13",
+     "INT-10"
+    ]
+   },
+   {
+    "type": "line",
+    "h": 104,
+    "label": "Serie temporal 48 h (gaps marcados)",
+    "meta": "tipo de valor: real / estimado / CNR",
+    "reqs": [
+     "DAT-04",
+     "DAT-06",
+     "DAT-19"
+    ]
+   },
+   {
+    "type": "timeline",
+    "h": 92,
+    "label": "Historial de fallas e intervenciones",
+    "reqs": [
+     "DAT-23",
+     "DAT-19"
+    ],
+    "items": [
+     "Offline > 4 h — reintento automático",
+     "Cambio de firmware — técnico",
+     "CNR ingresada — período repuesto"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Inventario de medidores accesible desde terreno con búsqueda y filtros, y ficha técnica detallada del medidor seleccionado. La ficha reúne identificación, ubicación física, estado de comunicación con disponibilidad de 72 h, serie temporal de 48 h con gaps marcados por tipo de valor, e historial de fallas e intervenciones.",
+   "componentes": [
+    {
+     "nombre": "Búsqueda y filtros",
+     "descripcion": "Por serial, tag, mall, zona, gateway, protocolo y estado. Filtros: mall / estado de comunicación / tipo / con alarma activa.",
+     "reqs": [
+      "INT-14",
+      "ARQ-15"
+     ]
+    },
+    {
+     "nombre": "Lista de medidores",
+     "descripcion": "Serial, nombre/tag, mall, zona, estado (online / offline / sin dato > 4 h), protocolo (Modbus / DLMS / otro), último dato y timestamp.",
+     "reqs": [
+      "INT-14",
+      "DAT-06",
+      "DAT-24"
+     ]
+    },
+    {
+     "nombre": "Ficha del medidor — Identificación",
+     "descripcion": "Serial, fabricante, modelo, firmware, protocolo, dirección Modbus/IP y gateway asignado.",
+     "reqs": [
+      "INT-14",
+      "DAT-23"
+     ]
+    },
+    {
+     "nombre": "Ficha del medidor — Ubicación física",
+     "descripcion": "Tipo de sala (ref. Estándar Técnico Salas), rack / tablero / posición.",
+     "reqs": [
+      "INT-14",
+      "ARQ-15"
+     ]
+    },
+    {
+     "nombre": "Ficha del medidor — Estado de comunicación",
+     "descripcion": "Timestamp, reintentos e historial de disponibilidad de 72 h en barras de 15 min.",
+     "reqs": [
+      "INT-13",
+      "INT-10"
+     ]
+    },
+    {
+     "nombre": "Ficha del medidor — Serie temporal 48 h",
+     "descripcion": "Serie de las últimas 48 h con gaps marcados y tipo de valor (real / estimado / CNR).",
+     "reqs": [
+      "DAT-04",
+      "DAT-06",
+      "DAT-19"
+     ]
+    },
+    {
+     "nombre": "Ficha del medidor — Historial de fallas",
+     "descripcion": "Fallas e intervenciones registradas sobre el medidor, en orden cronológico.",
+     "reqs": [
+      "DAT-23",
+      "DAT-19"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Mall",
+     "opciones": "Selector con buscador",
+     "default": "Costanera"
+    },
+    {
+     "nombre": "Estado de comunicación",
+     "opciones": "Todos / Online / Offline / Sin dato > 4 h",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Tipo",
+     "opciones": "Todos / Remarcador / Sub-medidor",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Con alarma activa",
+     "opciones": "Sí / No",
+     "default": "No"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Lista compacta arriba, ficha desplegada debajo",
+     "texto": "El técnico primero localiza el medidor y luego lo inspecciona; el layout respeta esa secuencia buscar → seleccionar → inspeccionar en un solo scroll vertical, sin abrir pantallas nuevas que le hagan perder la referencia del equipo que tiene delante.",
+     "principio": "Revelación progresiva: del listado al detalle sin cambiar de contexto."
+    },
+    {
+     "componente": "Identificación como ficha campo-por-línea",
+     "texto": "Serial, protocolo y dirección Modbus se muestran uno por renglón etiquetado para poder cotejarlos contra el tablero físico sin ambigüedad; en terreno un dígito confundido es una intervención perdida.",
+     "principio": "Reconocimiento sobre recuerdo y correspondencia con el objeto físico."
+    },
+    {
+     "componente": "Histograma de disponibilidad de 72 h",
+     "texto": "Las barras de 15 min dejan ver de un vistazo si la caída es puntual o sostenida, lo que decide si el técnico revisa el enlace o el equipo; el patrón temporal se lee antes que cualquier cifra.",
+     "principio": "Codificación visual pre-atenta de patrones temporales."
+    },
+    {
+     "componente": "Serie de 48 h con gaps dibujados explícitamente",
+     "texto": "Los huecos se representan como vacíos, no como ceros, para que el técnico distinga «sin dato» de «consumo nulo» y no diagnostique una falla donde solo faltó la lectura.",
+     "principio": "Hacer visible el estado ausente; prevención de error de interpretación."
+    },
+    {
+     "componente": "Historial como línea de tiempo al final",
+     "texto": "La cronología de fallas cierra la ficha para que el técnico sepa qué se intentó antes y no repita una intervención ya realizada por otro turno.",
+     "principio": "Continuidad y contexto: el sistema recuerda el historial por el usuario."
+    },
+    {
+     "componente": "Densidad reducida frente al escritorio",
+     "texto": "La ficha muestra menos elementos por pantalla que su equivalente de estación fija, priorizando lo que se consulta junto al equipo con señal intermitente y evitando saturar una pantalla pequeña.",
+     "principio": "Economía atencional adaptada al contexto móvil."
+    }
+   ]
+  }
+ },
+ {
+  "id": "5.3",
+  "slug": "diagnostico-comms",
+  "profile": "tecnico",
+  "device": "desktop",
+  "title": "Diagnóstico comms",
+  "activeMenu": "Diagnóstico comms",
+  "subtitle": "Dashboard de salud del enlace por medidor · herramientas de diagnóstico y log crudo",
+  "filters": [
+   {
+    "name": "Medidor",
+    "default": "SN-4471"
+   },
+   {
+    "name": "Mall",
+    "default": "Costanera"
+   },
+   {
+    "name": "Gateway",
+    "default": "GW-02"
+   },
+   {
+    "name": "Ventana",
+    "default": "72 h"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "kpi",
+    "col": 0,
+    "colspan": 4,
+    "y": 184,
+    "h": 112,
+    "label": "Estado de comunicación",
+    "value": "Intermitente",
+    "delta": "online / offline / intermitente · cambió hace 12 min",
+    "reqs": [
+     "INT-13",
+     "DAT-24"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 4,
+    "colspan": 4,
+    "y": 184,
+    "h": 112,
+    "label": "Tasa de éxito 24 h",
+    "value": "92%",
+    "delta": "reintentos 34 · timeouts 8",
+    "reqs": [
+     "INT-13",
+     "INT-10"
+    ]
+   },
+   {
+    "type": "kpi",
+    "col": 8,
+    "colspan": 4,
+    "y": 184,
+    "h": 112,
+    "label": "Último dato recibido",
+    "value": "14:32",
+    "delta": "hace 00:18 · 48,2 kWh",
+    "reqs": [
+     "INT-13",
+     "DAT-24"
+    ]
+   },
+   {
+    "type": "histogram",
+    "col": 0,
+    "colspan": 7,
+    "y": 312,
+    "h": 250,
+    "label": "Histograma de disponibilidad 72 h",
+    "meta": "barras de 15 min · huecos = sin lectura",
+    "reqs": [
+     "INT-13",
+     "INT-10",
+     "DAT-24"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 312,
+    "h": 150,
+    "label": "Herramientas de diagnóstico",
+    "meta": "acción directa sobre el enlace",
+    "reqs": [
+     "INT-13",
+     "INT-10"
+    ],
+    "subs": [
+     "Test de conexión al gateway",
+     "Forzar re-intento de lectura",
+     "Ver log de comunicación raw (100 líneas)"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 478,
+    "h": 40,
+    "btns": [
+     "Test de conexión",
+     "Forzar re-lectura",
+     "Ver log raw"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 590,
+    "h": 250,
+    "label": "Log de comunicación raw (últimas 100 líneas)",
+    "meta": "solo lectura · exportable",
+    "reqs": [
+     "INT-13",
+     "INT-10"
+    ],
+    "cols": [
+     "Timestamp UTC",
+     "Dirección",
+     "Trama / evento",
+     "Resultado"
+    ],
+    "nrows": 7,
+    "statuscol": true
+   }
+  ],
+  "detail": {
+   "descripcion": "Consola de diagnóstico de comunicaciones por medidor. Reúne el panel de estado del enlace (estado actual, último dato y tasa de éxito de 24 h), el histograma de disponibilidad de 72 h y las herramientas de diagnóstico activo, con acceso al log de comunicación crudo. Orientada a estación de escritorio por el detalle técnico que maneja.",
+   "componentes": [
+    {
+     "nombre": "Panel de diagnóstico",
+     "descripcion": "Estado actual (online / offline / intermitente). Último dato: valor, timestamp y tiempo transcurrido. Tasa de éxito de 24 h: % de intentos exitosos, reintentos y timeouts. Histograma de disponibilidad de 72 h.",
+     "reqs": [
+      "INT-13",
+      "INT-10",
+      "DAT-24"
+     ]
+    },
+    {
+     "nombre": "Histograma de disponibilidad 72 h",
+     "descripcion": "Barras de 15 min; los huecos indican tramos sin lectura, revelando si la falla es puntual o sostenida.",
+     "reqs": [
+      "INT-13",
+      "INT-10",
+      "DAT-24"
+     ]
+    },
+    {
+     "nombre": "Herramientas de diagnóstico",
+     "descripcion": "Test de conexión al gateway, forzar re-intento de lectura y ver el log de comunicación raw (últimas 100 líneas).",
+     "reqs": [
+      "INT-13",
+      "INT-10"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Medidor",
+     "opciones": "Selector por serial / tag",
+     "default": "SN-4471"
+    },
+    {
+     "nombre": "Mall",
+     "opciones": "Selector con buscador",
+     "default": "Costanera"
+    },
+    {
+     "nombre": "Gateway",
+     "opciones": "Selector de gateway del mall",
+     "default": "GW-02"
+    },
+    {
+     "nombre": "Ventana",
+     "opciones": "24 h / 48 h / 72 h",
+     "default": "72 h"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Tres KPIs de estado en la cabecera",
+     "texto": "Estado, tasa de éxito y último dato responden la primera pregunta del técnico —«¿está vivo el enlace?»— antes de que toque ninguna herramienta, de modo que el diagnóstico empieza con el estado visible y no con una acción a ciegas.",
+     "principio": "Visibilidad del estado del sistema."
+    },
+    {
+     "componente": "Histograma de 72 h como pieza principal",
+     "texto": "El patrón de intermitencia ocupa el bloque de mayor peso porque es lo que dicta qué herramienta usar: una caída sostenida apunta al gateway, una intermitente a la señal. La evidencia manda sobre las acciones.",
+     "principio": "Jerarquía por valor diagnóstico."
+    },
+    {
+     "componente": "Herramientas separadas de las lecturas",
+     "texto": "Test, forzar y log se agrupan a la derecha, apartados de los indicadores, para que el técnico no confunda «ver el estado» con «actuar sobre el equipo»; leer y modificar viven en zonas distintas.",
+     "principio": "Separación entre información y acción."
+    },
+    {
+     "componente": "«Forzar re-lectura» ofrecida sin confirmación pesada",
+     "texto": "Reintentar una lectura es seguro y repetible (INT-10), así que se expone como acción directa; la fricción se reserva para lo que no tiene vuelta atrás, no para operaciones inocuas.",
+     "principio": "Coste de interacción proporcional al riesgo de la acción."
+    },
+    {
+     "componente": "Log crudo al pie, en ancho completo",
+     "texto": "Las 100 líneas de trama son el último recurso del diagnóstico, por eso cierran el recorrido y ocupan todo el ancho, permitiendo leer las tramas completas sin recorte cuando el técnico ya agotó la vista resumida.",
+     "principio": "Jerarquía por frecuencia: el detalle crudo al final del flujo."
+    }
+   ]
+  },
+  "primaryAction": "Probar conexión"
+ },
+ {
+  "id": "5.4",
+  "slug": "registro-intervencion",
+  "profile": "tecnico",
+  "device": "mobile",
+  "navActive": 3,
+  "title": "Registro de intervención",
+  "activeMenu": "Registro de intervención",
+  "subtitle": "Bitácora firmada e inmutable de la intervención en terreno",
+  "blocks": [
+   {
+    "type": "panel",
+    "h": 66,
+    "label": "Orden asociada",
+    "meta": "OT-2291 · Medidor SN-4471",
+    "reqs": [
+     "DAT-19"
+    ],
+    "subs": [
+     "Cierre de intervención en terreno"
+    ]
+   },
+   {
+    "type": "form",
+    "h": 168,
+    "label": "Bitácora de intervención",
+    "reqs": [
+     "DAT-19",
+     "DAT-23"
+    ],
+    "fields": [
+     "Tipo de intervención",
+     "Descripción (texto libre)",
+     "Resultado (solucionado / pendiente piezas / escalación)"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 96,
+    "label": "Adjuntos y firma",
+    "reqs": [
+     "DAT-19",
+     "DAT-23"
+    ],
+    "subs": [
+     "Fotos máx. 5 (JPG/PNG) + documentos (PDF)",
+     "☐ Requiere CNR → pre-llena formulario de CNR",
+     "Firma digital del técnico"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 80,
+    "label": "Inmutabilidad del registro",
+    "meta": "al firmar y guardar",
+    "reqs": [
+     "DAT-19",
+     "CYB-10",
+     "DAT-14"
+    ],
+    "subs": [
+     "Timestamp del servidor + usuario + hash de integridad",
+     "No editable una vez firmado"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Formulario de bitácora de la intervención realizada en terreno, con adjuntos y firma digital del técnico. Al firmar y guardar, el registro se vuelve inmutable con timestamp del servidor, usuario y hash de integridad, y no puede editarse. Un checkbox permite encadenar el ingreso de CNR.",
+   "componentes": [
+    {
+     "nombre": "Formulario de bitácora",
+     "descripcion": "Tipo de intervención / Descripción (texto libre) / Resultado (solucionado / pendiente piezas / requiere escalación) / Adjuntos: fotos máx. 5 (JPG/PNG) + documentos (PDF) / Firma digital del técnico. El checkbox «requiere CNR» pre-llena el formulario de CNR.",
+     "reqs": [
+      "DAT-19",
+      "DAT-23"
+     ]
+    },
+    {
+     "nombre": "Validaciones e inmutabilidad",
+     "descripcion": "Al guardar: registro inmutable con timestamp del servidor, usuario y hash de integridad. No se puede editar una vez firmado.",
+     "reqs": [
+      "DAT-19",
+      "CYB-10",
+      "DAT-14"
+     ]
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Formulario corto en una sola columna",
+     "texto": "Se muestran pocos campos apilados a la vez para poder completar la bitácora de pie y con una mano justo al terminar el trabajo, evitando formularios que exijan sentarse o dos manos.",
+     "principio": "Minimizar campos por vista; baja carga de entrada en terreno."
+    },
+    {
+     "componente": "Resultado como opción cerrada",
+     "texto": "Solucionado / pendiente piezas / escalación se elige de una lista en vez de escribirse, lo que acelera el registro con guantes y estandariza el dato para los tableros aguas abajo.",
+     "principio": "Reconocer sobre escribir; entrada restringida y consistente."
+    },
+    {
+     "componente": "Bloque de inmutabilidad visible antes de firmar",
+     "texto": "Se advierte explícitamente que el registro no será editable antes de mostrar el botón de firma, para que el técnico revise el contenido sabiendo que no habrá corrección posterior.",
+     "principio": "Prevención de errores; visibilidad de consecuencias irreversibles."
+    },
+    {
+     "componente": "«Firmar y guardar» como único CTA de acento",
+     "texto": "Un solo botón primario, claramente distinto de «Cancelar», evita firmar por accidente y deja inequívoca la acción que cierra la bitácora.",
+     "principio": "Jerarquía de acciones; una salida primaria inconfundible."
+    },
+    {
+     "componente": "Checkbox «requiere CNR» que pre-llena el CNR",
+     "texto": "Cuando la intervención implica un consumo no registrado, el checkbox arrastra los datos ya capturados al formulario de CNR sin re-teclearlos, siguiendo el flujo natural del terreno.",
+     "principio": "Continuidad de tarea; evitar el reingreso de datos."
+    }
+   ]
+  },
+  "mobilePrimary": "Firmar y guardar"
+ },
+ {
+  "id": "5.5",
+  "slug": "ingreso-cnr-manual",
+  "profile": "tecnico",
+  "device": "mobile",
+  "navActive": 3,
+  "title": "Ingreso CNR manual",
+  "activeMenu": "Ingreso CNR manual",
+  "subtitle": "Alta de Consumo No Registrado firmada según norma CNR",
+  "blocks": [
+   {
+    "type": "panel",
+    "h": 66,
+    "label": "Medidor y contexto",
+    "meta": "SN-4471 · Costanera P2",
+    "reqs": [
+     "DAT-20"
+    ],
+    "subs": [
+     "Ingreso CNR según norma de Consumos No Registrados"
+    ]
+   },
+   {
+    "type": "form",
+    "h": 168,
+    "label": "Datos del CNR",
+    "reqs": [
+     "DAT-20",
+     "DAT-19"
+    ],
+    "fields": [
+     "Período afectado (fecha/hora inicio – fin)",
+     "Valor real [kWh]",
+     "Motivo del CNR"
+    ]
+   },
+   {
+    "type": "form",
+    "h": 124,
+    "label": "Justificación y evidencia",
+    "reqs": [
+     "DAT-20",
+     "DAT-14"
+    ],
+    "fields": [
+     "Justificación (texto libre)",
+     "Adjunto de evidencia"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 78,
+    "label": "Marcado del valor",
+    "reqs": [
+     "DAT-20",
+     "DAT-19"
+    ],
+    "subs": [
+     "Se marca 'dato manual — CNR' en todos los dashboards",
+     "Firma digital obligatoria"
+    ]
+   },
+   {
+    "type": "panel",
+    "h": 96,
+    "label": "Restricciones post-firma",
+    "meta": "irreversible",
+    "reqs": [
+     "DAT-20",
+     "DAT-14",
+     "CYB-10"
+    ],
+    "subs": [
+     "No se puede retroeditar",
+     "Solo Operacional puede marcar 'en revisión'",
+     "Auditoría: usuario, timestamp, valor anterior"
+    ]
+   }
+  ],
+  "detail": {
+   "descripcion": "Formulario de ingreso manual de Consumo No Registrado (CNR) siguiendo la norma correspondiente. Captura período afectado, valor real, motivo, justificación, evidencia y firma digital. El valor queda marcado como dato manual — CNR en todos los dashboards y, una vez firmado, no puede retroeditarse.",
+   "componentes": [
+    {
+     "nombre": "Formulario CNR",
+     "descripcion": "Período afectado (fecha/hora inicio – fin) / Valor real [kWh] / Motivo del CNR / Justificación (texto libre) / Adjunto de evidencia / Firma digital. El valor queda marcado como 'dato manual — CNR' en todos los dashboards.",
+     "reqs": [
+      "DAT-20",
+      "DAT-14",
+      "DAT-19"
+     ]
+    },
+    {
+     "nombre": "Restricciones post-firma",
+     "descripcion": "No se puede retroeditar. Solo puede marcarse como 'en revisión' por el perfil operacional. Registra en pista de auditoría: usuario, timestamp y valor anterior si existía.",
+     "reqs": [
+      "DAT-20",
+      "DAT-14",
+      "CYB-10"
+     ]
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Formulario dividido en dos bloques (datos / justificación)",
+     "texto": "Separar los datos duros del CNR de la justificación y evidencia parte el formulario en unidades más cortas y agrupa campos afines, reduciendo la sensación de trámite largo en una pantalla pequeña.",
+     "principio": "Chunking y agrupación por afinidad."
+    },
+    {
+     "componente": "Restricciones post-firma explícitas antes del botón",
+     "texto": "El aviso de irreversibilidad se coloca justo antes de la firma para que el técnico entienda que no hay marcha atrás en el mismo momento en que decide confirmar.",
+     "principio": "Prevención de errores en acciones irreversibles."
+    },
+    {
+     "componente": "Marcado «dato manual — CNR» comunicado en pantalla",
+     "texto": "Se informa que el valor quedará etiquetado como manual en todos los dashboards, alineando la expectativa del técnico con el efecto real del ingreso y evitando que crea que introduce una lectura ordinaria.",
+     "principio": "Visibilidad del efecto del sistema; honestidad sobre la naturaleza del dato."
+    },
+    {
+     "componente": "Confirmación por firma digital, no un simple guardar",
+     "texto": "La firma eleva el ingreso a un compromiso trazable, proporcional a un dato que altera consumos certificados; guardar sin firma sería demasiado liviano para el peso del acto.",
+     "principio": "Correspondencia entre gravedad del acto y fricción exigida."
+    },
+    {
+     "componente": "Targets grandes y campo numérico para [kWh]",
+     "texto": "Campos amplios y el tipo de dato adecuado para el valor en kWh reducen los errores de tecleo en terreno, donde una cifra mal ingresada quedaría fijada de forma inmutable.",
+     "principio": "Ley de Fitts; ajuste del control al tipo de dato."
+    }
+   ]
+  },
+  "mobilePrimary": "Firmar CNR"
+ },
+ {
+  "id": "5.6",
+  "slug": "maestro-medidores",
+  "profile": "tecnico",
+  "device": "desktop",
+  "title": "Maestro de medidores",
+  "activeMenu": "Maestro de medidores",
+  "subtitle": "Alta y edición del maestro de medidores con pista de cambios inmutable",
+  "filters": [
+   {
+    "name": "Mall",
+    "default": "Todos"
+   },
+   {
+    "name": "Protocolo",
+    "default": "Todos"
+   },
+   {
+    "name": "Estado del activo",
+    "default": "Activo"
+   },
+   {
+    "name": "Estado comms",
+    "default": "Todos"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 360,
+    "label": "Maestro de medidores",
+    "meta": "búsqueda y filtros completos · selecciona para editar",
+    "reqs": [
+     "INT-14",
+     "FIN-02",
+     "FIN-03"
+    ],
+    "cols": [
+     "Serial",
+     "Tag",
+     "Mall",
+     "Prot.",
+     "Gateway",
+     "Comms",
+     "Estado activo"
+    ],
+    "nrows": 8,
+    "statuscol": true
+   },
+   {
+    "type": "form",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 380,
+    "label": "Alta / edición de medidor",
+    "meta": "agrupado por secciones",
+    "reqs": [
+     "INT-14",
+     "ARQ-15",
+     "FIN-03"
+    ],
+    "fields": [
+     "Identificación: serial · fabricante · modelo · firmware",
+     "Protocolo",
+     "Comunicación: dirección Modbus/IP · gateway",
+     "Tiempo de muestreo",
+     "Ubicación: mall · zona · tipo de sala",
+     "Rack / tablero",
+     "Factor de multiplicación / constante de medición"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 580,
+    "h": 40,
+    "btns": [
+     "Guardar cambios",
+     "Dar de baja",
+     "Cancelar"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 636,
+    "h": 220,
+    "label": "Pista de cambios del maestro (inmutable)",
+    "meta": "campo · valor anterior → valor nuevo · usuario · timestamp",
+    "reqs": [
+     "DAT-23",
+     "DAT-14",
+     "CYB-10"
+    ],
+    "cols": [
+     "Timestamp",
+     "Usuario",
+     "Campo",
+     "Valor anterior",
+     "Valor nuevo"
+    ],
+    "nrows": 5
+   }
+  ],
+  "detail": {
+   "descripcion": "Gestión del maestro de medidores: tabla completa con búsqueda y filtros, formulario de alta / edición agrupado por secciones y pista de cambios inmutable. Permite incorporar nuevos puntos de medida sin consultoría específica (FIN-02 / FIN-03). Pensada para estación de escritorio por el volumen de campos y la precisión requerida.",
+   "componentes": [
+    {
+     "nombre": "Lista y búsqueda del maestro",
+     "descripcion": "Tabla completa: serial, tag, mall, zona, protocolo, gateway, estado comms, fecha de alta y estado del activo (activo / baja / en mantención). Búsqueda y filtros completos.",
+     "reqs": [
+      "INT-14",
+      "FIN-02",
+      "FIN-03"
+     ]
+    },
+    {
+     "nombre": "Formulario de alta / edición",
+     "descripcion": "Identificación (serial, fabricante, modelo, firmware, protocolo). Configuración de comunicación (dirección Modbus/IP, gateway, tiempo de muestreo). Ubicación (mall, zona, tipo de sala, rack, tablero). Factor de multiplicación / constante de medición.",
+     "reqs": [
+      "INT-14",
+      "ARQ-15",
+      "FIN-03"
+     ]
+    },
+    {
+     "nombre": "Pista de cambios del maestro",
+     "descripcion": "Toda modificación registra: campo cambiado, valor anterior, valor nuevo, usuario y timestamp. Inmutable.",
+     "reqs": [
+      "DAT-23",
+      "DAT-14",
+      "CYB-10"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Mall",
+     "opciones": "Selector con buscador",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Protocolo",
+     "opciones": "Modbus / DLMS / BACnet / Otro / Todos",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Estado del activo",
+     "opciones": "Activo / Baja / En mantención / Todos",
+     "default": "Activo"
+    },
+    {
+     "nombre": "Estado de comunicación",
+     "opciones": "Todos / Online / Offline / Sin dato > 4 h",
+     "default": "Todos"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Tabla a la izquierda, formulario a la derecha",
+     "texto": "Es un patrón maestro-detalle: el técnico selecciona un medidor en la lista y lo edita en el panel contiguo sin cambiar de pantalla, manteniendo a la vista el resto del inventario mientras modifica un registro.",
+     "principio": "Patrón maestro-detalle; contexto persistente durante la edición."
+    },
+    {
+     "componente": "Formulario largo agrupado por secciones",
+     "texto": "Identificación, comunicación, ubicación y medición se ordenan en bloques lógicos que guían el alta paso a paso; agrupar decenas de campos por afinidad evita que un formulario extenso resulte abrumador.",
+     "principio": "Agrupación por afinidad y progresión lógica del formulario."
+    },
+    {
+     "componente": "«Dar de baja» separado de «Guardar cambios»",
+     "texto": "La acción que retira un activo se distingue visualmente del guardado ordinario para que el técnico no la accione por inercia al confirmar una edición rutinaria.",
+     "principio": "Separación de acciones destructivas; prevención de error."
+    },
+    {
+     "componente": "Pista de cambios inmutable al pie",
+     "texto": "Mostrar valor anterior → nuevo, usuario y timestamp en la misma pantalla cumple la trazabilidad (DAT-23) y disuade cambios sin registro, porque cada modificación queda expuesta y firmada.",
+     "principio": "Transparencia; rendición de cuentas visible."
+    },
+    {
+     "componente": "Diseño de escritorio, no de terreno",
+     "texto": "El alta y la edición del maestro son trabajo de precisión con muchos campos, propio de una estación fija; por eso esta pantalla se saca del layout móvil de una columna que sirve para consulta en terreno.",
+     "principio": "Correspondencia dispositivo-tarea."
+    }
+   ]
+  },
+  "primaryAction": "Nuevo medidor"
+ },
+ {
+  "id": "5.7",
+  "slug": "reglas-transformacion",
+  "profile": "tecnico",
+  "device": "desktop",
+  "title": "Reglas de transformación",
+  "activeMenu": "Reglas de transformación",
+  "subtitle": "Normalización de datos de campo antes de exponerlos por API y dashboards · con simulador",
+  "filters": [
+   {
+    "name": "Medidor",
+    "default": "Todos"
+   },
+   {
+    "name": "Tipo de regla",
+    "default": "Todas"
+   },
+   {
+    "name": "Estado",
+    "default": "Activas"
+   }
+  ],
+  "blocks": [
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 7,
+    "y": 184,
+    "h": 300,
+    "label": "Reglas activas por medidor",
+    "meta": "entrada esperada → salida resultante",
+    "reqs": [
+     "INT-05",
+     "DAT-22",
+     "DAT-23"
+    ],
+    "cols": [
+     "Medidor",
+     "Tipo de regla",
+     "Entrada",
+     "Salida",
+     "Estado"
+    ],
+    "nrows": 6,
+    "statuscol": true
+   },
+   {
+    "type": "form",
+    "col": 7,
+    "colspan": 5,
+    "y": 184,
+    "h": 200,
+    "label": "Alta / edición de regla",
+    "reqs": [
+     "INT-05",
+     "DAT-22"
+    ],
+    "fields": [
+     "Medidor al que aplica",
+     "Tipo (factor / unidad / offset / fórmula)",
+     "Fórmula personalizada (expresión validada)"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 400,
+    "h": 110,
+    "label": "Simulador de valor de prueba",
+    "meta": "en tiempo real, antes de guardar",
+    "reqs": [
+     "INT-05",
+     "DAT-22"
+    ],
+    "subs": [
+     "Valor raw: 48 200 Wh",
+     "→ Valor transformado: 48,2 kWh",
+     "Se recalcula al editar la regla"
+    ]
+   },
+   {
+    "type": "panel",
+    "col": 7,
+    "colspan": 5,
+    "y": 526,
+    "h": 100,
+    "label": "Indicador de impacto",
+    "meta": "al editar sobre datos históricos",
+    "reqs": [
+     "INT-05",
+     "DAT-22",
+     "DAT-19"
+    ],
+    "subs": [
+     "12 dashboards · 5 exports · 3 alertas afectadas",
+     "Requiere confirmación explícita antes de guardar"
+    ]
+   },
+   {
+    "type": "actions",
+    "col": 7,
+    "colspan": 5,
+    "y": 642,
+    "h": 40,
+    "btns": [
+     "Guardar regla",
+     "Simular",
+     "Cancelar"
+    ]
+   },
+   {
+    "type": "table",
+    "col": 0,
+    "colspan": 12,
+    "y": 700,
+    "h": 160,
+    "label": "Historial de cambios de reglas (inmutable)",
+    "meta": "regla · campo · valor anterior → nuevo · usuario · timestamp",
+    "reqs": [
+     "DAT-23",
+     "DAT-14",
+     "CYB-10"
+    ],
+    "cols": [
+     "Timestamp",
+     "Usuario",
+     "Regla",
+     "Campo",
+     "Valor anterior",
+     "Valor nuevo"
+    ],
+    "nrows": 4
+   }
+  ],
+  "detail": {
+   "descripcion": "Módulo dentro del maestro de medidores para configurar las reglas de normalización de los datos de campo antes de exponerlos por la API y los dashboards (INT-05). Combina la lista de reglas activas, el formulario de alta / edición con simulador de valor de prueba, el indicador de impacto y el historial de cambios inmutable.",
+   "componentes": [
+    {
+     "nombre": "Lista de reglas activas por medidor",
+     "descripcion": "Tabla: medidor (serial/tag), tipo de regla (factor de escala / conversión de unidades / offset / fórmula personalizada), valor de entrada esperado, valor de salida resultante, estado (activa/inactiva), fecha de creación y usuario que la creó.",
+     "reqs": [
+      "INT-05",
+      "DAT-22",
+      "DAT-23"
+     ]
+    },
+    {
+     "nombre": "Formulario de alta / edición de regla",
+     "descripcion": "Medidor al que aplica. Tipo de transformación: factor multiplicador [número], conversión de unidad (ej. Wh → kWh), offset aditivo, fórmula personalizada (expresión validada). Campo de valor de prueba con simulador: ingresa un valor raw y muestra el valor transformado resultante en tiempo real antes de guardar.",
+     "reqs": [
+      "INT-05",
+      "DAT-22"
+     ]
+    },
+    {
+     "nombre": "Historial de cambios de reglas",
+     "descripcion": "Toda modificación registra: regla afectada, campo cambiado, valor anterior, valor nuevo, usuario y timestamp. Inmutable. Permite al auditor verificar cuándo y por qué cambió una regla de conversión.",
+     "reqs": [
+      "DAT-23",
+      "DAT-14",
+      "CYB-10"
+     ]
+    },
+    {
+     "nombre": "Indicador de impacto",
+     "descripcion": "Al editar una regla: aviso de cuántos dashboards, exports y alertas activas se ven afectados por el cambio. Solicita confirmación explícita antes de guardar cambios sobre medidores con datos históricos.",
+     "reqs": [
+      "INT-05",
+      "DAT-22",
+      "DAT-19"
+     ]
+    }
+   ],
+   "filtros": [
+    {
+     "nombre": "Medidor",
+     "opciones": "Selector por serial / tag",
+     "default": "Todos"
+    },
+    {
+     "nombre": "Tipo de regla",
+     "opciones": "Factor de escala / Conversión de unidades / Offset / Fórmula personalizada / Todas",
+     "default": "Todas"
+    },
+    {
+     "nombre": "Estado",
+     "opciones": "Activas / Inactivas / Todas",
+     "default": "Activas"
+    }
+   ],
+   "ux": [
+    {
+     "componente": "Simulador de valor de prueba junto al formulario",
+     "texto": "Mostrar el valor transformado en tiempo real mientras se define la regla convierte una conversión abstracta en un resultado verificable; el técnico comprueba que 48 200 Wh se vuelven 48,2 kWh antes de comprometer nada.",
+     "principio": "Feedback inmediato; prevención de errores antes de guardar."
+    },
+    {
+     "componente": "Indicador de impacto antes de confirmar",
+     "texto": "Avisar cuántos dashboards, exports y alertas dependen de la regla da al técnico el alcance real del cambio, para que decida sabiendo a cuántos consumidores del dato afecta.",
+     "principio": "Visibilidad de consecuencias; decisión informada."
+    },
+    {
+     "componente": "Confirmación explícita sobre datos históricos",
+     "texto": "Cambiar una conversión reescribe la interpretación de datos pasados, así que el sistema exige una confirmación deliberada cuando el medidor ya tiene historia, elevando la fricción justo donde el error es irreversible.",
+     "principio": "Fricción proporcional al riesgo; salvaguarda ante acción irreversible."
+    },
+    {
+     "componente": "Lista con entrada → salida visible por fila",
+     "texto": "Ver el par esperado en cada regla permite auditar de un vistazo si una transformación hace lo previsto, sin abrir el detalle de cada una.",
+     "principio": "Transparencia del comportamiento y escaneabilidad."
+    },
+    {
+     "componente": "Historial inmutable al pie",
+     "texto": "El registro de quién cambió qué y cuándo permite al auditor reconstruir el porqué de una conversión meses después, cumpliendo CYB-10 y cerrando la pantalla con la evidencia de gobierno del dato.",
+     "principio": "Trazabilidad; memoria del sistema."
+    },
+    {
+     "componente": "«Guardar» y «Simular» como acciones distintas",
+     "texto": "Simular no compromete y guardar sí; separarlas evita que el técnico persista una regla que solo quería probar, distinguiendo la exploración del compromiso.",
+     "principio": "Distinción entre exploración y compromiso."
+    }
+   ]
+  },
+  "primaryAction": "Nueva regla"
+ }
+]
